@@ -32,7 +32,7 @@ jobs:
         pip install -r requirements/requirements-core.txt
         pip install .
     
-    # - name: Run tests
-    #   run: |
-    #     pytest --cov-report term --cov=s2scat --cov-config=.coveragerc 
-    #     codecov --token 298dc7ee-bb9f-4221-b31f-3576cc6cb702
+    - name: Run tests
+      run: |
+        pytest --cov-report term --cov=s2scat --cov-config=.coveragerc 
+        codecov --token 99e22b3a-3f1d-40da-96af-22d2e98c31d6

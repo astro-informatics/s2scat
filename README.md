@@ -1,5 +1,5 @@
 [![image](https://github.com/astro-informatics/s2scat/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/astro-informatics/s2scat/actions/workflows/tests.yml)
-[![image](https://codecov.io/gh/astro-informatics/s2scat/branch/main/graph/badge.svg?token=7QYAFAAWLE)](https://codecov.io/gh/astro-informatics/s2scat)
+[![codecov](https://codecov.io/gh/astro-informatics/s2scat/graph/badge.svg?token=LTSRXQVHIA)](https://codecov.io/gh/astro-informatics/s2scat)
 [![image](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![image](https://badge.fury.io/py/s2scat.svg)](https://badge.fury.io/py/s2scat)
 [![image](http://img.shields.io/badge/arXiv-xxxx.xxxxx-orange.svg?style=flat)](https://arxiv.org/abs/xxxx.xxxxx)
