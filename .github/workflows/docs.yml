@@ -2,18 +2,16 @@ name: Docs
 
 on:
   push:
-    branches:        
+    branches:
     - main
-    # Add following in for testing
-    # - feature/deploy_docs
-
+    
 jobs:
   build:
 
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.8]
+        python-version: [3.9]
 
     steps:
     - name: Checkout Source
@@ -24,12 +22,15 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
     
-    - name: Install package
+    - name: Install dependencies
       run: |
         sudo apt install pandoc
-        python -m pip install --upgrade pip    
-        bash build_project_name.sh
-
+        python -m pip install --upgrade pip
+        pip install jaxlib
+        pip install -r requirements/requirements-core.txt
+        pip install -r requirements/requirements-docs.txt
+        pip install .
+  
     - name: Build Documentation
       run: |
         cd docs && make html

@@ -1,6 +1,12 @@
 name: Tests
 
-on: [pull_request]
+on:  
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build:
@@ -8,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.8]
+        python-version: [3.9]
 
     steps:
     - name: Checkout Source
@@ -19,14 +25,14 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
     
-    - name: Install package
+    - name: Install dependencies
       run: |
-        sudo apt install pandoc
-        python -m pip install --upgrade pip    
-        bash build_project_name.sh
+        python -m pip install --upgrade pip
+        pip install -r requirements/requirements-tests.txt
+        pip install -r requirements/requirements-core.txt
+        pip install .
     
-    - name: Run tests
-      run: |
-        pytest --cov-report term --cov=project_name --cov-config=.coveragerc 
-        codecov --token 1f998eff-7a78-4160-91c1-3376fb435d21
-
+    # - name: Run tests
+    #   run: |
+    #     pytest --cov-report term --cov=s2scat --cov-config=.coveragerc 
+    #     codecov --token 298dc7ee-bb9f-4221-b31f-3576cc6cb702

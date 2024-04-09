@@ -1,63 +1,74 @@
-.. image:: https://img.shields.io/badge/GitHub-<project-name>-brightgreen.svg?style=flat
-    :target: https://github.com/astro-informatics/<project-name>
-.. image:: https://github.com/astro-informatics/<project-name>/actions/workflows/python.yml/badge.svg
-    :target: https://github.com/astro-informatics/<project-name>/actions/workflows/python.yml
-.. image:: https://readthedocs.org/projects/ansicolortags/badge/?version=latest
-    :target: https://astro-informatics.github.io/<project-name>
-.. image:: https://codecov.io/gh/astro-informatics/code_template/branch/main/graph/badge.svg?token=8QMXOZK746
-    :target: https://codecov.io/gh/astro-informatics/code_template
-.. image:: https://img.shields.io/badge/License-GPL-blue.svg
-    :target: http://perso.crans.org/besson/LICENSE.html
+.. image:: https://github.com/astro-informatics/s2scat/actions/workflows/tests.yml/badge.svg?branch=main
+    :target: https://github.com/astro-informatics/s2scat/actions/workflows/tests.yml
+.. image:: https://codecov.io/gh/astro-informatics/s2scat/branch/main/graph/badge.svg?token=7QYAFAAWLE
+    :target: https://codecov.io/gh/astro-informatics/s2scat
+.. image:: https://img.shields.io/badge/License-MIT-yellow.svg
+    :target: https://opensource.org/licenses/MIT
 .. image:: http://img.shields.io/badge/arXiv-xxxx.xxxxx-orange.svg?style=flat
     :target: https://arxiv.org/abs/xxxx.xxxxx
+.. image:: https://img.shields.io/badge/code%20style-black-000000.svg
+    :target: https://github.com/psf/black
+.. image:: https://colab.research.google.com/assets/colab-badge.svg
+    :target: add_link_here
 
-<project-name>
+
+Scattering covariance transform on the sphere
 =================================================================================================================
 
-Add some basic discussion about ``<project-name>`` here.
+`S2SCAT` is a Python package for computing third generation scattering covariances on the 
+sphere `(Mousset et al 2024) <https://arxiv.org/abs/2311.14670>`_ using 
+JAX or PyTorch. It leverages autodiff to provide differentiable transforms, which are 
+also deployable on hardware accelerators (e.g. GPUs and TPUs).
 
-Installation
-============
-
-Add some basic installation instructions here.
-    
 Documentation
 =============
-
-Link to the full documentation (when deployed).
-
-Contributors
-============
-Author names & Contributors
+Read the full documentation `here <https://astro-informatics.github.io/s2scat/>`_.
 
 Attribution
 ===========
-A BibTeX entry for <project-name> is:
+Should this code be used in any way, we kindly request that the following article is
+referenced. A BibTeX entry for this reference may look like:
 
 .. code-block:: 
 
-     @article{<project-name>, 
-        author = {Author~List},
-         title = {"A totally amazing name"},
-       journal = {ArXiv},
-        eprint = {arXiv:0000.00000},
-          year = {what year is it?!}
-     }
+    @article{mousset:s2scat, 
+        author      = "Louise Mousset, Matthew A. Price, Erwan Allys and Jason D. McEwen",
+        title       = "TBD",
+        journal     = "Astronomy & Astrophysics, submitted",
+        year        = "2024",
+        eprint      = "TBD"        
+    }
+
+You might also like to consider citing our related papers on which this
+code builds:
+
+.. code-block:: 
+
+    @article{price:s2fft, 
+        author      = "Matthew A. Price and Jason D. McEwen",
+        title       = "Differentiable and accelerated spherical harmonic and Wigner transforms",
+        journal     = "Journal of Computational Physics, submitted",
+        year        = "2023",
+        eprint      = "arXiv:2311.14670"        
+    }
+
+.. code-block:: 
+
+    @article{price:s2wav, 
+        author      = {Matthew A. Price and Alicja Polanska and Jessica Whitney and Jason D. McEwen},
+        title       = {"Differentiable and accelerated directional wavelet transform on the sphere and ball"},
+        eprint      = {arXiv:2402.01282},
+        year        = {2024}
+    }
+
 
 License
 =======
 
-``<project-name>`` is released under the GPL-3 license (see `LICENSE.txt <https://github.com/astro-informatics/<project-name>/blob/main/LICENSE.txt>`_), subject to 
-the non-commercial use condition (see `LICENSE_EXT.txt <https://github.com/astro-informatics/<project-name>/blob/main/LICENSE_EXT.txt>`_)
+We provide this code under an MIT open-source licence with the hope that
+it will be of use to a wider community.
 
-.. code-block::
+Copyright 2023 Matthew Price, Jason McEwen and contributors.
 
-     LatentWaves
-     Copyright (C) 2022 Author names & contributors
-
-     This program is released under the GPL-3 license (see LICENSE.txt), 
-     subject to a non-commercial use condition (see LICENSE_EXT.txt).
-
-     This program is distributed in the hope that it will be useful,
-     but WITHOUT ANY WARRANTY; without even the implied warranty of
-     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+`S2FFT` is free software made available under the MIT License. For
+details see the LICENSE file.

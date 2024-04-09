@@ -6,7 +6,7 @@ build/
 _build/
 *~
 .DS_Store
-logs/*.log
+*.log
 .coverage
 .test.dat
 notebooks/.ipynb_checkpoints/
@@ -15,4 +15,8 @@ notebooks/.temp.*
 docs/assets/static_notebooks/.ipynb_checkpoints/
 docs/assets/static_notebooks/.temp.*
 dist/
-project_name.egg-info/
+s2fft.egg-info/
+resources/
+.matrices/
+s2fft.code-workspace
+.tox
