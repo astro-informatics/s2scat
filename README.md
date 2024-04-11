@@ -23,7 +23,7 @@ memory constraints are tight.
 
 ## Third Generation Scattering Covariances :zap:
 
-Details about the transform here with nice animations.
+Details about the transform here with nice animations!
 
 
 ## Installation :computer:
