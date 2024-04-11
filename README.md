@@ -153,5 +153,5 @@ it will be of use to a wider community.
 
 Copyright 2024 Louise Mousset, Matthew Price, Erwan Allys and Jason McEwen
 
-`S2FFT` is free software made available under the MIT License. For
+`S2SCAT` is free software made available under the MIT License. For
 details see the LICENSE file.
