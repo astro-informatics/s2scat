@@ -1,72 +1,99 @@
-|GitHub| |Build Status| |Docs| |CodeCov| |GPL license| |ArXiv|
+Differentiable and accelerated spherical transforms
+===================================================
 
-.. |GitHub| image:: https://img.shields.io/badge/GitHub-PyTemplate-brightgreen.svg?style=flat
-    :target: https://github.com/astro-informatics/code_template
-.. |Build Status| image:: https://github.com/astro-informatics/code_template/actions/workflows/python.yml/badge.svg
-    :target: https://github.com/astro-informatics/code_template/actions/workflows/python.yml
-.. |Docs| image:: https://readthedocs.org/projects/ansicolortags/badge/?version=latest
-    :target: https://astro-informatics.github.io/code_template
-.. |CodeCov| image:: https://codecov.io/gh/astro-informatics/code_template/branch/main/graph/badge.svg?token=8QMXOZK746
-    :target: https://codecov.io/gh/astro-informatics/code_template
-.. |GPL License| image:: https://img.shields.io/badge/License-GPL-blue.svg
-    :target: http://perso.crans.org/besson/LICENSE.html
-.. |ArXiv| image:: http://img.shields.io/badge/arXiv-xxxx.xxxxx-orange.svg?style=flat
-    :target: https://arxiv.org/abs/xxxx.xxxxx
+``S2SCAT`` is a Python package for computing third generation scattering covariances on the 
+sphere `(Mousset et al 2024) <https://arxiv.org/abs/2311.14670>`_ using 
+JAX or PyTorch. It leverages autodiff to provide differentiable transforms, which are 
+also deployable on hardware accelerators (e.g. GPUs and TPUs).
 
-<project-name>
-=================================================================================================================
+.. tip::
+    At launch ``S2SCAT`` also provides PyTorch implementations of underlying 
+    precompute transforms. In future releases this support will be extended to our 
+    on-the-fly algorithms. ``S2SCAT`` also provides JAX frontend support for the highly optimised 
+    but CPU bound SSHT C backends. These can be useful when GPU resources are not available or 
+    memory constraints are tight.
 
-Add some basic discussion about ``<project-name>`` here.
+Third Generation Scattering Covariances |:zap:|
+---------------------------------------------------------
 
-Installation
-============
+Details about the transform here with nice animations!
 
-Add some basic installation instructions here.
-    
-Documentation
-=============
 
-Link to the full documentation (when deployed).
+Contributors ✨
+-----------------------------------
 
-Contributors
-============
-Author names & Contributors
+Thanks goes to these wonderful people (`emoji
+key <https://allcontributors.org/docs/en/emoji-key>`_):
 
-Attribution
-===========
-A BibTeX entry for <project-name> is:
+.. raw:: html 
+
+    <embed>
+        <table>
+            <tbody>
+            <tr>
+                <td align="center" valign="top" width="14.28%"><a href="https://cosmomatt.github.io"><img src="https://avatars.githubusercontent.com/u/32554533?v=4?s=100" width="100px;" alt="Matt Price"/><br /><sub><b>Matt Price</b></sub></a><br /><a href="#ideas-CosmoMatt" title="Ideas, Planning, & Feedback">🤔</a> <a href="#code-CosmoMatt" title="Code">💻</a> <a href="#design-CosmoMatt" title="Design">🎨</a> <a href="#doc-CosmoMatt" title="Documentation">📖</a></td>
+                <td align="center" valign="top" width="14.28%"><a href="https://github.com/mousset"><img src="https://avatars.githubusercontent.com/u/37935237?v=4?s=100" width="100px;" alt="mousset"/><br /><sub><b>mousset</b></sub></a><br /><a href="#code-mousset" title="Code">💻</a> <a href="#design-mousset" title="Design">🎨</a> <a href="#ideas-mousset" title="Ideas, Planning, & Feedback">🤔</a></td>
+                <td align="center" valign="top" width="14.28%"><a href="http://www.jasonmcewen.org"><img src="https://avatars.githubusercontent.com/u/3181701?v=4?s=100" width="100px;" alt="Jason McEwen "/><br /><sub><b>Jason McEwen </b></sub></a><br /><a href="#ideas-jasonmcewen" title="Ideas, Planning, & Feedback">🤔</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </embed>
+
+We encourage contributions from any interested developers.
+
+Attribution |:books:|
+------------------
+
+Should this code be used in any way, we kindly request that the following
+article is referenced. A BibTeX entry for this reference may look like:
 
 .. code-block:: 
 
-     @article{<project-name>, 
-        author = {Author~List},
-         title = {"A totally amazing name"},
-       journal = {ArXiv},
-        eprint = {arXiv:0000.00000},
-          year = {what year is it?!}
-     }
+    @article{mousset:s2scat, 
+        author      = "Louise Mousset et al",
+        title       = "TBD",
+        journal     = "Astronomy & Astrophysics, submitted",
+        year        = "2024",
+        eprint      = "TBD"        
+    }
 
-License
-=======
+You might also like to consider citing our related papers on which this code builds:
 
-``<project-name>`` is released under the GPL-3 license (see `LICENSE.txt <https://github.com/astro-informatics/code_template/blob/main/LICENSE.txt>`_), subject to 
-the non-commercial use condition (see `LICENSE_EXT.txt <https://github.com/astro-informatics/code_template/blob/main/LICENSE_EXT.txt>`_)
+.. code-block:: 
+
+    @article{price:s2fft, 
+        author      = "Matthew A. Price and Jason D. McEwen",
+        title       = "Differentiable and accelerated spherical harmonic and Wigner transforms",
+        journal     = "Journal of Computational Physics, submitted",
+        year        = "2023",
+        eprint      = "arXiv:2311.14670"        
+    }
 
 .. code-block::
+   
+    @article{price:s2wav, 
+        author      = {Matthew A. Price and Alicja Polanska and Jessica Whitney and Jason D. McEwen},
+        title       = {"Differentiable and accelerated directional wavelet transform on the sphere and ball"},
+        eprint      = {arXiv:2402.01282},
+        year        = {2024}
+    }
 
-     LatentWaves
-     Copyright (C) 2022 Author names & contributors
+License |:memo:|
+----------------
 
-     This program is released under the GPL-3 license (see LICENSE.txt), 
-     subject to a non-commercial use condition (see LICENSE_EXT.txt).
+We provide this code under an MIT open-source licence with the hope that
+it will be of use to a wider community.
 
-     This program is distributed in the hope that it will be useful,
-     but WITHOUT ANY WARRANTY; without even the implied warranty of
-     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+Copyright 2024 Matthew Price, Louise Mousset, Erwan Allys and Jason McEwen
+
+``S2SCAT`` is free software made available under the MIT License. For
+details see the LICENSE file.
 
 .. bibliography:: 
     :notcited:
     :list: bullet
+
+.. * :ref:`modindex`
 
 .. toctree::
    :hidden:
@@ -75,27 +102,17 @@ the non-commercial use condition (see `LICENSE_EXT.txt <https://github.com/astro
 
    user_guide/install
 
-
 .. toctree::
    :hidden:
-   :maxdepth: 2
-   :caption: Background
-
-   background/index
-
-.. toctree::
-   :hidden:
-   :maxdepth: 1
+   :maxdepth: 3
    :caption: Interactive Tutorials
    
-   tutorials/example_notebook.nblink
+   tutorials/index
 
 .. toctree::
    :hidden:
-   :maxdepth: 2
+   :maxdepth: 3
    :caption: API
 
    api/index
-
-
 

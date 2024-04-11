@@ -15,7 +15,7 @@
 Scattering covariance transform on the sphere
 =================================================================================================================
 
-`S2SCAT` is a Python package for computing third generation scattering covariances on the 
+``S2SCAT`` is a Python package for computing third generation scattering covariances on the 
 sphere `(Mousset et al 2024) <https://arxiv.org/abs/2311.14670>`_ using 
 JAX or PyTorch. It leverages autodiff to provide differentiable transforms, which are 
 also deployable on hardware accelerators (e.g. GPUs and TPUs).
@@ -32,7 +32,7 @@ referenced. A BibTeX entry for this reference may look like:
 .. code-block:: 
 
     @article{mousset:s2scat, 
-        author      = "Louise Mousset, Matthew A. Price, Erwan Allys and Jason D. McEwen",
+        author      = "Louise Mousset et al",
         title       = "TBD",
         journal     = "Astronomy & Astrophysics, submitted",
         year        = "2024",
@@ -68,7 +68,7 @@ License
 We provide this code under an MIT open-source licence with the hope that
 it will be of use to a wider community.
 
-Copyright 2023 Matthew Price, Jason McEwen and contributors.
+Copyright 2024 Matthew Price, Louise Mousset, Erwan Allys and Jason McEwen
 
-`S2FFT` is free software made available under the MIT License. For
+``S2SCAT`` is free software made available under the MIT License. For
 details see the LICENSE file.

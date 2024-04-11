@@ -126,7 +126,7 @@ referenced. A BibTeX entry for this reference may look like:
 
 ```
     @article{mousset:s2scat, 
-        author      = "Louise Mousset, Matthew A. Price, Erwan Allys and Jason D. McEwen",
+        author      = "Louise Mousset et al",
         title       = "TBD",
         journal     = "Astronomy & Astrophysics, submitted",
         year        = "2024",

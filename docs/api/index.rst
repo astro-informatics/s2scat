@@ -1,16 +1,15 @@
+:html_theme.sidebar_secondary.remove:
+
 **************************
-Namespaces
+API
 **************************
-Automatically generated documentation for **<Project-name>** APIs. All functionality is accessible through a pip installation of the **<Project-name>** package.
+Automatically generated documentation for ``S2SCAT`` APIs. All functionality is accessible 
+through a pip installation of the ``S2SCAT`` package. Below is an overview of the 
+directory structure for the software.
 
-.. tabs:: 
-	
-	.. tab:: Logs
-
-		.. include:: logs.rst
-	
-	.. tab:: some
-
-	.. tab:: other
-
-	.. tab:: apis
+.. toctree::
+   :hidden:
+   :maxdepth: 1
+   :caption: Namespaces
+   
+   utility/index

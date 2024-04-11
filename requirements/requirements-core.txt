@@ -4,5 +4,6 @@ numpy
 # JAX optimisation routines
 jaxopt
 
-# Spherical JAX pacakges
+# Sister packages
 s2wav >= 1.0.1
+s2fft >= 1.1.0
