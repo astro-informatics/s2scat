@@ -23,7 +23,7 @@ memory constraints are tight.
 
 ## Third Generation Scattering Covariances :zap:
 
-Details about the transform here with nice animations.
+Details about the transform here with nice animations!
 
 
 ## Installation :computer:
@@ -108,6 +108,7 @@ For further details on usage see the associated [notebooks](add_link_here).
 <!-- prettier-ignore-end -->
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
+
 
 ## Attribution :books: 
 
