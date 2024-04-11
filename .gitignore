@@ -15,8 +15,8 @@ notebooks/.temp.*
 docs/assets/static_notebooks/.ipynb_checkpoints/
 docs/assets/static_notebooks/.temp.*
 dist/
-s2fft.egg-info/
+s2scat.egg-info/
 resources/
 .matrices/
-s2fft.code-workspace
+s2scat.code-workspace
 .tox
