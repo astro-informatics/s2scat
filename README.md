@@ -98,7 +98,7 @@ scientific computing or machine learning applications!
 
 For further details on usage see the associated [notebooks](add_link_here).
 
-## Contributors ✨
+## Contributors
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore-start -->
