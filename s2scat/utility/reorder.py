@@ -4,19 +4,18 @@ from functools import partial
 from typing import List, Tuple
 
 
-@partial(jit, static_argnums=(1, 2, 3))
+@partial(jit, static_argnums=(1, 2))
 def nested_list_to_list_of_arrays(
-    Nj1j2: List[List[List[jnp.ndarray]]],
-    N: int,
-    J_min: int,
-    J_max: int,
+    Nj1j2: List[List[List[jnp.ndarray]]], J_min: int, J_max: int
 ) -> List[jnp.ndarray]:
     """some docstrings"""
     Nj1j2_flat = []
     for j1 in range(J_min, J_max):
+        idx1 = j1 - J_min
         Nj1j2_flat_for_j2 = []
         for j2 in range(j1 + 1, J_max + 1):
-            Nj1j2_flat_for_j2.append(Nj1j2[j2 - J_min - 1][j1 - J_min])
+            idx2 = j2 - J_min - 1
+            Nj1j2_flat_for_j2.append(Nj1j2[idx2][idx1])
         Nj1j2_flat.append(jnp.array(Nj1j2_flat_for_j2))
     return Nj1j2_flat
 

@@ -4,6 +4,14 @@ from functools import partial
 from typing import List, Tuple
 
 
+@partial(jit)
+def normalize_map(f: jnp.ndarray) -> jnp.ndarray:
+    """some docstrings"""
+    f -= jnp.nanmean(f)
+    f /= jnp.nanstd(f)
+    return f
+
+
 @partial(jit, static_argnums=(1))
 def compute_mean_variance(flm: jnp.ndarray, L: int) -> Tuple[jnp.float64, jnp.float64]:
     """some docstrings"""
@@ -25,11 +33,13 @@ def compute_P00(
     """some docstrings"""
     P00 = []
     for j2 in range(J_min, J_max + 1):
-        P00 = add_to_P00(P00, W[j2 - J_min], Q[j2 - J_min])
+        idx = j2 - J_min
+        P00 = add_to_P00(P00, W[idx], Q[idx])
 
     if N is not None:
         for j2 in range(J_min, J_max + 1):
-            P00[j2 - J_min] /= N[j2 - J_min]
+            idx = j2 - J_min
+            P00[idx] /= N[idx]
     P00 = jnp.concatenate(P00) if S else P00
     return P00
 
@@ -102,22 +112,20 @@ def apply_norm(
 ) -> Tuple[List[jnp.ndarray], List[jnp.ndarray], List[jnp.ndarray], List[jnp.ndarray]]:
     """some docstrings"""
     for j2 in range(J_min, J_max + 1):
-        S1[j2 - J_min] /= jnp.sqrt(N[j2 - J_min])
-        P00[j2 - J_min] /= N[j2 - J_min]
+        idx = j2 - J_min
+        S1[j2 - J_min] /= jnp.sqrt(N[idx])
+        P00[j2 - J_min] /= N[idx]
 
     for j1 in range(J_min, J_max):
+        idx = j1 - J_min
         norm = jnp.einsum(
             "j,n->jn",
-            1 / jnp.sqrt(N[j1 - J_min]),
-            1 / jnp.sqrt(N[j1 - J_min]),
+            1 / jnp.sqrt(N[idx]),
+            1 / jnp.sqrt(N[idx]),
             optimize=True,
         )
 
-        C01[j1 - J_min] = jnp.einsum(
-            "ajn,jn->ajn", C01[j1 - J_min], norm, optimize=True
-        )
-        C11[j1 - J_min] = jnp.einsum(
-            "abjkn,jk->abjkn", C11[j1 - J_min], norm, optimize=True
-        )
+        C01[j1 - J_min] = jnp.einsum("ajn,jn->ajn", C01[idx], norm, optimize=True)
+        C11[j1 - J_min] = jnp.einsum("abjkn,jk->abjkn", C11[idx], norm, optimize=True)
 
     return S1, P00, C01, C11
