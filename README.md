@@ -14,7 +14,7 @@
 > At launch `S2SCAT` provides JAX frontend support for the highly optimised but CPU bound SSHT C backends. These can be useful when GPU resources are not available or memory constraints are tight.
 
 
-## Third Generation Scattering Covariances :zap:
+## Third Generation Scattering Covariances :dna:
 
 Details about the transform here with nice animations!
 
@@ -81,7 +81,7 @@ L = _   # Harmonic bandlimit
 N = _   # Azimuthal bandlimit 
 flm = _ # Harmonic coefficients of the input signal 
 
-wavelets= s2wav.filters.filters_directional_vectorised(L, N)[0]
+wavelets = s2wav.filters.filters_directional_vectorised(L, N)[0]
 matrices = s2scat.operators.matrices.generate_recursive_matrices(L, N)
 
 covariances = s2scat.core.scatter.directional(flm, L, N, filters=wavelets, precomps=precomps)
@@ -89,7 +89,7 @@ covariances = s2scat.core.scatter.directional(flm, L, N, filters=wavelets, preco
 
 For further details on usage see the [documentation](https://astro-informatics.github.io/s2scat/) and associated [notebooks](add_link_here).
 
-## Scalable C JAX Frontends :bulb:
+## C Backend CPU Support :bulb:
 
 `S2SCAT` also provides JAX support for existing C backend libraries which are memory efficient but CPU bound; at launch we support [`SSHT`](https://github.com/astro-informatics/ssht), however this could be extended straightforwardly. This works by wrapping python bindings with custom JAX frontends.
 
@@ -101,7 +101,7 @@ L = _   # Harmonic bandlimit
 N = _   # Azimuthal bandlimit 
 flm = _ # Harmonic coefficients of the input signal 
 
-wavelet = s2wav.filters.filters_directional_vectorised(L, N)[0]
+wavelets = s2wav.filters.filters_directional_vectorised(L, N)[0]
 covariances = s2scat.core.scatter.directional_c(flm, L, N, filters=wavelets)
 ```
 
