@@ -39,6 +39,24 @@ def make_flm_full(flm_real_only: jnp.ndarray, L: int) -> jnp.ndarray:
     return flm
 
 
+@partial(jit, static_argnums=(1))
+def make_flm_real(flm: jnp.ndarray, L: int) -> jnp.ndarray:
+    r"""Compresses harmonic coefficients of a real signal into positive coefficients only
+        which leverages hermitian symmetry.
+
+    Args:
+        flm (jnp.ndarray): Full set of spherical harmonic coefficients
+        L (int): Spherical harmonic bandlimit.
+
+    Returns:
+        jnp.ndarray: Positive half-plane of the spherical harmonic coefficients
+
+    Notes:
+        For real (spin-0) signals the harmonic coefficients obey :math:`f^*_{\ell, m} = (-1)^m f_{\ell, -m}`.
+    """
+    return flm[:, L - 1 :]
+
+
 @partial(jit, static_argnums=(0, 1))
 def quadrature(L: int, J_min: int = 0) -> List[jnp.ndarray]:
     r"""Generates spherical quadrature weights associated with McEwen-Wiaux sampling [1].
@@ -168,7 +186,6 @@ def _flm_to_analysis_vect(
     )(flmn)
 
 
-# TODO: Tidy this mess up.
 def _flm_to_analysis_looped(
     flmn: jnp.ndarray,
     Lj: int,
@@ -176,28 +193,17 @@ def _flm_to_analysis_looped(
     N: int = 1,
     J_min: int = 0,
     J_max: int = None,
-    reality: bool = False,
     filters: Tuple[jnp.ndarray] = None,
 ) -> Tuple[jnp.ndarray]:
     """Private function which loops over the partial analysis transform (C bound functions)."""
 
     f_wav = [[] for _ in range(J_min, J_max + 1)]
+    temp = filters[:, :Lj, L - Lj : L - 1 + Lj]
     for n in range(2 * N - 1):
         f_wav_n = wavelet.flm_to_analysis(
-            flmn[n],
-            Lj,
-            N,
-            J_min,
-            J_max,
-            2.0,
-            "mw",
-            None,
-            reality,
-            filters[:, :Lj, L - Lj : L - 1 + Lj],
-            None,
-            True,
+            flmn[n], Lj, N, J_min, J_max, 2.0, "mw", None, True, temp, None, True
         )
         for j in range(J_min, J_max + 1):
-            f_wav[j].append(f_wav_n[j])
+            f_wav[j - J_min].append(f_wav_n[j - J_min])
 
     return [jnp.array(f_wav[i]) for i in range(len(f_wav))]

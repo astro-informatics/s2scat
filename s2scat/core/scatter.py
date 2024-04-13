@@ -56,10 +56,10 @@ def directional(
         :math:`L \leq 512` the precompute approach is a better choice, beyond which we recommend the
         users switch to recursive transforms or the C backend functionality.
     """
-    if precomps == None:
+    if precomps is None:
         raise ValueError("Must provide precomputed kernels for this transform!")
 
-    if filters == None:
+    if filters is None:
         raise ValueError("Must provide wavelet filters for this transform!")
 
     ### Configure maximum scale, impose reality, define quadrature
@@ -82,7 +82,7 @@ def directional(
 
         ### Compute: Mlm = SHT(|W|)
         Mlm = spherical._forward_harmonic_vect(
-            jnp.abs(W[j2 - J_min]), j2, Lj2, J_min, J_max, False, precomps, recursive
+            jnp.abs(W[j2 - J_min]), j2, Lj2, J_min, J_max, reality, precomps, recursive
         )
 
         ### Compute: S1 and P00 statistics
@@ -153,7 +153,7 @@ def directional_c(
         optimised. All gradient functionality is supported, peak memory overhead is
         :math:`\mathcal{O}(NL^2)`, and this variant can scale to very high :math:`L \geq 4096`.
     """
-    if filters == None:
+    if filters is None:
         raise ValueError("Must provide wavelet filters for this transform!")
 
     ### Configure maximum scale, impose reality, define quadrature
@@ -168,6 +168,7 @@ def directional_c(
     W = spherical._first_flm_to_analysis(
         flm, L, N, J_min, reality, filters, use_c_backend=True
     )
+    # W = W.real if reality else W
 
     ### Compute S1, P00, and Nj1j2
     Nj1j2, S1, P00 = [], [], []
@@ -184,7 +185,7 @@ def directional_c(
         ### Compute: Nj1j2
         if j2 > J_min:
             val = spherical._flm_to_analysis_looped(
-                Mlm, Lj2, L, N, J_min, j2 - 1, True, filters
+                Mlm, Lj2, L, N, J_min, j2 - 1, filters
             )
 
             Nj1j2.append(val)
