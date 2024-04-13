@@ -103,7 +103,7 @@ def compute_C01_and_C11(
         Tuple[jnp.ndarray]: Fourth and sixth order scattering covariance statistics.
 
     Notes:
-        The fourth order statistic :math:`C01=\text{Cov}\big [ \Psi^\lambda_1 f, \Psi^{\lambda_1} | \Psi^{\lambda_2} f | \big ]`
+        The fourth order statistic :math:`\text{C01} = \text{Cov}\big [ \Psi^{\lambda_1} f, \Psi^{\lambda_1} | \Psi^{\lambda_2} f | \big ]`
         can be seen as the covariance between power on scales :math:`\lambda_1=(j_1,n_1)`
         and :math:`\lambda_2=(j_2,n_2)`, and is hence a fourth order statistic which is
         sensitive to directional multiscale structure, e.g. filaments. C11 behaves similarly,
@@ -120,7 +120,7 @@ def compute_C01_and_C11(
 
 @partial(jit, static_argnums=(2))
 def add_to_S1(S1: List[jnp.float64], Mlm: jnp.ndarray, L: int) -> List[jnp.float64]:
-    r"""Computes the mean field statistic :math:`\langle |\Psi^\lambda f| \rangle` at scale :math:`\lambda`.
+    r"""Computes the mean field statistic :math:`\text{S1}_j = \langle |\Psi^\lambda f| \rangle` at scale :math:`j`.
 
     Args:
         S1 (List[jnp.float64]): List in which to append the mean field statistic.
@@ -128,7 +128,7 @@ def add_to_S1(S1: List[jnp.float64], Mlm: jnp.ndarray, L: int) -> List[jnp.float
         L (int): Spherical harmonic bandlimit.
 
     Returns:
-        List[jnp.float64]: List into which :math:`S1_j` has been appended.
+        List[jnp.float64]: List into which :math:`\text{S1}_j` has been appended.
     """
     val = Mlm[:, 0, L - 1] / (2 * jnp.sqrt(jnp.pi))
     S1.append(jnp.real(val))
@@ -139,7 +139,7 @@ def add_to_S1(S1: List[jnp.float64], Mlm: jnp.ndarray, L: int) -> List[jnp.float
 def add_to_P00(
     P00: List[jnp.float64], W: jnp.ndarray, Q: jnp.ndarray
 ) -> List[jnp.float64]:
-    r"""Computes the second order power statistic :math:`\langle |\Psi^\lambda f|^2 \rangle` at scale :math:`\lambda`.
+    r"""Computes the second order power statistic :math:`\text{P00}_j = \langle |\Psi^\lambda f|^2 \rangle` at scale :math:`j`.
 
     Args:
         P00 (List[jnp.float64]): List in which to append the second order power statistic.
@@ -147,7 +147,7 @@ def add_to_P00(
         Q (List[jnp.ndarray]): Quadrautre weights of given sampling pattern at scale :math:`j`.
 
     Returns:
-        List[jnp.float64]: List into which :math:`P00_j` has been appended.
+        List[jnp.float64]: List into which :math:`\text{P00}_j` has been appended.
     """
     val = jnp.sum((jnp.abs(W) ** 2) * Q[None, :, None], axis=(-1, -2)) / (4 * jnp.pi)
     P00.append(jnp.real(val))
@@ -158,7 +158,7 @@ def add_to_P00(
 def add_to_C01(
     C01: List[jnp.float64], Nj1j2: jnp.ndarray, W: jnp.ndarray, Q: jnp.ndarray
 ) -> List[jnp.float64]:
-    r"""Computes the fourth order covariance statistic :math:`\text{Cov}\big [ \Psi^\lambda_1 f, \Psi^{\lambda_1} | \Psi^{\lambda_2} f | \big ]` at scale :math:`j`.
+    r"""Computes the fourth order covariance statistic :math:`\text{C01}_j = \text{Cov}\big [ \Psi^{\lambda_1} f, \Psi^{\lambda_1} | \Psi^{\lambda_2} f | \big ]` at scale :math:`j`.
 
     Args:
         C01 (List[jnp.float64]): List in which to append the fourth order covariance statistic.
@@ -167,7 +167,7 @@ def add_to_C01(
         Q (List[jnp.ndarray]): Quadrautre weights of given sampling pattern at scale :math:`j`.
 
     Returns:
-        List[jnp.float64]: List into which :math:`C01_j` has been appended.
+        List[jnp.float64]: List into which :math:`\text{C01}_j` has been appended.
     """
     val = jnp.einsum("ajntp,ntp,t->ajn", jnp.conj(Nj1j2), W, Q, optimize=True)
     C01.append(jnp.real(val))
@@ -178,7 +178,7 @@ def add_to_C01(
 def add_to_C11(
     C11: List[jnp.float64], Nj1j2: jnp.ndarray, Q: jnp.ndarray
 ) -> List[jnp.float64]:
-    r"""Computes the sixth order covariance statistic :math:`\text{Cov}\big [ \Psi^{\lambda_1} | \Psi^{\lambda_3} f |, \Psi^{\lambda_1} | \Psi^{\lambda_2} f | \big ]` at scale :math:`j`.
+    r"""Computes the sixth order covariance statistic :math:`\text{C11}_j = \text{Cov}\big [ \Psi^{\lambda_1} | \Psi^{\lambda_3} f |, \Psi^{\lambda_1} | \Psi^{\lambda_2} f | \big ]` at scale :math:`j`.
 
     Args:
         C11 (List[jnp.float64]): List in which to append the sixth order covariance statistic.
@@ -186,7 +186,7 @@ def add_to_C11(
         Q (List[jnp.ndarray]): Quadrautre weights of given sampling pattern at scale :math:`j`.
 
     Returns:
-        List[jnp.float64]: List into which :math:`C11_j` has been appended.
+        List[jnp.float64]: List into which :math:`\text{C11}_j` has been appended.
     """
     val = jnp.einsum("ajntp,bkntp, t->abjkn", Nj1j2, jnp.conj(Nj1j2), Q, optimize=True)
     C11.append(jnp.real(val))
@@ -208,7 +208,7 @@ def apply_norm(
     Args:
         S1 (List[jnp.float64]): Mean field statistic :math:`\langle |\Psi^\lambda f| \rangle`.
         P00 (List[jnp.float64]): Second order power statistic :math:`\langle |\Psi^\lambda f|^2 \rangle`.
-        C01 (List[jnp.float64]): Fourth order covariance statistic :math:`\text{Cov}\big [ \Psi^\lambda_1 f, \Psi^{\lambda_1} | \Psi^{\lambda_2} f | \big ]`.
+        C01 (List[jnp.float64]): Fourth order covariance statistic :math:`\text{Cov}\big [ \Psi^{\lambda_1} f, \Psi^{\lambda_1} | \Psi^{\lambda_2} f | \big ]`.
         C11 (List[jnp.float64]): Sixth order covariance statistic :math:`\text{Cov}\big [ \Psi^{\lambda_1} | \Psi^{\lambda_3} f |, \Psi^{\lambda_1} | \Psi^{\lambda_2} f | \big ]`.
         N (List[jnp.ndarray]): Multiscale normalisation factors for given signal.
         J_min (int): Minimum dyadic wavelet scale to consider.

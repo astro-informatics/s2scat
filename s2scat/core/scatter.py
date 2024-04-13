@@ -150,7 +150,7 @@ def directional_c(
         `S2FFT <https://github.com/astro-informatics/s2fft/tree/main>`_. As such, it is
         currently limited to CPU compute and cannot be JIT compiled. However, this approach
         can still be very fast as the underlying spherical harmonic libraries are extremely
-        optimised. All gradient functionality is supported, peak memory overhead is
+        optimised. Reverse mode gradient functionality is supported, peak memory overhead is
         :math:`\mathcal{O}(NL^2)`, and this variant can scale to very high :math:`L \geq 4096`.
     """
     if filters is None:

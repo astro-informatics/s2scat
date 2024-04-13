@@ -8,23 +8,34 @@
 
 # Scattering covariance transform on the sphere
 
-`S2SCAT` is a Python package for computing third generation scattering covariances on the 
-sphere [(Mousset et al 2024)](https://arxiv.org/abs/2311.14670) using 
-JAX or PyTorch. It leverages autodiff to provide differentiable transforms, which are 
-also deployable on hardware accelerators (e.g. GPUs and TPUs).
+`S2SCAT` is a Python package for computing third generation scattering covariances on the sphere [(Mousset et al 2024)](https://arxiv.org/abs/2311.14670) using JAX. It leverages autodiff to provide differentiable transforms, which are also deployable on hardware accelerators (e.g. GPUs and TPUs). Scattering covariances are useful both for field-level emulation of complex non-Gaussian textures and for statistical compression of high dimensional field-level data, a key step of e.g. simulation based inference [(Cranmer et al 2020)](https://www.pnas.org/doi/abs/10.1073/pnas.1912789117).
 
 > [!TIP]
-At launch `S2SCAT` also provides PyTorch implementations of underlying 
-precompute transforms. In future releases this support will be extended to our 
-on-the-fly algorithms. `S2SCAT` also provides JAX frontend support for the highly optimised 
-but CPU bound SSHT C backends. These can be useful when GPU resources are not available or 
-memory constraints are tight.
+> At launch `S2SCAT` provides JAX frontend support for the highly optimised but CPU bound SSHT C backends. These can be useful when GPU resources are not available or memory constraints are tight.
 
 
 ## Third Generation Scattering Covariances :zap:
 
 Details about the transform here with nice animations!
 
+
+## Package Directory Structure :art:
+
+``` bash
+s2scat/  
+├── core/               # Top-level functionality:
+│      ├─ scatter.py            # - Scattering covariance transform.
+│      ├─ compress.py           # - Statistical compression functions.
+│    
+├── operators/          # Internal functionality:
+│      ├─ spherical.py          # - Specific spherical operations, e.g. batched SHTs.
+│      ├─ matrices.py           # - Wrappers to generate cached values. 
+│
+├── utility/            # Convenience functionality:
+│      ├─ reorder.py            # - Reindexing and converting list and arrays.
+│      ├─ statistics.py         # - Calculation of covariance statistics. 
+│      ├─ plotting.py           # - Plotting functions for signals and statistics.
+```
 
 ## Installation :computer:
 
@@ -35,7 +46,7 @@ into the active python environment by [pip](https://pypi.org) when running
 ``` bash
 pip install s2scat
 ```
-This will install all core functionality which includes JAX support (including PyTorch support).
+This will install all core functionality which includes full JAX support.
 
 Alternatively, the `S2SCAT` package may be installed directly from GitHub by cloning this 
 repository and then running 
@@ -53,13 +64,11 @@ pip install -r requirements/requirements-tests.txt
 pytest tests/  
 ```
 
-Documentation for the released version is available [here](https://astro-informatics.github.io/s2scat/).  To build the documentation locally run
+Documentation for the released version is available [here](https://astro-informatics.github.io/s2scat/). To build the documentation locally run
 
 ``` bash
 pip install -r requirements/requirements-docs.txt
-cd docs 
-make html
-open _build/html/index.html
+cd docs && make html && open _build/html/index.html
 ```
 
 ## Usage :rocket:
@@ -67,33 +76,38 @@ open _build/html/index.html
 To import and use `S2SCAT` is as simple follows:
 
 ``` python
-Code example here. 
+import s2scat, s2wav
+L = _   # Harmonic bandlimit 
+N = _   # Azimuthal bandlimit 
+flm = _ # Harmonic coefficients of the input signal 
+
+wavelets= s2wav.filters.filters_directional_vectorised(L, N)[0]
+matrices = s2scat.operators.matrices.generate_recursive_matrices(L, N)
+
+covariances = s2scat.core.scatter.directional(flm, L, N, filters=wavelets, precomps=precomps)
 ```
 
-For further details on usage see the [documentation](https://astro-informatics.github.io/s2scat/) 
-and associated [notebooks](add_link_here).
+For further details on usage see the [documentation](https://astro-informatics.github.io/s2scat/) and associated [notebooks](add_link_here).
 
-> [!NOTE]  
-> We also provide PyTorch support for the precompute version of our transforms. These 
-> are called through forward/inverse_torch(). Full PyTorch support will be provided in 
-> future releases.
+## Scalable C JAX Frontends :bulb:
 
-## C/C++ JAX Frontends for SSHT/HEALPix :bulb:
+`S2SCAT` also provides JAX support for existing C backend libraries which are memory efficient but CPU bound; at launch we support [`SSHT`](https://github.com/astro-informatics/ssht), however this could be extended straightforwardly. This works by wrapping python bindings with custom JAX frontends.
 
-`S2SCAT` also provides JAX support for existing C backend libraries which are memory efficient 
-but CPU bound; at launch we support [`SSHT`](https://github.com/astro-informatics/ssht), 
-however this could be extended straightforwardly. This works by wrapping python bindings 
-with custom JAX frontends.
-
-For example, one may call these alternate backends for the spherical harmonic transform by:
+For example, one may call these alternate backends for the scattering covariance transform by:
 
 ``` python
-Code example here. 
+import s2scat, s2wav
+L = _   # Harmonic bandlimit 
+N = _   # Azimuthal bandlimit 
+flm = _ # Harmonic coefficients of the input signal 
+
+wavelet = s2wav.filters.filters_directional_vectorised(L, N)[0]
+covariances = s2scat.core.scatter.directional_c(flm, L, N, filters=wavelets)
 ```
 
-All of these JAX frontends supports out of the box reverse mode automatic differentiation, 
-and under the hood is simply linking to the C/C++ packages you are familiar with. In this 
-way `S2SCAT` supports existing backend transforms with gradient functionality for modern 
+This JAX frontend supports out of the box reverse mode automatic differentiation, 
+and under the hood is simply linking to the C packages you are familiar with. In this 
+way `S2SCAT` supports existing software and provides gradient functionality for modern 
 scientific computing or machine learning applications!
 
 For further details on usage see the associated [notebooks](add_link_here).

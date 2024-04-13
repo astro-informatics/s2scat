@@ -34,8 +34,7 @@ def generate_precompute_matrices(
         approach means that the majority of the memory overhead is incurred for the highest
         wavelet scale :math:`J_{\text{max}}` alone.
 
-        [1] Price, Matthew A., and Jason D. McEwen. "Differentiable and accelerated spherical
-            harmonic and Wigner transforms." arXiv preprint arXiv:2311.14670 (2023).
+        [1] Price, Matthew A., and Jason D. McEwen. "Differentiable and accelerated spherical harmonic and Wigner transforms." arXiv preprint arXiv:2311.14670 (2023).
     """
     J_max = samples.j_max(L)
     precomps = generate_full_precomputes(
@@ -73,8 +72,7 @@ def generate_recursive_matrices(
         computed on-the-fly however computing and caching them a priori can improve
         the efficiency of the recursion.
 
-        [1] Price, Matthew A., and Jason D. McEwen. "Differentiable and accelerated spherical
-            harmonic and Wigner transforms." arXiv preprint arXiv:2311.14670 (2023).
+        [1] Price, Matthew A., and Jason D. McEwen. "Differentiable and accelerated spherical harmonic and Wigner transforms." arXiv preprint arXiv:2311.14670 (2023).
     """
     J_max = samples.j_max(L)
     precomps = [[], [], []]

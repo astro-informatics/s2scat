@@ -31,10 +31,10 @@ def test_forward_pass(L: int, N: int, J_min: int):
 
     filters = s2wav.filters.filters_directional_vectorised(L, N)[0]
 
-    matrices_recursive = s2scat.utility.kernels.generate_recursive_matrices(
+    matrices_recursive = s2scat.operators.matrices.generate_recursive_matrices(
         L, N, J_min, reality
     )
-    matrices_precompute = s2scat.utility.kernels.generate_precompute_matrices(
+    matrices_precompute = s2scat.operators.matrices.generate_precompute_matrices(
         L, N, J_min, reality
     )
 
@@ -71,7 +71,7 @@ def test_forward_pass_c_backend(L: int, N: int, J_min: int):
 
     filters = s2wav.filters.filters_directional_vectorised(L, N)[0]
 
-    matrices_precompute = s2scat.utility.kernels.generate_precompute_matrices(
+    matrices_precompute = s2scat.operators.matrices.generate_precompute_matrices(
         L, N, J_min, reality
     )
     coeffs_precompute = s2scat.core.scatter.directional(

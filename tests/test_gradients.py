@@ -36,9 +36,11 @@ def test_gradients(L: int, N: int, J_min: int, reality: bool, recursive: bool):
     filters = s2wav.filters.filters_directional_vectorised(L, N)[0]
 
     matrices = (
-        s2scat.utility.kernels.generate_recursive_matrices(L, N, J_min, reality)
+        s2scat.operators.matrices.generate_recursive_matrices(L, N, J_min, reality)
         if recursive
-        else s2scat.utility.kernels.generate_precompute_matrices(L, N, J_min, reality)
+        else s2scat.operators.matrices.generate_precompute_matrices(
+            L, N, J_min, reality
+        )
     )
 
     def func(flm):

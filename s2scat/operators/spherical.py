@@ -70,8 +70,7 @@ def quadrature(L: int, J_min: int = 0) -> List[jnp.ndarray]:
             corresponding to each wavelet scale :math:`j \in [J_{\text{min}}, J_{\text{max}}]`.
 
     Notes:
-        [1] McEwen, Jason D., and Yves Wiaux. "A novel sampling theorem on the sphere."
-            IEEE Transactions on Signal Processing 59.12 (2011): 5876-5887.
+        [1] McEwen, Jason D., and Yves Wiaux. "A novel sampling theorem on the sphere." IEEE Transactions on Signal Processing 59.12 (2011): 5876-5887.
     """
     J_max = s2wav.samples.j_max(L)
     quads = []
