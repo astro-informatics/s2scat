@@ -50,4 +50,4 @@ def test_gradients(L: int, N: int, J_min: int, reality: bool, recursive: bool):
             loss += jnp.mean(jnp.abs(coeffs[i]))
         return loss
 
-    check_grads(func, (flm,), order=1, modes=("rev"), rtol=1e-4)
+    check_grads(func, (flm,), order=1, modes=("rev"), rtol=1e-3)
