@@ -14,7 +14,20 @@ from s2fft.transforms.spherical import forward_jax
 
 @partial(jit, static_argnums=(1))
 def make_flm_full(flm_real_only: jnp.ndarray, L: int) -> jnp.ndarray:
-    """Some docstrings"""
+    r"""Reflects real harmonic coefficients to a complete set of coefficients
+        using hermitian symmetry.
+
+    Args:
+        flm_real_only (jnp.ndarray): Positive half-plane of the spherical harmonic coefficients.
+        L (int): Spherical harmonic bandlimit.
+
+    Returns:
+        jnp.ndarray: Full set of spherical harmonic coefficients, reflected across :math:`m=0`
+            by using hermitian symmetry.
+
+    Notes:
+        For real (spin-0) signals the harmonic coefficients obey :math:`f^*_{\ell, m} = (-1)^m f_{\ell, -m}`.
+    """
     # Create and store signs
     msigns = (-1) ** jnp.arange(1, L)
 
@@ -27,8 +40,21 @@ def make_flm_full(flm_real_only: jnp.ndarray, L: int) -> jnp.ndarray:
 
 
 @partial(jit, static_argnums=(0, 1))
-def quadrature(L: int, J_min: int):
-    """Some docstrings"""
+def quadrature(L: int, J_min: int = 0) -> List[jnp.ndarray]:
+    r"""Generates spherical quadrature weights associated with McEwen-Wiaux sampling [1].
+
+    Args:
+        L (int): Spherical harmonic bandlimit.
+        J_min(int, optional): Minimum dyadic wavelet scale to consider. Defaults to 0.
+
+    Returns:
+        List[jnp.ndarray]: Multiresolution quadrature weights for each :math:`\theta`
+            corresponding to each wavelet scale :math:`j \in [J_{\text{min}}, J_{\text{max}}]`.
+
+    Notes:
+        [1] McEwen, Jason D., and Yves Wiaux. "A novel sampling theorem on the sphere."
+            IEEE Transactions on Signal Processing 59.12 (2011): 5876-5887.
+    """
     J_max = s2wav.samples.j_max(L)
     quads = []
     for j in range(J_min, J_max + 1):
@@ -48,7 +74,7 @@ def _forward_harmonic_vect(
     precomps: List[List[jnp.ndarray]],
     recursive: bool = True,
 ) -> jnp.ndarray:
-    """Some docstrings"""
+    """Private function which batches the forward SHT pass"""
     idx = j - J_min if j < J_max else j - J_min - 1
     return vmap(
         partial(
@@ -67,7 +93,7 @@ def _forward_harmonic_vect(
 def _forward_harmonic_looped(
     f: jnp.ndarray, Lj: int, N: int, reality: bool
 ) -> jnp.ndarray:
-    """Some docstrings"""
+    """Private function for looped forward SHT pass (C bound functions)."""
     flm = jnp.zeros((2 * N - 1, Lj, 2 * Lj - 1), dtype=jnp.complex128)
     for n in range(2 * N - 1):
         flm = flm.at[n].add(ssht_forward(jnp.abs(f[n]), Lj, 0, reality, 0))
@@ -85,7 +111,7 @@ def _first_flm_to_analysis(
     recursive: bool = True,
     use_c_backend: bool = False,
 ) -> jnp.ndarray:
-    """Some docstrings"""
+    """Private function which interfaces with `s2wav.flm_to_analysis <https://astro-informatics.github.io/s2wav/api/transforms/wavelet.html#s2wav.transforms.wavelet.flm_to_analysis>`_."""
     if use_c_backend and not recursive:
         raise ValueError(
             "C backend functions do not support full precompute transform."
@@ -119,7 +145,8 @@ def _flm_to_analysis_vect(
     precomps: List[List[jnp.ndarray]] = None,
     recursive: bool = True,
 ) -> Tuple[jnp.ndarray]:
-    """Some docstrings"""
+    """Private function with batches the partial analysis transform."""
+
     args = {} if recursive else {"_precomp_shift": False}
     idx = j - J_min
     preslice = precomps[2][:idx] if recursive else [0, 0, precomps[2][:idx]]
@@ -152,7 +179,8 @@ def _flm_to_analysis_looped(
     reality: bool = False,
     filters: Tuple[jnp.ndarray] = None,
 ) -> Tuple[jnp.ndarray]:
-    """Some docstrings"""
+    """Private function which loops over the partial analysis transform (C bound functions)."""
+
     f_wav = [[] for _ in range(J_min, J_max + 1)]
     for n in range(2 * N - 1):
         f_wav_n = wavelet.flm_to_analysis(

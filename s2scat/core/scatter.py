@@ -21,10 +21,46 @@ def directional(
     precomps: List[List[jnp.ndarray]] = None,
     recursive: bool = True,
 ) -> List[jnp.ndarray]:
-    """some docstrings"""
+    r"""Compute directional scattering covariances on the sphere (Mousset et al 2024).
 
+    Args:
+        flm (jnp.ndarray): Spherical harmonic coefficients.
+        L (int): Spherical harmonic bandlimit.
+        N (int): Azimuthal bandlimit (directionality).
+        J_min (int, optional): Minimum dyadic wavelet scale to consider. Defaults to 0.
+        reality (bool, optional): Whether :math:`f \in \mathbb{R}`, if True exploits
+            hermitian symmetry of harmonic coefficients. Defaults to False.
+        filters (jnp.ndarray, optional): Directional wavelet filters defined in spherical
+            harmonic space. Defaults to None, but note that currently this is not supported.
+        normalisation (List[jnp.ndarray], optional): Covariance normalisation values.
+            Defaults to None.
+        Q (List[jnp.ndarray], optional): Multiscale quadrautre weights of given sampling
+            pattern. Defaults to None.
+        precomps (List[jnp.ndarray], optional): Various cached precomputed values. Defaults
+            to None, but note that currently this is not supported.
+        recursive (bool, optional): Whether to perform a memory efficient recursive transform,
+            or a faster but less memory efficient fully precompute transform. Defaults to True.
+
+    Raises:
+        ValueError: If one does not pass an array of precomps.
+        ValueError: If one does not pass an array of wavelet filters.
+
+    Returns:
+        Tuple[jnp.ndarray]: Directional scattering covariance statistics.
+
+    Notes:
+        The recursive transform, outlined in `Price & McEwen (2023) <https://arxiv.org/pdf/2311.14670>`_,
+        requires :math:`\mathcal{O}(NL^2)` memory overhead and can scale to high bandlimits :math:`L`.
+        Conversely, the fully precompute transform requires :math:`\mathcal{O}(NL^3)` memory overhead
+        which can be large. However, the transform will be much faster. For applications at
+        :math:`L \leq 512` the precompute approach is a better choice, beyond which we recommend the
+        users switch to recursive transforms or the C backend functionality.
+    """
     if precomps == None:
         raise ValueError("Must provide precomputed kernels for this transform!")
+
+    if filters == None:
+        raise ValueError("Must provide wavelet filters for this transform!")
 
     ### Configure maximum scale, impose reality, define quadrature
     J_max = s2wav.samples.j_max(L)
@@ -86,7 +122,39 @@ def directional_c(
     normalisation: List[jnp.ndarray] = None,
     Q: List[jnp.ndarray] = None,
 ) -> List[jnp.ndarray]:
-    """some docstrings"""
+    r"""Compute directional scattering covariances on the sphere using a custom C backend (Mousset et al 2024).
+
+    Args:
+        flm (jnp.ndarray): Spherical harmonic coefficients.
+        L (int): Spherical harmonic bandlimit.
+        N (int): Azimuthal bandlimit (directionality).
+        J_min (int, optional): Minimum dyadic wavelet scale to consider. Defaults to 0.
+        reality (bool, optional): Whether :math:`f \in \mathbb{R}`, if True exploits
+            hermitian symmetry of harmonic coefficients. Defaults to False.
+        filters (jnp.ndarray, optional): Directional wavelet filters defined in spherical
+            harmonic space. Defaults to None, but note that currently this is not supported.
+        normalisation (List[jnp.ndarray], optional): Covariance normalisation values.
+            Defaults to None.
+        Q (List[jnp.ndarray], optional): Multiscale quadrautre weights of given sampling
+            pattern. Defaults to None.
+
+    Raises:
+        ValueError: If one does not pass an array of wavelet filters.
+
+    Returns:
+        Tuple[jnp.ndarray]: Directional scattering covariance statistics.
+
+    Notes:
+        This variant of the directional scattering covariance transform leverages the
+        JAX frontend for highly optimised C spherical harmonic libraries provided by
+        `S2FFT <https://github.com/astro-informatics/s2fft/tree/main>`_. As such, it is
+        currently limited to CPU compute and cannot be JIT compiled. However, this approach
+        can still be very fast as the underlying spherical harmonic libraries are extremely
+        optimised. All gradient functionality is supported, peak memory overhead is
+        :math:`\mathcal{O}(NL^2)`, and this variant can scale to very high :math:`L \geq 4096`.
+    """
+    if filters == None:
+        raise ValueError("Must provide wavelet filters for this transform!")
 
     ### Configure maximum scale, impose reality, define quadrature
     J_max = s2wav.samples.j_max(L)
