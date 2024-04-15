@@ -111,6 +111,10 @@ def compute_C01_and_C11(
         and :math:`\lambda_2=(j_2,n_2)`, and is hence a fourth order statistic which is
         sensitive to directional multiscale structure, e.g. filaments. C11 behaves similarly,
         but correlates between three scales and directions and is consequently sixth order.
+
+        If isotropic is true, the statistics will be contracted across :math:`n`. This will
+        dramatically compress the covariance representation, but will be somewhat less
+        sensitive to directional structure.
     """
     C01 = []
     C11 = []
@@ -177,6 +181,11 @@ def add_to_C01(
 
     Returns:
         List[jnp.float64]: List into which :math:`\text{C01}_j` has been appended.
+
+    Notes:
+        If isotropic is true, the statistics will be contracted across :math:`n`. This will
+        dramatically compress the covariance representation, but will be somewhat less
+        sensitive to directional structure.
     """
     einsum_str = "ajntp,ntp,t->a" if isotropic else "ajntp,ntp,t->ajn"
     val = jnp.einsum(einsum_str, jnp.conj(Nj1j2), W, Q, optimize=True)
@@ -199,6 +208,11 @@ def add_to_C11(
 
     Returns:
         List[jnp.float64]: List into which :math:`\text{C11}_j` has been appended.
+
+    Notes:
+        If isotropic is true, the statistics will be contracted across :math:`n`. This will
+        dramatically compress the covariance representation, but will be somewhat less
+        sensitive to directional structure.
     """
     einsum_str = "ajntp,bkntp, t->ab" if isotropic else "ajntp,bkntp, t->abjkn"
     val = jnp.einsum(einsum_str, Nj1j2, jnp.conj(Nj1j2), Q, optimize=True)
