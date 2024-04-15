@@ -82,13 +82,14 @@ def compute_P00(
     return P00
 
 
-@partial(jit, static_argnums=(3, 4))
+@partial(jit, static_argnums=(3, 4, 5))
 def compute_C01_and_C11(
     Nj1j2: List[jnp.ndarray],
     W: List[jnp.ndarray],
     Q: List[jnp.ndarray],
     J_min: int,
     J_max: int,
+    isotropic: bool = False,
 ) -> Tuple[jnp.ndarray]:
     r"""Compute the fourth (C01) and sixth (C11) order covariances.
 
@@ -98,6 +99,8 @@ def compute_C01_and_C11(
         Q (List[jnp.ndarray]): Multiscale quadrautre weights of given sampling pattern.
         J_min (int): Minimum dyadic wavelet scale to consider.
         J_max (int): Maximum dyadic wavelet scale to consider.
+        isotropic (bool, optional): Whether to return isotropic coefficients, i.e. average
+            over directionality. Defaults to False.
 
     Returns:
         Tuple[jnp.ndarray]: Fourth and sixth order scattering covariance statistics.
@@ -113,8 +116,8 @@ def compute_C01_and_C11(
     C11 = []
     for j1 in range(J_min, J_max):
         idx = j1 - J_min
-        C01 = add_to_C01(C01, Nj1j2[idx], W[idx], Q[idx])
-        C11 = add_to_C11(C11, Nj1j2[idx], Q[idx])
+        C01 = add_to_C01(C01, Nj1j2[idx], W[idx], Q[idx], isotropic)
+        C11 = add_to_C11(C11, Nj1j2[idx], Q[idx], isotropic)
     return C01, C11
 
 
@@ -154,9 +157,13 @@ def add_to_P00(
     return P00
 
 
-@jit
+@partial(jit, static_argnums=(4))
 def add_to_C01(
-    C01: List[jnp.float64], Nj1j2: jnp.ndarray, W: jnp.ndarray, Q: jnp.ndarray
+    C01: List[jnp.float64],
+    Nj1j2: jnp.ndarray,
+    W: jnp.ndarray,
+    Q: jnp.ndarray,
+    isotropic: bool = False,
 ) -> List[jnp.float64]:
     r"""Computes the fourth order covariance statistic :math:`\text{C01}_j = \text{Cov}\big [ \Psi^{\lambda_1} f, \Psi^{\lambda_1} | \Psi^{\lambda_2} f | \big ]` at scale :math:`j`.
 
@@ -165,18 +172,21 @@ def add_to_C01(
         Nj1j2 (List[jnp.ndarray]): Second order wavelet coefficients at scale :math:`j`.
         W (jnp.ndarray): Spherical signal at a single scale :math:`j`.
         Q (List[jnp.ndarray]): Quadrautre weights of given sampling pattern at scale :math:`j`.
+        isotropic (bool, optional): Whether to return isotropic coefficients, i.e. average
+            over directionality. Defaults to False.
 
     Returns:
         List[jnp.float64]: List into which :math:`\text{C01}_j` has been appended.
     """
-    val = jnp.einsum("ajntp,ntp,t->ajn", jnp.conj(Nj1j2), W, Q, optimize=True)
+    einsum_str = "ajntp,ntp,t->a" if isotropic else "ajntp,ntp,t->ajn"
+    val = jnp.einsum(einsum_str, jnp.conj(Nj1j2), W, Q, optimize=True)
     C01.append(jnp.real(val))
     return C01
 
 
-@jit
+@partial(jit, static_argnums=(3))
 def add_to_C11(
-    C11: List[jnp.float64], Nj1j2: jnp.ndarray, Q: jnp.ndarray
+    C11: List[jnp.float64], Nj1j2: jnp.ndarray, Q: jnp.ndarray, isotropic: bool = False
 ) -> List[jnp.float64]:
     r"""Computes the sixth order covariance statistic :math:`\text{C11}_j = \text{Cov}\big [ \Psi^{\lambda_1} | \Psi^{\lambda_3} f |, \Psi^{\lambda_1} | \Psi^{\lambda_2} f | \big ]` at scale :math:`j`.
 
@@ -184,11 +194,14 @@ def add_to_C11(
         C11 (List[jnp.float64]): List in which to append the sixth order covariance statistic.
         Nj1j2 (List[jnp.ndarray]): Second order wavelet coefficients at scale :math:`j`.
         Q (List[jnp.ndarray]): Quadrautre weights of given sampling pattern at scale :math:`j`.
+        isotropic (bool, optional): Whether to return isotropic coefficients, i.e. average
+            over directionality. Defaults to False.
 
     Returns:
         List[jnp.float64]: List into which :math:`\text{C11}_j` has been appended.
     """
-    val = jnp.einsum("ajntp,bkntp, t->abjkn", Nj1j2, jnp.conj(Nj1j2), Q, optimize=True)
+    einsum_str = "ajntp,bkntp, t->ab" if isotropic else "ajntp,bkntp, t->abjkn"
+    val = jnp.einsum(einsum_str, Nj1j2, jnp.conj(Nj1j2), Q, optimize=True)
     C11.append(jnp.real(val))
     return C11
 
