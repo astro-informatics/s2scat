@@ -8,7 +8,7 @@ from s2scat.utility import statistics, reorder
 from s2scat.operators import spherical
 
 
-@partial(jit, static_argnums=(1, 2, 3, 4, 9))
+@partial(jit, static_argnums=(1, 2, 3, 4, 9, 10))
 def directional(
     flm: jnp.ndarray,
     L: int,
@@ -20,6 +20,7 @@ def directional(
     Q: List[jnp.ndarray] = None,
     precomps: List[List[jnp.ndarray]] = None,
     recursive: bool = True,
+    isotropic: bool = False,
 ) -> List[jnp.ndarray]:
     r"""Compute directional scattering covariances on the sphere (Mousset et al 2024).
 
@@ -40,6 +41,8 @@ def directional(
             to None, but note that currently this is not supported.
         recursive (bool, optional): Whether to perform a memory efficient recursive transform,
             or a faster but less memory efficient fully precompute transform. Defaults to True.
+        isotropic (bool, optional): Whether to return isotropic coefficients, i.e. average
+            over directionality. Defaults to False.
 
     Raises:
         ValueError: If one does not pass an array of precomps.
@@ -55,6 +58,10 @@ def directional(
         which can be large. However, the transform will be much faster. For applications at
         :math:`L \leq 512` the precompute approach is a better choice, beyond which we recommend the
         users switch to recursive transforms or the C backend functionality.
+
+        If isotropic is true, the statistics will be contracted across :math:`n`. This will
+        dramatically compress the covariance representation, but will be somewhat less
+        sensitive to directional structure.
     """
     if precomps is None:
         raise ValueError("Must provide precomputed kernels for this transform!")
@@ -100,7 +107,7 @@ def directional(
     Nj1j2_flat = reorder.nested_list_to_list_of_arrays(Nj1j2, J_min, J_max)
 
     ### Compute: Higher order covariances C00/C11
-    C01, C11 = statistics.compute_C01_and_C11(Nj1j2_flat, W, Q, J_min, J_max)
+    C01, C11 = statistics.compute_C01_and_C11(Nj1j2_flat, W, Q, J_min, J_max, isotropic)
 
     ### Normalize the coefficients
     if normalisation is not None:
@@ -121,6 +128,7 @@ def directional_c(
     filters: jnp.ndarray = None,
     normalisation: List[jnp.ndarray] = None,
     Q: List[jnp.ndarray] = None,
+    isotropic: bool = False,
 ) -> List[jnp.ndarray]:
     r"""Compute directional scattering covariances on the sphere using a custom C backend (Mousset et al 2024).
 
@@ -137,6 +145,8 @@ def directional_c(
             Defaults to None.
         Q (List[jnp.ndarray], optional): Multiscale quadrautre weights of given sampling
             pattern. Defaults to None.
+        isotropic (bool, optional): Whether to return isotropic coefficients, i.e. average
+            over directionality. Defaults to False.
 
     Raises:
         ValueError: If one does not pass an array of wavelet filters.
@@ -152,6 +162,10 @@ def directional_c(
         can still be very fast as the underlying spherical harmonic libraries are extremely
         optimised. Reverse mode gradient functionality is supported, peak memory overhead is
         :math:`\mathcal{O}(NL^2)`, and this variant can scale to very high :math:`L \geq 4096`.
+
+        If isotropic is true, the statistics will be contracted across :math:`n`. This will
+        dramatically compress the covariance representation, but will be somewhat less
+        sensitive to directional structure.
     """
     if filters is None:
         raise ValueError("Must provide wavelet filters for this transform!")
@@ -193,7 +207,7 @@ def directional_c(
     Nj1j2_flat = reorder.nested_list_to_list_of_arrays(Nj1j2, J_min, J_max)
 
     ### Compute: Higher order covariances C00/C11
-    C01, C11 = statistics.compute_C01_and_C11(Nj1j2_flat, W, Q, J_min, J_max)
+    C01, C11 = statistics.compute_C01_and_C11(Nj1j2_flat, W, Q, J_min, J_max, isotropic)
 
     ### Normalize the coefficients
     if normalisation is not None:
