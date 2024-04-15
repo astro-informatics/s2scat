@@ -5,7 +5,7 @@ from typing import List, Tuple
 import s2fft
 
 import s2wav
-from s2wav.transforms import wavelet, wavelet_precompute
+from s2wav.transforms import wavelet, wavelet_c, wavelet_precompute
 
 from s2fft.precompute_transforms.spherical import forward_transform_jax
 from s2fft.transforms.c_backend_spherical import ssht_forward
@@ -59,7 +59,7 @@ def make_flm_real(flm: jnp.ndarray, L: int) -> jnp.ndarray:
 
 @partial(jit, static_argnums=(0, 1))
 def quadrature(L: int, J_min: int = 0) -> List[jnp.ndarray]:
-    r"""Generates spherical quadrature weights associated with McEwen-Wiaux sampling [1].
+    r"""Generates spherical quadrature weights associated Gauss-Legendre sampling points.
 
     Args:
         L (int): Spherical harmonic bandlimit.
@@ -68,15 +68,12 @@ def quadrature(L: int, J_min: int = 0) -> List[jnp.ndarray]:
     Returns:
         List[jnp.ndarray]: Multiresolution quadrature weights for each :math:`\theta`
             corresponding to each wavelet scale :math:`j \in [J_{\text{min}}, J_{\text{max}}]`.
-
-    Notes:
-        [1] McEwen, Jason D., and Yves Wiaux. "A novel sampling theorem on the sphere." IEEE Transactions on Signal Processing 59.12 (2011): 5876-5887.
     """
     J_max = s2wav.samples.j_max(L)
     quads = []
     for j in range(J_min, J_max + 1):
         Lj = s2wav.samples.wav_j_bandlimit(L, j, multiresolution=True)
-        quads.append(s2fft.utils.quadrature_jax.quad_weights(Lj, "mw"))
+        quads.append(s2fft.utils.quadrature_jax.quad_weights(Lj, "gl"))
     return quads
 
 
@@ -99,7 +96,7 @@ def _forward_harmonic_vect(
             L=Lj,
             spin=0,
             nside=None,
-            sampling="mw",
+            sampling="gl",
             reality=reality,
             **{"precomps" if recursive else "kernel": precomps[0][idx]},
         ),
@@ -107,13 +104,11 @@ def _forward_harmonic_vect(
     )(f)
 
 
-def _forward_harmonic_looped(
-    f: jnp.ndarray, Lj: int, N: int, reality: bool
-) -> jnp.ndarray:
+def _forward_harmonic_looped(f: jnp.ndarray, Lj: int, N: int) -> jnp.ndarray:
     """Private function for looped forward SHT pass (C bound functions)."""
     flm = jnp.zeros((2 * N - 1, Lj, 2 * Lj - 1), dtype=jnp.complex128)
     for n in range(2 * N - 1):
-        flm = flm.at[n].add(ssht_forward(jnp.abs(f[n]), Lj, 0, reality, 0))
+        flm = flm.at[n].add(ssht_forward(jnp.abs(f[n]), Lj, 0, True, 3))
     return flm
 
 
@@ -133,17 +128,19 @@ def _first_flm_to_analysis(
         raise ValueError(
             "C backend functions do not support full precompute transform."
         )
-    args = {"use_c_backend": use_c_backend} if use_c_backend else {}
-    submod = wavelet if use_c_backend or recursive else wavelet_precompute
+    precomps_slice = precomps[2] if recursive and not use_c_backend else precomps
+    args = {"precomps": precomps_slice} if not use_c_backend else {}
+    submod = (
+        wavelet_c if use_c_backend else (wavelet if recursive else wavelet_precompute)
+    )
     return submod.flm_to_analysis(
         flm=flm,
         L=L,
         N=N,
         J_min=J_min,
-        sampling="mw",
+        sampling="gl",
         reality=reality,
         filters=filters,
-        precomps=precomps[2] if recursive and not use_c_backend else precomps,
         **args,
     )
 
@@ -176,6 +173,7 @@ def _flm_to_analysis_vect(
             N=N,
             J_min=J_min,
             J_max=J_max,
+            sampling="gl",
             reality=reality,
             filters=filtslice,
             precomps=preslice,
@@ -199,8 +197,8 @@ def _flm_to_analysis_looped(
     f_wav = [[] for _ in range(J_min, J_max + 1)]
     temp = filters[:, :Lj, L - Lj : L - 1 + Lj]
     for n in range(2 * N - 1):
-        f_wav_n = wavelet.flm_to_analysis(
-            flmn[n], Lj, N, J_min, J_max, 2.0, "mw", None, True, temp, None, True
+        f_wav_n = wavelet_c.flm_to_analysis(
+            flmn[n], Lj, N, J_min, J_max, 2.0, "gl", True, temp
         )
         for j in range(J_min, J_max + 1):
             f_wav[j - J_min].append(f_wav_n[j - J_min])

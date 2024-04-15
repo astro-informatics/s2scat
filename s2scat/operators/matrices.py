@@ -38,12 +38,12 @@ def generate_precompute_matrices(
     """
     J_max = samples.j_max(L)
     precomps = generate_full_precomputes(
-        L=L, N=N, J_min=J_min, forward=False, reality=reality, nospherical=True
+        L, N, J_min, sampling="gl", forward=False, reality=reality, nospherical=True
     )
     for j2 in range(J_min, J_max):
         Lj2 = samples.wav_j_bandlimit(L, j2, multiresolution=True)
         precomps[0].append(
-            spin_spherical_kernel_jax(L=Lj2, spin=0, reality=reality, forward=True)
+            spin_spherical_kernel_jax(Lj2, sampling="gl", reality=reality, forward=True)
         )
     return precomps
 
@@ -77,9 +77,9 @@ def generate_recursive_matrices(
     J_max = samples.j_max(L)
     precomps = [[], [], []]
     precomps[2] = generate_wigner_precomputes(
-        L, N, J_min=J_min, reality=reality, forward=False
+        L, N, J_min, sampling="gl", reality=reality, forward=False
     )
     for j2 in range(J_min, J_max):
         Lj2 = samples.wav_j_bandlimit(L, j2, multiresolution=True)
-        precomps[0].append(generate_precomputes_jax(Lj2, forward=True))
+        precomps[0].append(generate_precomputes_jax(Lj2, sampling="gl", forward=True))
     return precomps

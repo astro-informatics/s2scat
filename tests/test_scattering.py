@@ -12,7 +12,6 @@ L_to_test = [8, 16]
 N_to_test = [2, 3]
 J_min_to_test = [0, 2]
 
-
 # Both GPU directional transforms are built from the same core recursion relations,
 # hence it is reasonable to expect that the scattering representation should match
 # to a decent level of precision (say around 1e-5).

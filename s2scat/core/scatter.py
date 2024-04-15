@@ -168,7 +168,6 @@ def directional_c(
     W = spherical._first_flm_to_analysis(
         flm, L, N, J_min, reality, filters, use_c_backend=True
     )
-    # W = W.real if reality else W
 
     ### Compute S1, P00, and Nj1j2
     Nj1j2, S1, P00 = [], [], []
@@ -176,7 +175,7 @@ def directional_c(
         Lj2 = s2wav.samples.wav_j_bandlimit(L, j2, 2.0, True)
 
         ### Compute: Mlm = SHT(|W|)
-        Mlm = spherical._forward_harmonic_looped(jnp.abs(W[j2 - J_min]), Lj2, N, True)
+        Mlm = spherical._forward_harmonic_looped(jnp.abs(W[j2 - J_min]), Lj2, N)
 
         ### Compute: S1 and P00 statistics
         S1 = statistics.add_to_S1(S1, Mlm, Lj2)
