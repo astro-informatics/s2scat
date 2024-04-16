@@ -13,6 +13,7 @@ N_to_test = [2, 3]
 J_min_to_test = [0, 1]
 delta_to_test = [None, 1]
 isotropic = [False, True]
+normalise = [False, True]
 
 # Both GPU directional transforms are built from the same core recursion relations,
 # hence it is reasonable to expect that the scattering representation should match
@@ -22,7 +23,10 @@ isotropic = [False, True]
 @pytest.mark.parametrize("J_min", J_min_to_test)
 @pytest.mark.parametrize("delta_j", delta_to_test)
 @pytest.mark.parametrize("isotropic", isotropic)
-def test_forward_pass(L: int, N: int, J_min: int, delta_j: int, isotropic: bool):
+@pytest.mark.parametrize("normalise", normalise)
+def test_forward_pass(
+    L: int, N: int, J_min: int, delta_j: int, isotropic: bool, normalise: bool
+):
     J = s2wav.samples.j_max(L)
     reality = False
     # Exceptions
@@ -41,6 +45,14 @@ def test_forward_pass(L: int, N: int, J_min: int, delta_j: int, isotropic: bool)
         L, N, J_min, reality
     )
 
+    norm = (
+        s2scat.utility.normalisation.compute_norm(
+            flm, L, N, J_min, reality, filters, matrices_precompute, False
+        )
+        if normalise
+        else None
+    )
+
     coeffs_recursive = s2scat.core.scatter.directional(
         flm,
         L,
@@ -48,7 +60,7 @@ def test_forward_pass(L: int, N: int, J_min: int, delta_j: int, isotropic: bool)
         J_min,
         reality,
         filters,
-        None,
+        norm,
         None,
         matrices_recursive,
         True,
@@ -62,7 +74,7 @@ def test_forward_pass(L: int, N: int, J_min: int, delta_j: int, isotropic: bool)
         J_min,
         reality,
         filters,
-        None,
+        norm,
         None,
         matrices_precompute,
         False,

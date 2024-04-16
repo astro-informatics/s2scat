@@ -16,6 +16,7 @@ reality_to_test = [False, True]
 recursive_transform = [False, True]
 delta_to_test = [None, 1]
 isotropic = [False, True]
+normalise = [False, True]
 
 
 # This test uses the in built jax.check_grad function to validate gradients for a simple
@@ -28,6 +29,7 @@ isotropic = [False, True]
 @pytest.mark.parametrize("recursive", recursive_transform)
 @pytest.mark.parametrize("delta_j", delta_to_test)
 @pytest.mark.parametrize("isotropic", isotropic)
+@pytest.mark.parametrize("normalise", normalise)
 def test_gradients(
     L: int,
     N: int,
@@ -36,6 +38,7 @@ def test_gradients(
     recursive: bool,
     delta_j: int,
     isotropic: bool,
+    normalise: bool,
 ):
     J = s2wav.samples.j_max(L)
 
@@ -56,6 +59,14 @@ def test_gradients(
         )
     )
 
+    norm = (
+        s2scat.utility.normalisation.compute_norm(
+            flm, L, N, J_min, reality, filters, matrices, recursive
+        )
+        if normalise
+        else None
+    )
+
     def func(flm):
         coeffs = s2scat.core.scatter.directional(
             flm,
@@ -64,7 +75,7 @@ def test_gradients(
             J_min,
             reality,
             filters,
-            None,
+            norm,
             None,
             matrices,
             recursive,

@@ -4,8 +4,9 @@ from functools import partial
 from typing import List
 
 import s2wav
-from s2scat.utility import statistics, reorder
+from s2scat.utility import statistics, reorder, normalisation
 from s2scat.operators import spherical
+from s2scat.core import compress
 
 
 @partial(jit, static_argnums=(1, 2, 3, 4, 9, 10, 11))
@@ -16,7 +17,7 @@ def directional(
     J_min: int = 0,
     reality: bool = False,
     filters: jnp.ndarray = None,
-    normalisation: List[jnp.ndarray] = None,
+    norm: List[jnp.ndarray] = None,
     Q: List[jnp.ndarray] = None,
     precomps: List[List[jnp.ndarray]] = None,
     recursive: bool = True,
@@ -34,7 +35,7 @@ def directional(
             hermitian symmetry of harmonic coefficients. Defaults to False.
         filters (jnp.ndarray, optional): Directional wavelet filters defined in spherical
             harmonic space. Defaults to None, but note that currently this is not supported.
-        normalisation (List[jnp.ndarray], optional): Covariance normalisation values.
+        norm (List[jnp.ndarray], optional): Covariance normalisation values.
             Defaults to None.
         Q (List[jnp.ndarray], optional): Multiscale quadrautre weights of given sampling
             pattern. Defaults to None.
@@ -121,11 +122,17 @@ def directional(
     Nj1j2_flat = reorder.nested_list_to_list_of_arrays(Nj1j2, J_min, J_max, delta_j)
 
     ### Compute: Higher order covariances C00/C11
-    C01, C11 = statistics.compute_C01_and_C11(Nj1j2_flat, W, Q, J_min, J_max, isotropic)
+    C01, C11 = statistics.compute_C01_and_C11(Nj1j2_flat, W, Q, J_min, J_max)
 
     ### Normalize the coefficients
-    if normalisation is not None:
-        S1, P00, C01, C11 = statistics.apply_norm(S1, P00, C01, C11, N, J_min, J_max)
+    if norm is not None:
+        S1, P00, C01, C11 = normalisation.apply_norm(
+            S1, P00, C01, C11, norm, J_min, J_max
+        )
+
+    ### Compress covariances to isotropic coefficients
+    if isotropic:
+        C01, C11 = compress.C01_C11_to_isotropic(C01, C11, J_min, J_max)
 
     ### Return 1D jnp arrays for synthesis
     S1, P00, C01, C11 = reorder.list_to_array(S1, P00, C01, C11)
@@ -140,7 +147,7 @@ def directional_c(
     J_min: int = 0,
     reality: bool = False,
     filters: jnp.ndarray = None,
-    normalisation: List[jnp.ndarray] = None,
+    norm: List[jnp.ndarray] = None,
     Q: List[jnp.ndarray] = None,
     isotropic: bool = False,
     delta_j: int = None,
@@ -156,7 +163,7 @@ def directional_c(
             hermitian symmetry of harmonic coefficients. Defaults to False.
         filters (jnp.ndarray, optional): Directional wavelet filters defined in spherical
             harmonic space. Defaults to None, but note that currently this is not supported.
-        normalisation (List[jnp.ndarray], optional): Covariance normalisation values.
+        norm (List[jnp.ndarray], optional): Covariance normalisation values.
             Defaults to None.
         Q (List[jnp.ndarray], optional): Multiscale quadrautre weights of given sampling
             pattern. Defaults to None.
@@ -224,11 +231,17 @@ def directional_c(
     Nj1j2_flat = reorder.nested_list_to_list_of_arrays(Nj1j2, J_min, J_max, delta_j)
 
     ### Compute: Higher order covariances C00/C11
-    C01, C11 = statistics.compute_C01_and_C11(Nj1j2_flat, W, Q, J_min, J_max, isotropic)
+    C01, C11 = statistics.compute_C01_and_C11(Nj1j2_flat, W, Q, J_min, J_max)
 
     ### Normalize the coefficients
-    if normalisation is not None:
-        S1, P00, C01, C11 = statistics.apply_norm(S1, P00, C01, C11, N, J_min, J_max)
+    if norm is not None:
+        S1, P00, C01, C11 = normalisation.apply_norm(
+            S1, P00, C01, C11, norm, J_min, J_max
+        )
+
+    ### Compress covariances to isotropic coefficients
+    if isotropic:
+        C01, C11 = compress.C01_C11_to_isotropic(C01, C11, J_min, J_max)
 
     ### Return 1D jnp arrays for synthesis
     S1, P00, C01, C11 = reorder.list_to_array(S1, P00, C01, C11)
