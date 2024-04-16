@@ -246,8 +246,8 @@ def apply_norm(
     """
     for j2 in range(J_min, J_max + 1):
         idx = j2 - J_min
-        S1[j2 - J_min] /= jnp.sqrt(N[idx])
-        P00[j2 - J_min] /= N[idx]
+        S1[idx] /= jnp.sqrt(N[idx])
+        P00[idx] /= N[idx]
 
     for j1 in range(J_min, J_max):
         idx = j1 - J_min
@@ -258,7 +258,7 @@ def apply_norm(
             optimize=True,
         )
 
-        C01[j1 - J_min] = jnp.einsum("ajn,jn->ajn", C01[idx], norm, optimize=True)
-        C11[j1 - J_min] = jnp.einsum("abjkn,jk->abjkn", C11[idx], norm, optimize=True)
+        C01[idx] = jnp.einsum("ajn,jn->ajn", C01[idx], norm, optimize=True)
+        C11[idx] = jnp.einsum("abjkn,jk->abjkn", C11[idx], norm, optimize=True)
 
     return S1, P00, C01, C11

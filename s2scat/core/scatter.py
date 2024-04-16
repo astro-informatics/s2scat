@@ -8,7 +8,7 @@ from s2scat.utility import statistics, reorder
 from s2scat.operators import spherical
 
 
-@partial(jit, static_argnums=(1, 2, 3, 4, 9, 10))
+@partial(jit, static_argnums=(1, 2, 3, 4, 9, 10, 11))
 def directional(
     flm: jnp.ndarray,
     L: int,
@@ -21,6 +21,7 @@ def directional(
     precomps: List[List[jnp.ndarray]] = None,
     recursive: bool = True,
     isotropic: bool = False,
+    delta_j: int = None,
 ) -> List[jnp.ndarray]:
     r"""Compute directional scattering covariances on the sphere (Mousset et al 2024).
 
@@ -43,6 +44,8 @@ def directional(
             or a faster but less memory efficient fully precompute transform. Defaults to True.
         isotropic (bool, optional): Whether to return isotropic coefficients, i.e. average
             over directionality. Defaults to False.
+        delta_j (int, optional): Range of wavelet scales over which to compute covariances.
+            If None, covariances between all scales will be considered. Defaults to None.
 
     Raises:
         ValueError: If one does not pass an array of precomps.
@@ -99,12 +102,23 @@ def directional(
         ### Compute: Nj1j2
         if j2 > J_min:
             val = spherical._flm_to_analysis_vect(
-                Mlm, j2, Lj2, L, N, J_min, j2 - 1, reality, filters, precomps, recursive
+                Mlm,
+                j2,
+                Lj2,
+                L,
+                N,
+                J_min,
+                j2 - 1,
+                reality,
+                filters,
+                precomps,
+                recursive,
+                delta_j,
             )
             Nj1j2.append(val)
 
     ### Reorder and flatten Njjprime, convert to JAX arrays for C01/C11
-    Nj1j2_flat = reorder.nested_list_to_list_of_arrays(Nj1j2, J_min, J_max)
+    Nj1j2_flat = reorder.nested_list_to_list_of_arrays(Nj1j2, J_min, J_max, delta_j)
 
     ### Compute: Higher order covariances C00/C11
     C01, C11 = statistics.compute_C01_and_C11(Nj1j2_flat, W, Q, J_min, J_max, isotropic)
@@ -129,6 +143,7 @@ def directional_c(
     normalisation: List[jnp.ndarray] = None,
     Q: List[jnp.ndarray] = None,
     isotropic: bool = False,
+    delta_j: int = None,
 ) -> List[jnp.ndarray]:
     r"""Compute directional scattering covariances on the sphere using a custom C backend (Mousset et al 2024).
 
@@ -147,6 +162,8 @@ def directional_c(
             pattern. Defaults to None.
         isotropic (bool, optional): Whether to return isotropic coefficients, i.e. average
             over directionality. Defaults to False.
+        delta_j (int, optional): Range of wavelet scales over which to compute covariances.
+            If None, covariances between all scales will be considered. Defaults to None.
 
     Raises:
         ValueError: If one does not pass an array of wavelet filters.
@@ -198,13 +215,13 @@ def directional_c(
         ### Compute: Nj1j2
         if j2 > J_min:
             val = spherical._flm_to_analysis_looped(
-                Mlm, Lj2, L, N, J_min, j2 - 1, filters
+                Mlm, j2, Lj2, L, N, J_min, j2 - 1, filters, delta_j
             )
 
             Nj1j2.append(val)
 
     ### Reorder and flatten Njjprime, convert to JAX arrays for C01/C11
-    Nj1j2_flat = reorder.nested_list_to_list_of_arrays(Nj1j2, J_min, J_max)
+    Nj1j2_flat = reorder.nested_list_to_list_of_arrays(Nj1j2, J_min, J_max, delta_j)
 
     ### Compute: Higher order covariances C00/C11
     C01, C11 = statistics.compute_C01_and_C11(Nj1j2_flat, W, Q, J_min, J_max, isotropic)

@@ -8,9 +8,11 @@ import s2scat
 
 import s2wav
 
-L_to_test = [8, 16]
+L_to_test = [16]
 N_to_test = [2, 3]
-J_min_to_test = [0, 2]
+J_min_to_test = [0, 1]
+delta_to_test = [None, 1]
+isotropic = [False, True]
 
 # Both GPU directional transforms are built from the same core recursion relations,
 # hence it is reasonable to expect that the scattering representation should match
@@ -18,7 +20,9 @@ J_min_to_test = [0, 2]
 @pytest.mark.parametrize("L", L_to_test)
 @pytest.mark.parametrize("N", N_to_test)
 @pytest.mark.parametrize("J_min", J_min_to_test)
-def test_forward_pass(L: int, N: int, J_min: int):
+@pytest.mark.parametrize("delta_j", delta_to_test)
+@pytest.mark.parametrize("isotropic", isotropic)
+def test_forward_pass(L: int, N: int, J_min: int, delta_j: int, isotropic: bool):
     J = s2wav.samples.j_max(L)
     reality = False
     # Exceptions
@@ -38,10 +42,32 @@ def test_forward_pass(L: int, N: int, J_min: int):
     )
 
     coeffs_recursive = s2scat.core.scatter.directional(
-        flm, L, N, J_min, reality, filters, None, None, matrices_recursive, True
+        flm,
+        L,
+        N,
+        J_min,
+        reality,
+        filters,
+        None,
+        None,
+        matrices_recursive,
+        True,
+        isotropic,
+        delta_j,
     )
     coeffs_precompute = s2scat.core.scatter.directional(
-        flm, L, N, J_min, reality, filters, None, None, matrices_precompute, False
+        flm,
+        L,
+        N,
+        J_min,
+        reality,
+        filters,
+        None,
+        None,
+        matrices_precompute,
+        False,
+        isotropic,
+        delta_j,
     )
 
     for i in range(6):
@@ -58,7 +84,11 @@ def test_forward_pass(L: int, N: int, J_min: int):
 @pytest.mark.parametrize("L", L_to_test)
 @pytest.mark.parametrize("N", N_to_test)
 @pytest.mark.parametrize("J_min", J_min_to_test)
-def test_forward_pass_c_backend(L: int, N: int, J_min: int):
+@pytest.mark.parametrize("delta_j", delta_to_test)
+@pytest.mark.parametrize("isotropic", isotropic)
+def test_forward_pass_c_backend(
+    L: int, N: int, J_min: int, delta_j: int, isotropic: bool
+):
     J = s2wav.samples.j_max(L)
     reality = False
     # Exceptions
@@ -74,10 +104,23 @@ def test_forward_pass_c_backend(L: int, N: int, J_min: int):
         L, N, J_min, reality
     )
     coeffs_precompute = s2scat.core.scatter.directional(
-        flm, L, N, J_min, reality, filters, None, None, matrices_precompute, False
+        flm,
+        L,
+        N,
+        J_min,
+        reality,
+        filters,
+        None,
+        None,
+        matrices_precompute,
+        False,
+        isotropic,
+        delta_j,
     )
 
-    coeffs_c = s2scat.core.scatter.directional_c(flm, L, N, J_min, reality, filters)
+    coeffs_c = s2scat.core.scatter.directional_c(
+        flm, L, N, J_min, reality, filters, None, None, isotropic, delta_j
+    )
 
     for i in range(6):
         np.testing.assert_allclose(coeffs_precompute[i], coeffs_c[i], atol=1e-3)

@@ -145,7 +145,7 @@ def _first_flm_to_analysis(
     )
 
 
-@partial(jit, static_argnums=(1, 2, 3, 4, 5, 6, 7, 10))
+@partial(jit, static_argnums=(1, 2, 3, 4, 5, 6, 7, 10, 11))
 def _flm_to_analysis_vect(
     flmn: jnp.ndarray,
     j: int,
@@ -158,12 +158,17 @@ def _flm_to_analysis_vect(
     filters: Tuple[jnp.ndarray] = None,
     precomps: List[List[jnp.ndarray]] = None,
     recursive: bool = True,
+    delta_j: int = None,
 ) -> Tuple[jnp.ndarray]:
     """Private function with batches the partial analysis transform."""
-
     args = {} if recursive else {"_precomp_shift": False}
     idx = j - J_min
-    preslice = precomps[2][:idx] if recursive else [0, 0, precomps[2][:idx]]
+    j_min = J_min if delta_j is None else max(J_min, j - delta_j - 1)
+    preslice = (
+        precomps[2][j_min - J_min : idx]
+        if recursive
+        else [0, 0, precomps[2][j_min - J_min : idx]]
+    )
     filtslice = filters[:, :Lj, L - Lj : L - 1 + Lj]
     submod = wavelet if recursive else wavelet_precompute
     return vmap(
@@ -171,7 +176,7 @@ def _flm_to_analysis_vect(
             submod.flm_to_analysis,
             L=Lj,
             N=N,
-            J_min=J_min,
+            J_min=j_min,
             J_max=J_max,
             sampling="gl",
             reality=reality,
@@ -185,22 +190,25 @@ def _flm_to_analysis_vect(
 
 def _flm_to_analysis_looped(
     flmn: jnp.ndarray,
+    j: int,
     Lj: int,
     L: int,
     N: int = 1,
     J_min: int = 0,
     J_max: int = None,
     filters: Tuple[jnp.ndarray] = None,
+    delta_j: int = None,
 ) -> Tuple[jnp.ndarray]:
     """Private function which loops over the partial analysis transform (C bound functions)."""
+    j_min = J_min if delta_j is None else max(J_min, j - delta_j - 1)
 
-    f_wav = [[] for _ in range(J_min, J_max + 1)]
+    f_wav = [[] for _ in range(j_min, J_max + 1)]
     temp = filters[:, :Lj, L - Lj : L - 1 + Lj]
     for n in range(2 * N - 1):
         f_wav_n = wavelet_c.flm_to_analysis(
-            flmn[n], Lj, N, J_min, J_max, 2.0, "gl", True, temp
+            flmn[n], Lj, N, j_min, J_max, 2.0, "gl", True, temp
         )
-        for j in range(J_min, J_max + 1):
-            f_wav[j - J_min].append(f_wav_n[j - J_min])
+        for j in range(j_min, J_max + 1):
+            f_wav[j - j_min].append(f_wav_n[j - j_min])
 
     return [jnp.array(f_wav[i]) for i in range(len(f_wav))]

@@ -4,9 +4,9 @@ from functools import partial
 from typing import List, Tuple
 
 
-@partial(jit, static_argnums=(1, 2))
+@partial(jit, static_argnums=(1, 2, 3))
 def nested_list_to_list_of_arrays(
-    Nj1j2: List[List[List[jnp.ndarray]]], J_min: int, J_max: int
+    Nj1j2: List[List[List[jnp.ndarray]]], J_min: int, J_max: int, delta_j: int = None
 ) -> List[jnp.ndarray]:
     r"""Specific reindexing function which switches covariance wavelet scale list ordering.
 
@@ -15,6 +15,8 @@ def nested_list_to_list_of_arrays(
         Nj1j2 (List[List[jnp.ndarray]]): Nested list of second order wavelet coefficients.
         J_min(int): Minimum dyadic wavelet scale to consider.
         J_max(int): Maximum dyadic wavelet scale to consider.
+        delta_j (int, optional): Range of wavelet scales over which to compute covariances.
+            If None, covariances between all scales will be considered. Defaults to None.
 
     Returns:
         List[jnp.ndarray]: Compressed list of all scattering covariances that end in scale :math:`j2`.
@@ -31,13 +33,14 @@ def nested_list_to_list_of_arrays(
         internal arrays are of the same dimension, which simplifies the subsequent
         covariance statistics which are computed from combindations of these arrays.
     """
+    delta_j = J_max + 1 if delta_j is None else delta_j
     Nj1j2_flat = []
     for j1 in range(J_min, J_max):
-        idx1 = j1 - J_min
         Nj1j2_flat_for_j2 = []
-        for j2 in range(j1 + 1, J_max + 1):
+        for j2 in range(j1 + 1, min(j1 + delta_j + 1, J_max + 1)):
             idx2 = j2 - J_min - 1
-            Nj1j2_flat_for_j2.append(Nj1j2[idx2][idx1])
+            dj2 = max(J_min, j2 - delta_j - 1)
+            Nj1j2_flat_for_j2.append(Nj1j2[idx2][j1 - dj2])
         Nj1j2_flat.append(jnp.array(Nj1j2_flat_for_j2))
     return Nj1j2_flat
 
