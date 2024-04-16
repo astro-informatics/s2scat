@@ -2,7 +2,7 @@
 numpy 
 
 # JAX optimisation routines
-jaxopt
+optax
 
 # Sister packages
 s2wav >= 1.0.4
