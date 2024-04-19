@@ -128,7 +128,8 @@ def add_to_C01(
     Returns:
         List[jnp.float64]: List into which :math:`\text{C01}_j` has been appended.
     """
-    val = jnp.einsum("ajntp,ntp,t->ajn", jnp.conj(Nj1j2), W, Q, optimize=True)
+    val = jnp.einsum("ajntp,ntp->ajntp", jnp.conj(Nj1j2), W, optimize=True)
+    val = jnp.einsum("ajntp,t->ajn", val, Q, optimize=True)
     C01.append(jnp.real(val))
     return C01
 
@@ -147,6 +148,7 @@ def add_to_C11(
     Returns:
         List[jnp.float64]: List into which :math:`\text{C11}_j` has been appended.
     """
-    val = jnp.einsum("ajntp,bkntp, t->abjkn", Nj1j2, jnp.conj(Nj1j2), Q, optimize=True)
+    val = jnp.einsum("ajntp,bkntp->abjkntp", Nj1j2, jnp.conj(Nj1j2), optimize=True)
+    val = jnp.einsum("abjkntp,t->abjkn", val, Q, optimize=True)
     C11.append(jnp.real(val))
     return C11

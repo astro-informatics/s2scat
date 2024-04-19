@@ -98,14 +98,28 @@ def apply_norm(
 
     for j1 in range(J_min, J_max):
         idx = j1 - J_min
-        norm = jnp.einsum(
-            "j,n->jn",
+        C01[idx] = jnp.einsum(
+                "ajn,j->ajn",
+                C01[idx],
+                1 / jnp.sqrt(norm[idx]),
+                optimize=True
+            )
+        C01[idx] = jnp.einsum(
+            "ajn,n->ajn",
+            C01[idx],
             1 / jnp.sqrt(norm[idx]),
-            1 / jnp.sqrt(norm[idx]),
-            optimize=True,
+            optimize=True
         )
-
-        C01[idx] = jnp.einsum("ajn,jn->ajn", C01[idx], norm, optimize=True)
-        C11[idx] = jnp.einsum("abjkn,jk->abjkn", C11[idx], norm, optimize=True)
-
+        C11[idx] = jnp.einsum(
+                "abjkn,j->abjkn",
+                C11[idx],
+                1 / jnp.sqrt(norm[idx]),
+                optimize=True
+            )
+        C11[idx] = jnp.einsum(
+            "abjkn,k->abjkn",
+            C11[idx],
+            1 / jnp.sqrt(norm[idx]),
+            optimize=True
+        )
     return S1, P00, C01, C11
