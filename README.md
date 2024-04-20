@@ -8,13 +8,15 @@
 
 # Scattering covariance transform on the sphere
 
+<img align="center" src="./docs/assets/synthesis_zoom.gif">
+
 `S2SCAT` is a Python package for computing third generation scattering covariances on the sphere [(Mousset et al 2024)](https://arxiv.org/abs/xxxx.xxxxx) using JAX. It leverages autodiff to provide differentiable transforms, which are also deployable on hardware accelerators (e.g. GPUs and TPUs). Scattering covariances are useful both for field-level emulation of complex non-Gaussian textures and for statistical compression of high dimensional field-level data, a key step of e.g. simulation based inference [(Cranmer et al 2020)](https://www.pnas.org/doi/abs/10.1073/pnas.1912789117).
 
 > [!TIP]
 > At launch `S2SCAT` provides JAX frontend support for the highly optimised but CPU bound SSHT C backends. These can be useful when GPU resources are not available or memory constraints are tight.
 
 
-## Third Generation Scattering Covariances :dna:
+## Third Generation Scattering Statistics :dna:
 
 <img align="right" src="./docs/assets/synthesis.gif">
 
