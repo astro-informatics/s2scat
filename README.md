@@ -18,7 +18,7 @@
 
 ## Third Generation Scattering Statistics :dna:
 
-<img align="right" src="./docs/assets/synthesis.gif">
+<img align="right" width="500" height="500" src="./docs/assets/synthesis.gif">
 
 Scattering covariances, or scattering spectra, were previously introduced for 1D signals by [Morel et al (2023)](https://arxiv.org/abs/2204.10177) and for planar 2D signals by [Cheng et al (2023)](https://arxiv.org/abs/2306.17210). The scattering transform is defined by repeated application of directional wavelet transforms followed by a machine learning inspired non-linearity, typically the modulus operator. The wavelet transform $W^{\lambda}$ within each layer has an associated scale $j$ and direction $n$, which we group into a single label $\lambda$. Scattering covariances $S$ are computed from the coefficients of a two-layer scattering transform and are defined as
 
