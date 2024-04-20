@@ -18,6 +18,7 @@
 
 Details about the transform here with nice animations!
 
+![image](./docs/assets/synthesis.gif)
 
 ## Package Directory Structure :art:
 
