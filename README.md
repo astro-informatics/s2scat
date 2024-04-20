@@ -6,7 +6,7 @@
 [![All Contributors](https://img.shields.io/github/all-contributors/astro-informatics/s2fft?color=ee8449&style=flat-square)](#contributors)
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](add_link_here)
 
-# Scattering covariance transform on the sphere
+# S2SCAT: Scattering covariance transform on the sphere
 
 <img align="center" src="./docs/assets/synthesis_zoom.gif">
 
