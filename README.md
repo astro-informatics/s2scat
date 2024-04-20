@@ -85,7 +85,7 @@ Documentation for the released version is available [here](https://astro-informa
 To import and use `S2SCAT` is as simple follows:
 
 ``` python
-import s2scat, s2wav
+import s2scat
 L = _   # Harmonic bandlimit 
 N = _   # Azimuthal bandlimit 
 flm = _ # Harmonic coefficients of the input signal 
