@@ -8,7 +8,7 @@
 
 # Scattering covariance transform on the sphere
 
-<img align="center" width="700" height="50" src="./docs/assets/synthesis_zoom.gif">
+<img align="center" width="1000" src="./docs/assets/synthesis_zoom.gif">
 
 `S2SCAT` is a Python package for computing third generation scattering covariances on the sphere [(Mousset et al 2024)](https://arxiv.org/abs/xxxx.xxxxx) using JAX. It leverages autodiff to provide differentiable transforms, which are also deployable on hardware accelerators (e.g. GPUs and TPUs). Scattering covariances are useful both for field-level emulation of complex non-Gaussian textures and for statistical compression of high dimensional field-level data, a key step of e.g. simulation based inference [(Cranmer et al 2020)](https://www.pnas.org/doi/abs/10.1073/pnas.1912789117).
 
@@ -18,7 +18,7 @@
 
 ## Third Generation Scattering Statistics :dna:
 
-<img align="right" width="500" height="500" src="./docs/assets/synthesis.gif">
+<img align="right" width="300" height="300" src="./docs/assets/synthesis.gif">
 
 Scattering covariances, or scattering spectra, were previously introduced for 1D signals by [Morel et al (2023)](https://arxiv.org/abs/2204.10177) and for planar 2D signals by [Cheng et al (2023)](https://arxiv.org/abs/2306.17210). The scattering transform is defined by repeated application of directional wavelet transforms followed by a machine learning inspired non-linearity, typically the modulus operator. The wavelet transform $W^{\lambda}$ within each layer has an associated scale $j$ and direction $n$, which we group into a single label $\lambda$. Scattering covariances $S$ are computed from the coefficients of a two-layer scattering transform and are defined as
 
