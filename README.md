@@ -77,12 +77,7 @@ pip install -r requirements/requirements-tests.txt
 pytest tests/  
 ```
 
-Documentation for the released version is available [here](https://astro-informatics.github.io/s2scat/). To build the documentation locally run
-
-``` bash
-pip install -r requirements/requirements-docs.txt
-cd docs && make html && open _build/html/index.html
-```
+Documentation for the released version is available [here](https://astro-informatics.github.io/s2scat/).
 
 ## Usage :rocket:
 
