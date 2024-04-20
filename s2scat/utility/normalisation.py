@@ -9,15 +9,14 @@ from s2scat.operators import spherical
 from s2scat.utility.statistics import add_to_P00
 
 
-@partial(jit, static_argnums=(1, 2, 3, 4, 7))
+@partial(jit, static_argnums=(1, 2, 3, 4, 6))
 def compute_norm(
     flm: jnp.ndarray,
     L: int,
     N: int,
     J_min: int = 0,
     reality: bool = False,
-    filters: jnp.ndarray = None,
-    precomps: List[List[jnp.ndarray]] = None,
+    config: List[jnp.ndarray] = None,
     recursive: bool = True,
 ) -> List[jnp.ndarray]:
     r"""Compute multi-scale normalisation for the scattering covariances.
@@ -29,25 +28,19 @@ def compute_norm(
         J_min (int, optional): Minimum dyadic wavelet scale to consider. Defaults to 0.
         reality (bool, optional): Whether :math:`f \in \mathbb{R}`, if True exploits
             hermitian symmetry of harmonic coefficients. Defaults to False.
-        filters (jnp.ndarray, optional): Directional wavelet filters defined in spherical
-            harmonic space. Defaults to None, but note that currently this is not supported.
-        precomps (List[jnp.ndarray], optional): Various cached precomputed values. Defaults
-            to None, but note that currently this is not supported.
+        config (List[jnp.ndarray], optional): All necessary precomputed arrays. Defaults to None.
         recursive (bool, optional): Whether to perform a memory efficient recursive transform,
             or a faster but less memory efficient fully precompute transform. Defaults to True.
 
     Raises:
-        ValueError: If one does not pass an array of precomps.
-        ValueError: If one does not pass an array of wavelet filters.
+        ValueError: If one does not pass configuration arrays.
 
     Returns:
         Tuple[jnp.ndarray]: Normalisation for the scattering covariance statistics.
     """
-    if precomps is None:
+    if config is None:
         raise ValueError("Must provide precomputed kernels for this transform!")
-
-    if filters is None:
-        raise ValueError("Must provide wavelet filters for this transform!")
+    filters, Q, precomps = config
 
     ### Configure maximum scale, impose reality, define quadrature
     J_max = s2wav.samples.j_max(L)
@@ -99,27 +92,15 @@ def apply_norm(
     for j1 in range(J_min, J_max):
         idx = j1 - J_min
         C01[idx] = jnp.einsum(
-                "ajn,j->ajn",
-                C01[idx],
-                1 / jnp.sqrt(norm[idx]),
-                optimize=True
-            )
+            "ajn,j->ajn", C01[idx], 1 / jnp.sqrt(norm[idx]), optimize=True
+        )
         C01[idx] = jnp.einsum(
-            "ajn,n->ajn",
-            C01[idx],
-            1 / jnp.sqrt(norm[idx]),
-            optimize=True
+            "ajn,n->ajn", C01[idx], 1 / jnp.sqrt(norm[idx]), optimize=True
         )
         C11[idx] = jnp.einsum(
-                "abjkn,j->abjkn",
-                C11[idx],
-                1 / jnp.sqrt(norm[idx]),
-                optimize=True
-            )
+            "abjkn,j->abjkn", C11[idx], 1 / jnp.sqrt(norm[idx]), optimize=True
+        )
         C11[idx] = jnp.einsum(
-            "abjkn,k->abjkn",
-            C11[idx],
-            1 / jnp.sqrt(norm[idx]),
-            optimize=True
+            "abjkn,k->abjkn", C11[idx], 1 / jnp.sqrt(norm[idx]), optimize=True
         )
     return S1, P00, C01, C11

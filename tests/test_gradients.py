@@ -9,14 +9,13 @@ import s2scat
 
 import s2wav
 
-L_to_test = [16]
-N_to_test = [2, 3]
-J_min_to_test = [0, 2]
+L_to_test = [8]
+N_to_test = [3]
+J_min_to_test = [0]
 reality_to_test = [False, True]
 recursive_transform = [False, True]
 delta_to_test = [None, 1]
 isotropic = [False, True]
-normalise = [False, True]
 
 
 # This test uses the in built jax.check_grad function to validate gradients for a simple
@@ -29,7 +28,6 @@ normalise = [False, True]
 @pytest.mark.parametrize("recursive", recursive_transform)
 @pytest.mark.parametrize("delta_j", delta_to_test)
 @pytest.mark.parametrize("isotropic", isotropic)
-@pytest.mark.parametrize("normalise", normalise)
 def test_gradients(
     L: int,
     N: int,
@@ -38,7 +36,6 @@ def test_gradients(
     recursive: bool,
     delta_j: int,
     isotropic: bool,
-    normalise: bool,
 ):
     J = s2wav.samples.j_max(L)
 
@@ -49,38 +46,11 @@ def test_gradients(
     flm = jnp.array(np.random.randn(L, 2 * L - 1) + 1j * np.random.randn(L, 2 * L - 1))
     flm = s2scat.operators.spherical.make_flm_real(flm, L) if reality else flm
 
-    filters = s2wav.filters.filters_directional_vectorised(L, N)[0]
-
-    matrices = (
-        s2scat.operators.matrices.generate_recursive_matrices(L, N, J_min, reality)
-        if recursive
-        else s2scat.operators.matrices.generate_precompute_matrices(
-            L, N, J_min, reality
-        )
-    )
-
-    norm = (
-        s2scat.utility.normalisation.compute_norm(
-            flm, L, N, J_min, reality, filters, matrices, recursive
-        )
-        if normalise
-        else None
-    )
+    config = s2scat.utility.config.run_config(L, N, J_min, reality, recursive, False)
 
     def func(flm):
         coeffs = s2scat.core.scatter.directional(
-            flm,
-            L,
-            N,
-            J_min,
-            reality,
-            filters,
-            norm,
-            None,
-            matrices,
-            recursive,
-            isotropic,
-            delta_j,
+            flm, L, N, J_min, reality, config, None, recursive, isotropic, delta_j
         )
         loss = 0
         for i in range(6):

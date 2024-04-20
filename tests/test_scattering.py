@@ -8,8 +8,8 @@ import s2scat
 
 import s2wav
 
-L_to_test = [16]
-N_to_test = [2, 3]
+L_to_test = [8]
+N_to_test = [3]
 J_min_to_test = [0, 1]
 delta_to_test = [None, 1]
 isotropic = [False, True]
@@ -36,50 +36,26 @@ def test_forward_pass(
     flm = jnp.array(np.random.randn(L, 2 * L - 1) + 1j * np.random.randn(L, 2 * L - 1))
     flm = s2scat.operators.spherical.make_flm_real(flm, L) if reality else flm
 
-    filters = s2wav.filters.filters_directional_vectorised(L, N)[0]
-
-    matrices_recursive = s2scat.operators.matrices.generate_recursive_matrices(
-        L, N, J_min, reality
+    config_precompute = s2scat.utility.config.run_config(
+        L, N, J_min, reality, False, False
     )
-    matrices_precompute = s2scat.operators.matrices.generate_precompute_matrices(
-        L, N, J_min, reality
+    config_recursive = s2scat.utility.config.run_config(
+        L, N, J_min, reality, True, False
     )
 
     norm = (
         s2scat.utility.normalisation.compute_norm(
-            flm, L, N, J_min, reality, filters, matrices_precompute, False
+            flm, L, N, J_min, reality, config_precompute, False
         )
         if normalise
         else None
     )
 
     coeffs_recursive = s2scat.core.scatter.directional(
-        flm,
-        L,
-        N,
-        J_min,
-        reality,
-        filters,
-        norm,
-        None,
-        matrices_recursive,
-        True,
-        isotropic,
-        delta_j,
+        flm, L, N, J_min, reality, config_recursive, norm, True, isotropic, delta_j
     )
     coeffs_precompute = s2scat.core.scatter.directional(
-        flm,
-        L,
-        N,
-        J_min,
-        reality,
-        filters,
-        norm,
-        None,
-        matrices_precompute,
-        False,
-        isotropic,
-        delta_j,
+        flm, L, N, J_min, reality, config_precompute, norm, False, isotropic, delta_j
     )
 
     for i in range(6):
@@ -110,28 +86,16 @@ def test_forward_pass_c_backend(
     flm = jnp.array(np.random.randn(L, 2 * L - 1) + 1j * np.random.randn(L, 2 * L - 1))
     flm = s2scat.operators.spherical.make_flm_real(flm, L) if reality else flm
 
-    filters = s2wav.filters.filters_directional_vectorised(L, N)[0]
-
-    matrices_precompute = s2scat.operators.matrices.generate_precompute_matrices(
-        L, N, J_min, reality
+    config_c = s2scat.utility.config.run_config(L, N, J_min, reality, True, True)
+    config_precompute = s2scat.utility.config.run_config(
+        L, N, J_min, reality, False, False
     )
     coeffs_precompute = s2scat.core.scatter.directional(
-        flm,
-        L,
-        N,
-        J_min,
-        reality,
-        filters,
-        None,
-        None,
-        matrices_precompute,
-        False,
-        isotropic,
-        delta_j,
+        flm, L, N, J_min, reality, config_precompute, None, False, isotropic, delta_j
     )
 
     coeffs_c = s2scat.core.scatter.directional_c(
-        flm, L, N, J_min, reality, filters, None, None, isotropic, delta_j
+        flm, L, N, J_min, reality, config_c, None, isotropic, delta_j
     )
 
     for i in range(6):

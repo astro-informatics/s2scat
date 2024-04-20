@@ -9,17 +9,15 @@ from s2scat.operators import spherical
 from s2scat.core import compress
 
 
-@partial(jit, static_argnums=(1, 2, 3, 4, 9, 10, 11))
+@partial(jit, static_argnums=(1, 2, 3, 4, 7, 8, 9))
 def directional(
     flm: jnp.ndarray,
     L: int,
     N: int,
     J_min: int = 0,
     reality: bool = False,
-    filters: jnp.ndarray = None,
+    config: List[jnp.ndarray] = None,
     norm: List[jnp.ndarray] = None,
-    Q: List[jnp.ndarray] = None,
-    precomps: List[List[jnp.ndarray]] = None,
     recursive: bool = True,
     isotropic: bool = False,
     delta_j: int = None,
@@ -33,14 +31,9 @@ def directional(
         J_min (int, optional): Minimum dyadic wavelet scale to consider. Defaults to 0.
         reality (bool, optional): Whether :math:`f \in \mathbb{R}`, if True exploits
             hermitian symmetry of harmonic coefficients. Defaults to False.
-        filters (jnp.ndarray, optional): Directional wavelet filters defined in spherical
-            harmonic space. Defaults to None, but note that currently this is not supported.
+        config (List[jnp.ndarray], optional): All necessary precomputed arrays. Defaults to None.
         norm (List[jnp.ndarray], optional): Covariance normalisation values.
             Defaults to None.
-        Q (List[jnp.ndarray], optional): Multiscale quadrautre weights of given sampling
-            pattern. Defaults to None.
-        precomps (List[jnp.ndarray], optional): Various cached precomputed values. Defaults
-            to None, but note that currently this is not supported.
         recursive (bool, optional): Whether to perform a memory efficient recursive transform,
             or a faster but less memory efficient fully precompute transform. Defaults to True.
         isotropic (bool, optional): Whether to return isotropic coefficients, i.e. average
@@ -49,8 +42,7 @@ def directional(
             If None, covariances between all scales will be considered. Defaults to None.
 
     Raises:
-        ValueError: If one does not pass an array of precomps.
-        ValueError: If one does not pass an array of wavelet filters.
+        ValueError: If one does not pass configuration arrays.
 
     Returns:
         Tuple[jnp.ndarray]: Directional scattering covariance statistics.
@@ -67,11 +59,9 @@ def directional(
         dramatically compress the covariance representation, but will be somewhat less
         sensitive to directional structure.
     """
-    if precomps is None:
+    if config is None:
         raise ValueError("Must provide precomputed kernels for this transform!")
-
-    if filters is None:
-        raise ValueError("Must provide wavelet filters for this transform!")
+    filters, Q, precomps = config
 
     ### Configure maximum scale, impose reality, define quadrature
     J_max = s2wav.samples.j_max(L)
@@ -146,9 +136,8 @@ def directional_c(
     N: int,
     J_min: int = 0,
     reality: bool = False,
-    filters: jnp.ndarray = None,
+    config: List[jnp.ndarray] = None,
     norm: List[jnp.ndarray] = None,
-    Q: List[jnp.ndarray] = None,
     isotropic: bool = False,
     delta_j: int = None,
 ) -> List[jnp.ndarray]:
@@ -161,12 +150,9 @@ def directional_c(
         J_min (int, optional): Minimum dyadic wavelet scale to consider. Defaults to 0.
         reality (bool, optional): Whether :math:`f \in \mathbb{R}`, if True exploits
             hermitian symmetry of harmonic coefficients. Defaults to False.
-        filters (jnp.ndarray, optional): Directional wavelet filters defined in spherical
-            harmonic space. Defaults to None, but note that currently this is not supported.
+        config (List[jnp.ndarray], optional): All necessary precomputed arrays. Defaults to None.
         norm (List[jnp.ndarray], optional): Covariance normalisation values.
             Defaults to None.
-        Q (List[jnp.ndarray], optional): Multiscale quadrautre weights of given sampling
-            pattern. Defaults to None.
         isotropic (bool, optional): Whether to return isotropic coefficients, i.e. average
             over directionality. Defaults to False.
         delta_j (int, optional): Range of wavelet scales over which to compute covariances.
@@ -191,8 +177,9 @@ def directional_c(
         dramatically compress the covariance representation, but will be somewhat less
         sensitive to directional structure.
     """
-    if filters is None:
-        raise ValueError("Must provide wavelet filters for this transform!")
+    if config is None:
+        raise ValueError("Must provide precomputed kernels for this transform!")
+    filters, Q, _ = config
 
     ### Configure maximum scale, impose reality, define quadrature
     J_max = s2wav.samples.j_max(L)

@@ -89,36 +89,17 @@ L = _   # Harmonic bandlimit
 N = _   # Azimuthal bandlimit 
 flm = _ # Harmonic coefficients of the input signal 
 
-wavelets = s2wav.filters.filters_directional_vectorised(L, N)[0]
-matrices = s2scat.operators.matrices.generate_recursive_matrices(L, N)
+# Core GPU transforms 
+config = s2scat.configure(L, N)
+covariances = s2scat.scatter(flm, L, N, config=config)
 
-covariances = s2scat.core.scatter.directional(flm, L, N, filters=wavelets, precomps=precomps)
+# C backend CPU transforms
+config = s2scat.configure(L, N, c_backend=True)
+covariances = s2scat.scatter_c(flm, L, N, config=config)
 ```
-
-For further details on usage see the [documentation](https://astro-informatics.github.io/s2scat/) and associated [notebooks](add_link_here).
-
-## C Backend CPU Support :bulb:
-
 `S2SCAT` also provides JAX support for existing C backend libraries which are memory efficient but CPU bound; at launch we support [`SSHT`](https://github.com/astro-informatics/ssht), however this could be extended straightforwardly. This works by wrapping python bindings with custom JAX frontends.
 
-For example, one may call these alternate backends for the scattering covariance transform by:
-
-``` python
-import s2scat, s2wav
-L = _   # Harmonic bandlimit 
-N = _   # Azimuthal bandlimit 
-flm = _ # Harmonic coefficients of the input signal 
-
-wavelets = s2wav.filters.filters_directional_vectorised(L, N)[0]
-covariances = s2scat.core.scatter.directional_c(flm, L, N, filters=wavelets)
-```
-
-This JAX frontend supports out of the box reverse mode automatic differentiation, 
-and under the hood is simply linking to the C packages you are familiar with. In this 
-way `S2SCAT` supports existing software and provides gradient functionality for modern 
-scientific computing or machine learning applications!
-
-For further details on usage see the associated [notebooks](add_link_here).
+For further details on usage see the [documentation](https://astro-informatics.github.io/s2scat/) and associated [notebooks](add_link_here).
 
 ## Contributors
 

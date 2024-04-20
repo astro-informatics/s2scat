@@ -4,6 +4,15 @@
 Helper Functions
 **************************
 
+.. list-table:: Configuration Functions 
+   :widths: 25 25
+   :header-rows: 1
+
+   * - Function Name
+     - Description
+   * - :func:`~s2scat.utility.config.run_config`
+     - Generates and caches all precomputed arrays.
+
 .. list-table:: Statistics Functions
    :widths: 25 25
    :header-rows: 1
@@ -29,6 +38,17 @@ Helper Functions
    * - :func:`~s2scat.utility.statistics.apply_norm`
      - Applies normalisation to a complete list of covariance statistics.
 
+.. list-table:: Statistical Normalisation Functions 
+   :widths: 25 25
+   :header-rows: 1
+
+   * - Function Name
+     - Description
+   * - :func:`~s2scat.utility.normalisation.compute_norm`
+     - Computes normalisation for the scattering covariance statistics.
+   * - :func:`~s2scat.utility.normalisation.apply_norm`
+     - Applies normalisation to a complete list of covariance statistics.
+
 .. list-table:: Reindexing Functions 
    :widths: 25 25
    :header-rows: 1
@@ -47,4 +67,6 @@ Helper Functions
 
    statistics
    reorder 
+   normalisation
+   config
    
