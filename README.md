@@ -17,6 +17,12 @@ It is worth highlighting that the input to `S2SCAT` are spherical harmonic coeff
 > [!TIP]
 > At launch `S2SCAT` provides two core transform modes: recursive, which performs underlying spherical harmonic and Wigner transforms through the [Price & McEwen](https://arxiv.org/abs/2311.14670) recursion; and precompute, which a priori computes and caches all Wigner elements required. The precompute approach will be faster but can only be run up to $L \sim 512$, whereas the recursive approach will run up to $L \sim 2048$, depending on GPU hardware.
 
+| Stress testing ballpark numbers   | Maximum resolution | Forward pass | Gradient pass | JIT compilation | Input dimensionality | Latent Parameters (anisotropic)  | Latent Parameters (isotropic) |
+|-----------------------------------|--------------------|--------------|---------------|-----------------|----------------------|----------------------------------|-------------------------------|
+| Recursive mode [A100 40GB]        | L = 512, N = 3     | ~ 90ms       | ~ 190ms       | ~ 20s           | 2,618,880            | ~ 63,000 (compression: 97.594%)  | ~504 (compression: 99.981%)   |
+| Precompute mode [A100 40GB]       | L = 2048, N = 3    | ~ 18s        | ~ 40s         | ~ 5m            | 41,932,800           | ~ 123,750 (compression: 99.705%) | ~ 990 (compression: 99.998%)  |
+| C backend mode [Xeon(R) E5-2650L] | L = 2048, N = 3    | ~ 150 s      | ~ 380s        | None            | ---                  | ---                              | ---                           |
+
 ## Third Generation Scattering Statistics :dna:
 
 <img align="right" width="300" height="300" src="./docs/assets/synthesis.gif">
