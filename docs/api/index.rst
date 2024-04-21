@@ -16,6 +16,7 @@ Directory structure
    ├── core/               # Top-level functionality:
    │      ├─ scatter.py            # - Scattering covariance transform.
    │      ├─ compress.py           # - Statistical compression functions.
+   │      ├─ synthesis.py          # - Synthesis optimisation functions. 
    │    
    ├── operators/          # Internal functionality:
    │      ├─ spherical.py          # - Specific spherical operations, e.g. batched SHTs.
@@ -24,6 +25,7 @@ Directory structure
    ├── utility/            # Convenience functionality:
    │      ├─ reorder.py            # - Reindexing and converting list and arrays.
    │      ├─ statistics.py         # - Calculation of covariance statistics. 
+   │      ├─ normalisation.py      # - Normalisation functions for covariance statistics. 
    │      ├─ plotting.py           # - Plotting functions for signals and statistics.
 
 .. toctree::

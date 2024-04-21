@@ -4,7 +4,7 @@
 [![image](https://badge.fury.io/py/s2scat.svg)](https://badge.fury.io/py/s2scat)
 [![image](http://img.shields.io/badge/arXiv-xxxx.xxxxx-orange.svg?style=flat)](https://arxiv.org/abs/xxxx.xxxxx)
 [![All Contributors](https://img.shields.io/github/all-contributors/astro-informatics/s2fft?color=ee8449&style=flat-square)](#contributors)
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](add_link_here)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/astro-informatics/s2scat/blob/main/notebooks/synthesis.ipynb)
 
 # S2SCAT: Scattering covariance transform on the sphere
 
@@ -100,7 +100,7 @@ covariances = s2scat.scatter_c(flm, L, N, config=config)
 ```
 `S2SCAT` also provides JAX support for existing C backend libraries which are memory efficient but CPU bound; at launch we support [`SSHT`](https://github.com/astro-informatics/ssht), however this could be extended straightforwardly. This works by wrapping python bindings with custom JAX frontends.
 
-For further details on usage see the [documentation](https://astro-informatics.github.io/s2scat/) and associated [notebooks](add_link_here).
+For further details on usage see the [documentation](https://astro-informatics.github.io/s2scat/) and associated [notebooks](https://astro-informatics.github.io/s2scat/notebooks/).
 
 ## Contributors
 
@@ -152,10 +152,10 @@ code builds:
 ```
 ```
     @article{price:s2wav, 
-        author      = {Matthew A. Price and Alicja Polanska and Jessica Whitney and Jason D. McEwen},
-        title       = {"Differentiable and accelerated directional wavelet transform on the sphere and ball"},
-        eprint      = {arXiv:2402.01282},
-        year        = {2024}
+        author      = "Matthew A. Price and Alicja Polanska and Jessica Whitney and Jason D. McEwen",
+        title       = "Differentiable and accelerated directional wavelet transform on the sphere and ball",
+        year        = "2024",
+        eprint      = "arXiv:2402.01282"
     }
 ```
 

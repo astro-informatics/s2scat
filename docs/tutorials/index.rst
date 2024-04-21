@@ -15,27 +15,27 @@ To import and use ``S2SCAT``  is as simple follows:
 
 .. code-block:: python
 
-      some code here.
+   import s2scat
+   L = _   # Harmonic bandlimit 
+   N = _   # Azimuthal bandlimit 
+   flm = _ # Harmonic coefficients of the input signal 
 
-C backend usage |:bulb:|
------------------
-``S2SCAT`` also provides JAX support for existing C libraries, at launch this includes `SSHT <https://github.com/astro-informatics/ssht>`_. 
-This works by wrapping python bindings with custom JAX frontends. Note that currently this C to JAX interoperability is currently 
-limited to CPU, however for many applications this is desirable due to memory constraints.
+   # Core GPU transforms 
+   config = s2scat.configure(L, N)
+   covariances = s2scat.scatter(flm, L, N, config=config)
 
-For example, one may call these alternate backends for the spherical harmonic transform by:
+   # C backend CPU transforms
+   config = s2scat.configure(L, N, c_backend=True)
+   covariances = s2scat.scatter_c(flm, L, N, config=config)
 
-.. code-block:: python
+``S2SCAT`` also provides JAX support for existing C backend libraries which are memory efficient but CPU bound; at launch we support `SSHT <https://github.com/astro-informatics/ssht>`_, however this could be extended straightforwardly. This works by wrapping python bindings with custom JAX frontends.
 
-   some code here. 
-
-This JAX frontend supports out of the box reverse mode automatic differentiation, 
-and under the hood is simply linking to the C packages you are familiar with. In this 
-way ``S2SCAT`` enhances existing packages with gradient functionality for modern signal processing 
-applications!
+For further details on usage see the `documentation <https://astro-informatics.github.io/s2scat/>`_ and associated `notebooks <https://astro-informatics.github.io/s2scat/notebooks/>`_.
 
 
 .. toctree::
    :hidden:
    :maxdepth: 3
    :caption: Jupyter Notebooks
+
+   synthesis/synthesis.nblink
