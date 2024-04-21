@@ -39,3 +39,4 @@ For further details on usage see the `documentation <https://astro-informatics.g
    :caption: Jupyter Notebooks
 
    synthesis/synthesis.nblink
+   compression/compression.nblink
