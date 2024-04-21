@@ -18,10 +18,10 @@
 > [!TIP]
 > At launch `S2SCAT` provides two core transform modes: recursive, which performs underlying spherical harmonic and Wigner transforms through the [Price & McEwen](https://arxiv.org/abs/2311.14670) recursion; and precompute, which a priori computes and caches all Wigner elements required. The precompute approach will be faster but can only be run up to $L \sim 512$, whereas the recursive approach will run up to $L \sim 2048$, depending on GPU hardware.
 
-| Ballpark Numbers [A100 40GB] | Max resolution | Forward pass | Gradient pass | JIT compilation | Input params | Anisotropic params  (compression) | Isotropic params  (compression) |
-|:----------------------------:|:--------------:|:------------:|:-------------:|:---------------:|:------------:|:---------------------------------:|:-------------------------------:|
-|           Recursive          |   L=512, N=3   |     ~90ms    |     ~190ms    |       ~20s      |   2,618,880  |        ~ 63,000  (97.594%)        |         ~504  (99.981%)         |
-|          Precompute          |   L=2048, N=3  |     ~18s     |      ~40s     |       ~5m       |  41,932,800  |        ~ 123,750  (99.705%)       |         ~ 990  (99.998%)        |
+| Ballpark Numbers [A100 40GB] | Max resolution | Forward pass | Gradient pass | JIT compilation | Input params | Anisotropic  (compression) | Isotropic  (compression) |
+|:----------------------------:|:--------------:|:------------:|:-------------:|:---------------:|:------------:|:--------------------------:|:------------------------:|
+|           Recursive          |   L=512, N=3   |     ~90ms    |     ~190ms    |       ~20s      |   2,618,880  |     ~ 63,000  (97.594%)    |      ~504  (99.981%)     |
+|          Precompute          |   L=2048, N=3  |     ~18s     |      ~40s     |       ~5m       |  41,932,800  |    ~ 123,750  (99.705%)    |     ~ 990  (99.998%)     |
 
 ## Third Generation Scattering Statistics :dna:
 
