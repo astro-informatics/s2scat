@@ -4,7 +4,7 @@ from functools import partial
 from typing import List, Tuple
 
 
-@partial(jit)
+@jit
 def normalize_map(f: jnp.ndarray) -> jnp.ndarray:
     r"""Normalises a spherical map by removing the mean and enforcing unit variance.
 
@@ -152,3 +152,38 @@ def add_to_C11(
     val = jnp.einsum("abjkntp,t->abjkn", val, Q, optimize=True)
     C11.append(jnp.real(val))
     return C11
+
+
+@jit
+def compute_snr(target: jnp.ndarray, predict: jnp.ndarray) -> jnp.float64:
+    r"""Computes the recovered signal to noise ratio (SNR) in dB.
+
+    Args:
+        target (jnp.ndarray): Ground truth signal.
+        predict (jnp.ndarray): Estimated/recovered signal.
+    
+    Returns:
+        jnp.float64: Signal to noise ratio (dB)
+    """
+    temp = jnp.sqrt(jnp.mean(jnp.abs(target)**2))
+    temp /= jnp.sqrt(jnp.mean(jnp.abs(target-predict)**2))
+    return 20 * jnp.log10(temp)
+
+@jit
+def compute_pearson_correlation(target: jnp.ndarray, predict: jnp.ndarray) -> jnp.float64:
+    r"""Computes the recovered signal pearson correlation coefficient (structural similarity).
+
+    Args:
+        target (jnp.ndarray): Ground truth signal.
+        predict (jnp.ndarray): Estimated/recovered signal.
+    
+    Returns:
+        jnp.float64: Pearson correlation coefficient.
+    """
+    predict_mean = jnp.mean(predict)
+    target_mean = jnp.mean(target)
+
+    numerator = jnp.sum((predict-predict_mean)*(target-target_mean))
+    denominator = jnp.sqrt(jnp.sum((predict-predict_mean)**2))
+    denominator *= jnp.sqrt(jnp.sum((target-target_mean)**2))
+    return numerator/denominator
