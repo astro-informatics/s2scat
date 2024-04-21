@@ -11,6 +11,15 @@ Scattering covariance transform on the sphere
 .. tip::
     At launch `S2SCAT` provides two core transform modes: recursive, which performs underlying spherical harmonic and Wigner transforms through the `Price & McEwen <https://arxiv.org/abs/2311.14670>`_ recursion; and precompute, which a priori computes and caches all Wigner elements required. The precompute approach will be faster but can only be run up to :math:`L \sim 512`, whereas the recursive approach will run up to :math:`L \sim 2048`, depending on GPU hardware.
 
++------------------------------+----------------+--------------+---------------+-----------------+--------------+----------------------------+--------------------------+
+| Ballpark Numbers [A100 40GB] | Max resolution | Forward pass | Gradient pass | JIT compilation | Input params | Anisotropic  (compression) | Isotropic  (compression) |
++==============================+================+==============+===============+=================+==============+============================+==========================+
+| Recursive                    | L=512, N=3     | ~90ms        | ~190ms        | ~20s            | 2,618,880    | ~ 63,000  (97.594%)        | ~504  (99.981%)          |
++------------------------------+----------------+--------------+---------------+-----------------+--------------+----------------------------+--------------------------+
+| Precompute                   | L=2048, N=3    | ~18s         | ~40s          | ~5m             | 41,932,800   | ~ 123,750  (99.705%)       | ~ 990  (99.998%)         |
++------------------------------+----------------+--------------+---------------+-----------------+--------------+----------------------------+--------------------------+
+
+
 Third Generation Scattering Covariances |:dna:|
 ---------------------------------------------------------
 
@@ -18,7 +27,7 @@ Third Generation Scattering Covariances |:dna:|
     :align: right
     :width: 200
 
-Scattering covariances, or scattering spectra, were previously introduced for 1D signals by `Morel et al (2023) <https://arxiv.org/abs/2204.10177>`_ and for planar 2D signals by `Cheng et al (2023) <https://arxiv.org/abs/2306.17210>`_. The scattering transform is defined by repeated application of directional wavelet transforms followed by a machine learning inspired non-linearity, typically the modulus operator. The wavelet transform :math:`W^{\lambda}` within each layer has an associated scale :math:`j` and direction $n$, which we group into a single label :math:`\lambda`. Scattering covariances :math:`S` are computed from the coefficients of a two-layer scattering transform :math:`\mathcal{S}` and are defined as
+Scattering covariances, or scattering spectra, were previously introduced for 1D signals by `Morel et al (2023) <https://arxiv.org/abs/2204.10177>`_ and for planar 2D signals by `Cheng et al (2023) <https://arxiv.org/abs/2306.17210>`_. The scattering transform is defined by repeated application of directional wavelet transforms followed by a machine learning inspired non-linearity, typically the modulus operator. The wavelet transform :math:`W^{\lambda}` within each layer has an associated scale :math:`j` and direction $n$, which we group into a single label :math:`\lambda`. Scattering covariances :math:`S` are computed from the coefficients of a two-layer scattering transform and are defined as
 
 .. math:: 
     

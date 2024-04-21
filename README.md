@@ -12,16 +12,16 @@
 
 `S2SCAT` is a Python package for computing third generation scattering covariances on the sphere [(Mousset et al 2024)](https://arxiv.org/abs/xxxx.xxxxx) using JAX. It leverages autodiff to provide differentiable transforms, which are also deployable on hardware accelerators (e.g. GPUs and TPUs). Scattering covariances are useful both for field-level emulation of complex non-Gaussian textures and for statistical compression of high dimensional field-level data, a key step of e.g. simulation based inference [(Cranmer et al 2020)](https://www.pnas.org/doi/abs/10.1073/pnas.1912789117).
 
-It is worth highlighting that the input to `S2SCAT` are spherical harmonic coefficients, which can be generated with whichever software package you prefer, e.g. [`S2FFT`](https://github.com/astro-informatics/s2fft) or [`healpy`](https://healpy.readthedocs.io/en/latest/). Just ensure your harmonic coefficients are indexed using our convention; helper functions for this reindexing can be found in [`S2FFT`](https://github.com/astro-informatics/s2fft).
+> [!IMPORTANT]
+> It is worth highlighting that the input to `S2SCAT` are spherical harmonic coefficients, which can be generated with whichever software package you prefer, e.g. [`S2FFT`](https://github.com/astro-informatics/s2fft) or [`healpy`](https://healpy.readthedocs.io/en/latest/). Just ensure your harmonic coefficients are indexed using our convention; helper functions for this reindexing can be found in [`S2FFT`](https://github.com/astro-informatics/s2fft).
 
 > [!TIP]
 > At launch `S2SCAT` provides two core transform modes: recursive, which performs underlying spherical harmonic and Wigner transforms through the [Price & McEwen](https://arxiv.org/abs/2311.14670) recursion; and precompute, which a priori computes and caches all Wigner elements required. The precompute approach will be faster but can only be run up to $L \sim 512$, whereas the recursive approach will run up to $L \sim 2048$, depending on GPU hardware.
 
-| Ballpark Numbers             | Maximum resolution | Forward pass | Gradient pass | JIT compilation | Input params | Anisotropic params (compression) | Isotropic params (compression) |
-|------------------------------|--------------------|--------------|---------------|-----------------|--------------|----------------------------------|--------------------------------|
-| Recursive [A100 40GB]        | L=512, N=3         | ~90ms        | ~190ms        | ~20s            | 2,618,880    | ~ 63,000 (97.594%)               | ~504 (99.981%)                 |
-| Precompute [A100 40GB]       | L=2048, N=3        | ~18s         | ~40s          | ~5m             | 41,932,800   | ~ 123,750 (99.705%)              | ~ 990 (99.998%)                |
-| C backend [Xeon(R) E5-2650L] | L=2048, N=3        | ~150s        | ~380s         | None            | ---          | ---                              | ---                            |                            | ---                           |
+| Ballpark Numbers [A100 40GB] | Max resolution | Forward pass | Gradient pass | JIT compilation | Input params | Anisotropic params  (compression) | Isotropic params  (compression) |
+|:----------------------------:|:--------------:|:------------:|:-------------:|:---------------:|:------------:|:---------------------------------:|:-------------------------------:|
+|           Recursive          |   L=512, N=3   |     ~90ms    |     ~190ms    |       ~20s      |   2,618,880  |        ~ 63,000  (97.594%)        |         ~504  (99.981%)         |
+|          Precompute          |   L=2048, N=3  |     ~18s     |      ~40s     |       ~5m       |  41,932,800  |        ~ 123,750  (99.705%)       |         ~ 990  (99.998%)        |
 
 ## Third Generation Scattering Statistics :dna:
 
