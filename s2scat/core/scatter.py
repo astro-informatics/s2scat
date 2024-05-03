@@ -22,7 +22,7 @@ def directional(
     isotropic: bool = False,
     delta_j: int = None,
 ) -> List[jnp.ndarray]:
-    r"""Compute directional scattering covariances on the sphere (Mousset et al 2024).
+    r"""Compute directional scattering covariances on the sphere.
 
     Args:
         flm (jnp.ndarray): Spherical harmonic coefficients.
@@ -141,7 +141,7 @@ def directional_c(
     isotropic: bool = False,
     delta_j: int = None,
 ) -> List[jnp.ndarray]:
-    r"""Compute directional scattering covariances on the sphere using a custom C backend (Mousset et al 2024).
+    r"""Compute directional scattering covariances on the sphere using a custom C backend.
 
     Args:
         flm (jnp.ndarray): Spherical harmonic coefficients.
