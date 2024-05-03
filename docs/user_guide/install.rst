@@ -1,25 +1,25 @@
+:html_theme.sidebar_secondary.remove:
+
 .. _install:
 
 Installation
-============
-Link to `PyPi <https://pypi.org>`_ and provide link for source install.
+=========================
+There are two primary ways to install ``S2SCAT``. One can either build the project from 
+the most recent GitHub source, which comes with the added benefit of being able to 
+locally execute the unit testing. Alternately, one may simply install the package directly 
+from PyPi, an online python package manager.
 
 Quick install (PyPi)
 --------------------
-Install **<Project-name>** from PyPi with a single command
+The simplest way to pick up ``S2SCAT`` is to install the core JAX functionality directly 
+from PyPi by running 
 
 .. code-block:: bash
+    
+    pip install s2scat 
 
-    pip install <Project-name>
-
-Check that the package has installed by running 
-
-.. code-block:: bash 
-
-	pip list 
-
-and locate <Project-name>.
-
+after which ``S2SCAT`` may be imported and run as outlined in the associated notebooks and collab tutorials.
+This will include PyTorch functionality.
 
 Install from source (GitHub)
 ----------------------------
@@ -28,26 +28,55 @@ When installing from source we recommend working within an existing conda enviro
 
 .. code-block:: bash
 
-    conda create -n <Project-name>_env python=3.8
-    conda activate <Project-name>_env
+    conda create -n "env_name" python>=3.11
+    conda activate "env_name"
 
-Once within a fresh environment **<Project-name>** may be installed by cloning the GitHub repository
-
-.. code-block:: bash
-
-    git clone https://github.com/astro-informatics/<Project-name>
-    cd <Project-name>
-
-and running the install script, within the root directory, with one command 
+Once within a fresh environment ``S2SCAT`` may be installed by cloning the GitHub repository 
+and pip installing locally
 
 .. code-block:: bash
 
-    bash build_<Project-name>.sh
+    git clone https://github.com/astro-informatics/s2scat
+    cd s2scat
+    pip install .
 
-To check the install has worked correctly run the unit tests with 
+from the root directory of the repository. This will include PyTorch functionality.
 
-.. code-block:: bash
+Unit tests can then be executed to ensure the installation was successful by first installing the test requirements and then running pytest
 
-	pytest --black <Project-name>/tests/ 
+.. code-block:: bash 
 
-.. note:: For installing from source a conda environment is required by the installation bash script, which is recommended, due to a pandoc dependency.
+    pip install -r requirements/requirements-tests.txt
+    pytest tests/ 
+
+Documentation for the released version is available `here <https://astro-informatics.github.io/s2scat/>`_.  To build the documentation locally run
+
+.. code-block:: bash 
+
+    pip install -r requirements/requirements-docs.txt
+    cd docs 
+    make html
+    open _build/html/index.html
+
+
+
+Installing JAX for NVIDIA GPUs
+------------------------------
+We include both ``jax`` and ``jaxlib`` as dependencies in ``requirements/requirements-core.txt`` 
+however to get things running on GPUs can be a bit more involved. We strongly recommend 
+this installation `guide <https://github.com/google/jax#installation>`_ provided by 
+Google. To summarise you will first need to install NVIDIA drivers for 
+`CUDA <https://developer.nvidia.com/cuda-downloads>`_ and `CuDNN <https://developer.nvidia.com/CUDNN>`_, 
+following which a pre-built CUDA-compatible wheels shoulld be installed by running 
+
+.. code-block:: bash 
+
+    pip install --upgrade pip 
+
+    # Wheels only built for linux
+    pip install --upgrade "jax[cuda]" -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html
+
+    # Wheels built for many machine architectures 
+    pip install "jax[cuda11_cudnn86]" -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html
+
+where the versions of CUDA and CuDNN should match those you have installed on the machine.

@@ -4,27 +4,58 @@
 [![image](https://badge.fury.io/py/s2scat.svg)](https://badge.fury.io/py/s2scat)
 [![image](http://img.shields.io/badge/arXiv-xxxx.xxxxx-orange.svg?style=flat)](https://arxiv.org/abs/xxxx.xxxxx)
 [![All Contributors](https://img.shields.io/github/all-contributors/astro-informatics/s2fft?color=ee8449&style=flat-square)](#contributors)
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](add_link_here)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/astro-informatics/s2scat/blob/main/notebooks/synthesis.ipynb)
 
-# Scattering covariance transform on the sphere
+# S2SCAT: Scattering covariance transform on the sphere
 
-`S2SCAT` is a Python package for computing third generation scattering covariances on the 
-sphere [(Mousset et al 2024)](https://arxiv.org/abs/2311.14670) using 
-JAX or PyTorch. It leverages autodiff to provide differentiable transforms, which are 
-also deployable on hardware accelerators (e.g. GPUs and TPUs).
+<img align="center" src="./docs/assets/synthesis_zoom.gif">
+
+`S2SCAT` is a Python package for computing third generation scattering covariances on the sphere [(Mousset et al 2024)](https://arxiv.org/abs/xxxx.xxxxx) using JAX. It leverages autodiff to provide differentiable transforms, which are also deployable on hardware accelerators (e.g. GPUs and TPUs). Scattering covariances are useful both for field-level emulation of complex non-Gaussian textures and for statistical compression of high dimensional field-level data, a key step of e.g. simulation based inference [(Cranmer et al 2020)](https://www.pnas.org/doi/abs/10.1073/pnas.1912789117).
+
+> [!IMPORTANT]
+> It is worth highlighting that the input to `S2SCAT` are spherical harmonic coefficients, which can be generated with whichever software package you prefer, e.g. [`S2FFT`](https://github.com/astro-informatics/s2fft) or [`healpy`](https://healpy.readthedocs.io/en/latest/). Just ensure your harmonic coefficients are indexed using our convention; helper functions for this reindexing can be found in [`S2FFT`](https://github.com/astro-informatics/s2fft).
 
 > [!TIP]
-At launch `S2SCAT` also provides PyTorch implementations of underlying 
-precompute transforms. In future releases this support will be extended to our 
-on-the-fly algorithms. `S2SCAT` also provides JAX frontend support for the highly optimised 
-but CPU bound SSHT C backends. These can be useful when GPU resources are not available or 
-memory constraints are tight.
+> At launch `S2SCAT` provides two core transform modes: recursive, which performs underlying spherical harmonic and Wigner transforms through the [Price & McEwen](https://arxiv.org/abs/2311.14670) recursion; and precompute, which a priori computes and caches all Wigner elements required. The precompute approach will be faster but can only be run up to $L \sim 512$, whereas the recursive approach will run up to $L \sim 2048$, depending on GPU hardware.
 
+| Ballpark Numbers [A100 40GB] | Max resolution | Forward pass | Gradient pass | JIT compilation | Input params | Anisotropic  (compression) | Isotropic  (compression) |
+|:----------------------------:|:--------------:|:------------:|:-------------:|:---------------:|:------------:|:--------------------------:|:------------------------:|
+|           Recursive          |   L=512, N=3   |     ~90ms    |     ~190ms    |       ~20s      |   2,618,880  |     ~ 63,000  (97.594%)    |      ~504  (99.981%)     |
+|          Precompute          |   L=2048, N=3  |     ~18s     |      ~40s     |       ~5m       |  41,932,800  |    ~ 123,750  (99.705%)    |     ~ 990  (99.998%)     |
 
-## Third Generation Scattering Covariances :zap:
+## Third Generation Scattering Statistics :dna:
 
-Details about the transform here with nice animations!
+<img align="right" width="300" height="300" src="./docs/assets/synthesis.gif">
 
+Scattering covariances, or scattering spectra, were previously introduced for 1D signals by [Morel et al (2023)](https://arxiv.org/abs/2204.10177) and for planar 2D signals by [Cheng et al (2023)](https://arxiv.org/abs/2306.17210). The scattering transform is defined by repeated application of directional wavelet transforms followed by a machine learning inspired non-linearity, typically the modulus operator. The wavelet transform $W^{\lambda}$ within each layer has an associated scale $j$ and direction $n$, which we group into a single label $\lambda$. Scattering covariances $S$ are computed from the coefficients of a two-layer scattering transform and are defined as
+
+$$S_1^{\lambda_1} = \langle |W^{\lambda_1} I| \rangle \quad S_2^{\lambda_1} = \langle|W^{\lambda_1} I|^2 \rangle$$
+
+$$S_3^{\lambda_1, \lambda_2} = \text{Cov} \left[  W^{\lambda_1}I, W^{\lambda_1}|W^{\lambda_2} I| \right]$$
+
+$$S_4^{\lambda_1, \lambda_2, \lambda_3} = \text{Cov} \left[W^{\lambda_1}|W^{\lambda_3}I|, W^{\lambda_1}|W^{\lambda_2}I|\right].$$
+
+Given that the highest order coefficients are computed from products between $\lambda_1, \lambda_2$ and $\lambda_3$ they encode $6^{\text{th}}$-order statistical information. This statistical representation characterises the power and sparsity at given scales, as well as covariant features between different wavelet scale and directions; which can adequetly capture complex non-Gaussian structural information, e.g. filamentary structure. Using recently release JAX spherical harmonic [(Price & McEwen 2023)](https://arxiv.org/abs/2311.14670) and wavelet transforms [(Price et al 2024)](https://arxiv.org/abs/2402.01282) this work extends scattering covariances to the sphere, which is necessary for their application to e.g. wide-field cosmological surveys [(Mousset et al 2024)](https://arxiv.org/abs/xxxx.xxxxx).
+
+## Package Directory Structure :art:
+
+``` bash
+s2scat/  
+├── core/               # Top-level functionality:
+│      ├─ scatter.py            # - Scattering covariance transform.
+│      ├─ compress.py           # - Statistical compression functions.
+│      ├─ synthesis.py          # - Synthesis optimisation functions. 
+│    
+├── operators/          # Internal functionality:
+│      ├─ spherical.py          # - Specific spherical operations, e.g. batched SHTs.
+│      ├─ matrices.py           # - Wrappers to generate cached values. 
+│
+├── utility/            # Convenience functionality:
+│      ├─ reorder.py            # - Reindexing and converting list and arrays.
+│      ├─ statistics.py         # - Calculation of covariance statistics. 
+│      ├─ normalisation.py      # - Normalisation functions for covariance statistics. 
+│      ├─ plotting.py           # - Plotting functions for signals and statistics.
+```
 
 ## Installation :computer:
 
@@ -35,7 +66,7 @@ into the active python environment by [pip](https://pypi.org) when running
 ``` bash
 pip install s2scat
 ```
-This will install all core functionality which includes JAX support (including PyTorch support).
+This will install all core functionality which includes full JAX support.
 
 Alternatively, the `S2SCAT` package may be installed directly from GitHub by cloning this 
 repository and then running 
@@ -53,50 +84,29 @@ pip install -r requirements/requirements-tests.txt
 pytest tests/  
 ```
 
-Documentation for the released version is available [here](https://astro-informatics.github.io/s2scat/).  To build the documentation locally run
-
-``` bash
-pip install -r requirements/requirements-docs.txt
-cd docs 
-make html
-open _build/html/index.html
-```
+Documentation for the released version is available [here](https://astro-informatics.github.io/s2scat/).
 
 ## Usage :rocket:
 
 To import and use `S2SCAT` is as simple follows:
 
 ``` python
-Code example here. 
+import s2scat
+L = _   # Harmonic bandlimit 
+N = _   # Azimuthal bandlimit 
+flm = _ # Harmonic coefficients of the input signal 
+
+# Core GPU transforms 
+config = s2scat.configure(L, N)
+covariances = s2scat.scatter(flm, L, N, config=config)
+
+# C backend CPU transforms
+config = s2scat.configure(L, N, c_backend=True)
+covariances = s2scat.scatter_c(flm, L, N, config=config)
 ```
+`S2SCAT` also provides JAX support for existing C backend libraries which are memory efficient but CPU bound; at launch we support [`SSHT`](https://github.com/astro-informatics/ssht), however this could be extended straightforwardly. This works by wrapping python bindings with custom JAX frontends.
 
-For further details on usage see the [documentation](https://astro-informatics.github.io/s2scat/) 
-and associated [notebooks](add_link_here).
-
-> [!NOTE]  
-> We also provide PyTorch support for the precompute version of our transforms. These 
-> are called through forward/inverse_torch(). Full PyTorch support will be provided in 
-> future releases.
-
-## C/C++ JAX Frontends for SSHT/HEALPix :bulb:
-
-`S2SCAT` also provides JAX support for existing C backend libraries which are memory efficient 
-but CPU bound; at launch we support [`SSHT`](https://github.com/astro-informatics/ssht), 
-however this could be extended straightforwardly. This works by wrapping python bindings 
-with custom JAX frontends.
-
-For example, one may call these alternate backends for the spherical harmonic transform by:
-
-``` python
-Code example here. 
-```
-
-All of these JAX frontends supports out of the box reverse mode automatic differentiation, 
-and under the hood is simply linking to the C/C++ packages you are familiar with. In this 
-way `S2SCAT` supports existing backend transforms with gradient functionality for modern 
-scientific computing or machine learning applications!
-
-For further details on usage see the associated [notebooks](add_link_here).
+For further details on usage see the [documentation](https://astro-informatics.github.io/s2scat/) and associated [notebooks](https://astro-informatics.github.io/s2scat/notebooks/).
 
 ## Contributors
 
@@ -126,7 +136,7 @@ referenced. A BibTeX entry for this reference may look like:
 
 ```
     @article{mousset:s2scat, 
-        author      = "Louise Mousset, Matthew A. Price, Erwan Allys and Jason D. McEwen",
+        author      = "Louise Mousset et al",
         title       = "TBD",
         journal     = "Astronomy & Astrophysics, submitted",
         year        = "2024",
@@ -148,10 +158,10 @@ code builds:
 ```
 ```
     @article{price:s2wav, 
-        author      = {Matthew A. Price and Alicja Polanska and Jessica Whitney and Jason D. McEwen},
-        title       = {"Differentiable and accelerated directional wavelet transform on the sphere and ball"},
-        eprint      = {arXiv:2402.01282},
-        year        = {2024}
+        author      = "Matthew A. Price and Alicja Polanska and Jessica Whitney and Jason D. McEwen",
+        title       = "Differentiable and accelerated directional wavelet transform on the sphere and ball",
+        year        = "2024",
+        eprint      = "arXiv:2402.01282"
     }
 ```
 
