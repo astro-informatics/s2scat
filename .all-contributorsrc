@@ -37,8 +37,17 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/3181701?v=4",
       "profile": "http://www.jasonmcewen.org",
       "contributions": [
-      "ideas"
-    ]
+        "ideas"
+      ]
+    },
+    {
+      "login": "Eralys",
+      "name": "Eralys",
+      "avatar_url": "https://avatars.githubusercontent.com/u/47173968?v=4",
+      "profile": "https://github.com/Eralys",
+      "contributions": [
+        "ideas"
+      ]
     }
   ]
 }
