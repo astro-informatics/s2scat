@@ -16,7 +16,7 @@
 > [!TIP]
 > At launch `S2SCAT` provides two core transform modes: on-the-fly, which performs underlying spherical harmonic and Wigner transforms through the [Price & McEwen](https://arxiv.org/abs/2311.14670) recursion; and precompute, which a priori computes and caches all Wigner elements required. The precompute approach will be faster but can only be run up to $L \sim 512$, whereas the on-the-fly approach will run up to $L \sim 2048$ and potentially beyond, depending on GPU hardware.
 
-Ballpark compute times (when running on an 40GB A100 GPU) and compression levels are given in the table below. 
+Ball-park compute times (when running on an 40GB A100 GPU) and compression levels are given in the table below. 
 
 | Method | Resolution | Forward pass | Gradient pass | JIT compilation | Input params | Anisotropic  (compression) | Isotropic  (compression) |
 |:----------------------------:|:--------------:|:------------:|:-------------:|:---------------:|:------------:|:--------------------------:|:------------------------:|
