@@ -6,7 +6,7 @@
 [![All Contributors](https://img.shields.io/github/all-contributors/astro-informatics/s2fft?color=ee8449&style=flat-square)](#contributors)
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/astro-informatics/s2scat/blob/main/notebooks/synthesis.ipynb)
 
-# Differentiable scattering covariance statistics on the sphere
+# Differentiable scattering covariances on the sphere
 
 `S2SCAT` is a Python package for computing scattering covariances on the sphere ([Mousset et al. 2024](https://arxiv.org/abs/xxxx.xxxxx)) using JAX.  It exploits autodiff to provide differentiable transforms, which are also deployable on hardware accelerators (e.g. GPUs and TPUs), leveraging the differentiable and accelerated spherical harmonic and wavelet transforms implemented in [S2FFT](https://github.com/astro-informatics/s2fft) and [S2WAV](https://github.com/astro-informatics/s2wav), respectively. 
 
