@@ -1,7 +1,7 @@
 :html_theme.sidebar_secondary.remove:
 
 **************************
-Synthesis
+Generation
 **************************
-.. automodule:: s2scat.core.synthesis
+.. automodule:: s2scat.generation
    :members: 

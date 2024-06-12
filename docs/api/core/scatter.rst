@@ -1,7 +1,7 @@
 :html_theme.sidebar_secondary.remove:
 
 **************************
-Scattering
+Representation
 **************************
-.. automodule:: s2scat.core.scatter
+.. automodule:: s2scat.representation
    :members: 

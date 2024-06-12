@@ -13,10 +13,9 @@ Directory structure
 .. code-block:: bash
 
    s2scat/  
-   ├── core/               # Top-level functionality:
-   │      ├─ scatter.py            # - Scattering covariance transform.
-   │      ├─ compress.py           # - Statistical compression functions.
-   │      ├─ synthesis.py          # - Synthesis optimisation functions. 
+   ├── representation.py   # - Scattering covariance transform.
+   ├── compression.py      # - Statistical compression functions.
+   ├── generation.py       # - Generative optimisation wrappers. 
    │    
    ├── operators/          # Internal functionality:
    │      ├─ spherical.py          # - Specific spherical operations, e.g. batched SHTs.

@@ -3,5 +3,5 @@
 **************************
 Compression
 **************************
-.. automodule:: s2scat.core.compress
+.. automodule:: s2scat.compression
    :members: 

@@ -8,7 +8,7 @@
 
 # Differentiable scattering covariances on the sphere
 
-`S2SCAT` is a Python package for computing scattering covariances on the sphere ([Mousset et al. 2024](https://arxiv.org/abs/xxxx.xxxxx)) using JAX.  It exploits autodiff to provide differentiable transforms, which are also deployable on hardware accelerators (e.g. GPUs and TPUs), leveraging the differentiable and accelerated spherical harmonic and wavelet transforms implemented in [S2FFT](https://github.com/astro-informatics/s2fft) and [S2WAV](https://github.com/astro-informatics/s2wav), respectively. 
+`S2SCAT` is a Python package for computing scattering covariances on the sphere ([Mousset et al. 2024](https://arxiv.org/abs/xxxx.xxxxx)) using JAX.  It exploits autodiff to provide differentiable transforms, which are also deployable on hardware accelerators (e.g. GPUs and TPUs), leveraging the differentiable and accelerated spherical harmonic and wavelet transforms implemented in [S2FFT](https://github.com/astro-informatics/s2fft) and [S2WAV](https://github.com/astro-informatics/s2wav), respectively. Scattering covariances are useful both for field-level generative modelling of complex non-Gaussian textures and for statistical compression of high dimensional field-level data, a key step of e.g. simulation based inference.
 
 > [!IMPORTANT]
 > It is worth highlighting that the input to `S2SCAT` are spherical harmonic coefficients, which can be generated with whichever software package you prefer, e.g. [`S2FFT`](https://github.com/astro-informatics/s2fft) or [`healpy`](https://healpy.readthedocs.io/en/latest/). Just ensure your harmonic coefficients are indexed using our convention; helper functions for this reindexing can be found in [`S2FFT`](https://github.com/astro-informatics/s2fft).
@@ -49,10 +49,9 @@ This statistical representation characterises the power and sparsity at given sc
 
 ``` bash
 s2scat/  
-├── core/               # Top-level functionality:
-│      ├─ scatter.py            # - Scattering covariance transform.
-│      ├─ compress.py           # - Statistical compression functions.
-│      ├─ synthesis.py          # - Synthesis optimisation functions. 
+├── representation.py   # - Scattering covariance transform.
+├── compression.py      # - Statistical compression functions.
+├── generation.py       # - Generative optimisation wrappers. 
 │    
 ├── operators/          # Internal functionality:
 │      ├─ spherical.py          # - Specific spherical operations, e.g. batched SHTs.

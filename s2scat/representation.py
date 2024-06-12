@@ -6,11 +6,11 @@ from typing import List
 import s2wav
 from s2scat.utility import statistics, reorder, normalisation
 from s2scat.operators import spherical
-from s2scat.core import compress
+from s2scat import compression
 
 
 @partial(jit, static_argnums=(1, 2, 3, 4, 7, 8, 9))
-def directional(
+def scatter(
     flm: jnp.ndarray,
     L: int,
     N: int,
@@ -122,7 +122,7 @@ def directional(
 
     ### Compress covariances to isotropic coefficients
     if isotropic:
-        C01, C11 = compress.C01_C11_to_isotropic(C01, C11, J_min, J_max)
+        C01, C11 = compression.C01_C11_to_isotropic(C01, C11, J_min, J_max)
 
     ### Return 1D jnp arrays for synthesis
     S1, P00, C01, C11 = reorder.list_to_array(S1, P00, C01, C11)
@@ -130,7 +130,7 @@ def directional(
     return mean, var, S1, P00, C01, C11
 
 
-def directional_c(
+def scatter_c(
     flm: jnp.ndarray,
     L: int,
     N: int,
@@ -228,7 +228,7 @@ def directional_c(
 
     ### Compress covariances to isotropic coefficients
     if isotropic:
-        C01, C11 = compress.C01_C11_to_isotropic(C01, C11, J_min, J_max)
+        C01, C11 = compression.C01_C11_to_isotropic(C01, C11, J_min, J_max)
 
     ### Return 1D jnp arrays for synthesis
     S1, P00, C01, C11 = reorder.list_to_array(S1, P00, C01, C11)

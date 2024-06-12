@@ -49,7 +49,7 @@ def test_gradients(
     config = s2scat.utility.config.run_config(L, N, J_min, reality, recursive, False)
 
     def func(flm):
-        coeffs = s2scat.core.scatter.directional(
+        coeffs = s2scat.scatter(
             flm, L, N, J_min, reality, config, None, recursive, isotropic, delta_j
         )
         loss = 0
