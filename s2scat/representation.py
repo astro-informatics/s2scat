@@ -8,7 +8,6 @@ from s2scat.utility import statistics, reorder, normalisation
 from s2scat.operators import spherical
 from s2scat import compression
 
-
 @partial(jit, static_argnums=(1, 2, 3, 4, 7, 8, 9))
 def scatter(
     flm: jnp.ndarray,

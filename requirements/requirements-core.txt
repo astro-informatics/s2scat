@@ -2,7 +2,6 @@
 numpy 
 
 # JAX optimisation routines
-jaxopt
 optax
 
 # Sister packages

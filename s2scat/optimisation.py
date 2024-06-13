@@ -2,58 +2,8 @@ from jax import jit, grad
 import jax.numpy as jnp
 from functools import partial
 from typing import List, Tuple
-import time
 
-import jaxopt, optax
-
-
-def fit_jaxopt_scipy(
-    params: jnp.ndarray,
-    loss_func,
-    niter: int = 10,
-    method="L-BFGS-B",
-    loss_history: list = None,
-    apply_jit: bool = True,
-    print_iters: int = 10,
-    verbose: bool = False,
-    track_history: bool = False,
-) -> Tuple[jnp.ndarray, List]:
-    """Minimises the declared loss function starting at params using jaxopt.
-
-    Args:
-        params (jnp.ndarray): Initial estimate (signal).
-        loss_func (function): Loss function to minimise.
-        niter (int, optional): Maximum number of iterations. Defaults to 10.
-        method (str, optional): jaxopt optimization algorithm. Defaults to "L-BFGS-B".
-        loss_history (list, optional): A list in which to store the loss history. Defaults to None.
-        apply_jit (bool, optional): Whether to jit the training step. Defaults to False.
-        print_iters (int, optional): How often to return the loss during training. Defaults to 10.
-        verbose (bool, optional): Whether to print loss during generation. Defaults to False.
-        track_history (bool, optional): Whether to track history during generation. Defaults to False.
-
-    Returns:
-        Tuple[jnp.ndarray, List]: Optimised solution and loss history.
-    """
-    if loss_history is None and track_history:
-        loss_history = []
-        loss_history.append(loss_func(params))
-
-    optimizer = jaxopt.ScipyMinimize(
-        fun=loss_func, method=method, jit=apply_jit, maxiter=1
-    )
-
-    for i in range(niter):
-        params, opt_state = optimizer.run(params)
-
-        if i % print_iters == 0 and track_history:
-            loss_history.append(opt_state.fun_val)
-            if verbose:
-                print(
-                    f"Iter {i}, Success: {opt_state.success}, Loss = {opt_state.fun_val}"
-                )
-
-    return (params, loss_history) if track_history else params
-
+import optax
 
 def fit_optax(
     params: optax.Params,
