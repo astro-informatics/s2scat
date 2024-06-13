@@ -37,6 +37,6 @@ For further details on usage see the `documentation <https://astro-informatics.g
    :caption: Jupyter Notebooks
 
    generation/automatic_generation.nblink
-   generation/manual_generation.nblink
    compression/automatic_compression.nblink
+   generation/manual_generation.nblink
    compression/manual_compression.nblink

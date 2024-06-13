@@ -15,7 +15,8 @@ Directory structure
    s2scat/  
    ├── representation.py   # - Scattering covariance transform.
    ├── compression.py      # - Statistical compression functions.
-   ├── generation.py       # - Generative optimisation wrappers. 
+   ├── optimisation.py     # - Optimisation algorithm wrappers. 
+   ├── generation.py       # - Latent encoder and Generative decoder.
    │    
    ├── operators/          # Internal functionality:
    │      ├─ spherical.py          # - Specific spherical operations, e.g. batched SHTs.

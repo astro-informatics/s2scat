@@ -7,18 +7,19 @@ Differentiable scattering covariances on the sphere
     It is worth highlighting that the input to ``S2SCAT`` are spherical harmonic coefficients, which can be generated with whichever software package you prefer, e.g. `S2FFT <https://github.com/astro-informatics/s2fft>`_ or `healpy <https://healpy.readthedocs.io/en/latest/>`_. Just ensure your harmonic coefficients are indexed using our convention; helper functions for this reindexing can be found in `S2FFT <https://github.com/astro-informatics/s2fft>`_.
 
 .. tip::
-    At launch `S2SCAT` provides two core transform modes: recursive, which performs underlying spherical harmonic and Wigner transforms through the `Price & McEwen <https://arxiv.org/abs/2311.14670>`_ recursion; and precompute, which a priori computes and caches all Wigner elements required. The precompute approach will be faster but can only be run up to :math:`L \sim 512`, whereas the recursive approach will run up to :math:`L \sim 2048`, depending on GPU hardware.
+    At launch ``S2SCAT`` provides two core transform modes: recursive, which performs underlying spherical harmonic and Wigner transforms through the `Price & McEwen <https://arxiv.org/abs/2311.14670>`_ recursion; and precompute, which a priori computes and caches all Wigner elements required. The precompute approach will be faster but can only be run up to :math:`L \sim 512`, whereas the recursive approach will run up to :math:`L \sim 2048`, depending on GPU hardware.
 
 +------------------------------+----------------+--------------+---------------+-----------------+--------------+----------------------------+--------------------------+
 | Ballpark Numbers [A100 40GB] | Max resolution | Forward pass | Gradient pass | JIT compilation | Input params | Anisotropic  (compression) | Isotropic  (compression) |
 +==============================+================+==============+===============+=================+==============+============================+==========================+
-| Recursive                    | L=512, N=3     | ~90ms        | ~190ms        | ~20s            | 2,618,880    | ~ 63,000  (97.594%)        | ~504  (99.981%)          |
+| Precompute                   | L=512, N=3     | ~90ms        | ~190ms        | ~20s            | 2,618,880    | ~ 63,000  (97.594%)        | ~504  (99.981%)          |
 +------------------------------+----------------+--------------+---------------+-----------------+--------------+----------------------------+--------------------------+
-| Precompute                   | L=2048, N=3    | ~18s         | ~40s          | ~5m             | 41,932,800   | ~ 123,750  (99.705%)       | ~ 990  (99.998%)         |
+| On-the-fly                   | L=2048, N=3    | ~18s         | ~40s          | ~5m             | 41,932,800   | ~ 123,750  (99.705%)       | ~ 990  (99.998%)         |
 +------------------------------+----------------+--------------+---------------+-----------------+--------------+----------------------------+--------------------------+
 
+Note that these times are not batched, so in practice may be substantially faster.
 
-Third Generation Scattering Covariances |:dna:|
+Scattering Covariances |:dna:|
 ---------------------------------------------------------
 
 .. image:: ./assets/synthesis.gif

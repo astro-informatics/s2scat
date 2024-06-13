@@ -23,6 +23,8 @@ Ballpark compute times (when running on an 40GB A100 GPU) and compression levels
 |           Precompute          |   L=512, N=3   |     ~90ms    |     ~190ms    |       ~20s      |   2,618,880  |     ~ 63,000  (97.594%)    |      ~504  (99.981%)     |
 |          On-the-fly          |   L=2048, N=3  |     ~18s     |      ~40s     |       ~5m       |  41,932,800  |    ~ 123,750  (99.705%)    |     ~ 990  (99.998%)     |
 
+Note that these times are not batched, so in practice may be substantially faster.
+
 ## Scattering covariances :dna:
 
 <p align="center">
@@ -70,7 +72,8 @@ For further details on usage see the [documentation](https://astro-informatics.g
 s2scat/  
 ├── representation.py   # - Scattering covariance transform.
 ├── compression.py      # - Statistical compression functions.
-├── generation.py       # - Generative optimisation wrappers. 
+├── optimisation.py     # - Optimisation algorithm wrappers. 
+├── generation.py       # - Latent encoder and Generative decoder.
 │    
 ├── operators/          # Internal functionality:
 │      ├─ spherical.py          # - Specific spherical operations, e.g. batched SHTs.

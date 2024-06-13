@@ -31,7 +31,7 @@ def build_encoder(
             If None, covariances between all scales will be considered. Defaults to None.
         c_backend (bool, optional): Whether to pick up and use the C backend functionality.
             Defaults to False.
-    
+
     Returns:
         Callable: Latent encoder.
     """
@@ -73,7 +73,7 @@ def build_decoder(
     delta_j: int = None,
     c_backend: bool = False,
 ) -> Callable:
-    """Builds a scattering covariance decoder function.
+    """Builds a scattering covariance decoding function.
 
     Args:
         flm (jnp.ndarray): Spherical harmonic coefficients of target signal.
@@ -90,7 +90,7 @@ def build_decoder(
             If None, covariances between all scales will be considered. Defaults to None.
         c_backend (bool, optional): Whether to pick up and use the C backend functionality.
             Defaults to False.
-    
+
     Returns:
         Callable: Latent decoder.
     """
