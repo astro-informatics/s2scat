@@ -15,10 +15,10 @@ def scatter(
     L: int,
     N: int,
     J_min: int = 0,
-    reality: bool = False,
+    reality: bool = True,
     config: List[jnp.ndarray] = None,
     norm: List[jnp.ndarray] = None,
-    recursive: bool = True,
+    recursive: bool = False,
     isotropic: bool = False,
     delta_j: int = None,
 ) -> List[jnp.ndarray]:
@@ -30,12 +30,12 @@ def scatter(
         N (int): Azimuthal bandlimit (directionality).
         J_min (int, optional): Minimum dyadic wavelet scale to consider. Defaults to 0.
         reality (bool, optional): Whether :math:`f \in \mathbb{R}`, if True exploits
-            hermitian symmetry of harmonic coefficients. Defaults to False.
+            hermitian symmetry of harmonic coefficients. Defaults to True.
         config (List[jnp.ndarray], optional): All necessary precomputed arrays. Defaults to None.
         norm (List[jnp.ndarray], optional): Covariance normalisation values.
             Defaults to None.
         recursive (bool, optional): Whether to perform a memory efficient recursive transform,
-            or a faster but less memory efficient fully precompute transform. Defaults to True.
+            or a faster but less memory efficient fully precompute transform. Defaults to False.
         isotropic (bool, optional): Whether to return isotropic coefficients, i.e. average
             over directionality. Defaults to False.
         delta_j (int, optional): Range of wavelet scales over which to compute covariances.
