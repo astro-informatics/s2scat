@@ -10,27 +10,31 @@ import jaxopt, optax
 def fit_jaxopt_scipy(
     params: jnp.ndarray,
     loss_func,
-    method="L-BFGS-B",
     niter: int = 10,
+    method="L-BFGS-B",
     loss_history: list = None,
-    apply_jit: bool = False,
+    apply_jit: bool = True,
     print_iters: int = 10,
+    verbose: bool = False,
+    track_history: bool = False,
 ) -> Tuple[jnp.ndarray, List]:
     """Minimises the declared loss function starting at params using jaxopt.
 
     Args:
         params (jnp.ndarray): Initial estimate (signal).
         loss_func (function): Loss function to minimise.
-        method (str, optional): jaxopt optimization algorithm. Defaults to "L-BFGS-B".
         niter (int, optional): Maximum number of iterations. Defaults to 10.
+        method (str, optional): jaxopt optimization algorithm. Defaults to "L-BFGS-B".
         loss_history (list, optional): A list in which to store the loss history. Defaults to None.
         apply_jit (bool, optional): Whether to jit the training step. Defaults to False.
         print_iters (int, optional): How often to return the loss during training. Defaults to 10.
+        verbose (bool, optional): Whether to print loss during generation. Defaults to False.
+        track_history (bool, optional): Whether to track history during generation. Defaults to False.
 
     Returns:
         Tuple[jnp.ndarray, List]: Optimised solution and loss history.
     """
-    if loss_history is None:
+    if loss_history is None and track_history:
         loss_history = []
         loss_history.append(loss_func(params))
 
@@ -39,16 +43,16 @@ def fit_jaxopt_scipy(
     )
 
     for i in range(niter):
-        start = time.time()
         params, opt_state = optimizer.run(params)
-        end = time.time()
-        if i % print_iters == 0:
-            loss_history.append(opt_state.fun_val)
-            print(
-                f"Iter {i}, Success: {opt_state.success}, Loss = {opt_state.fun_val}, Time = {end - start:.5f} s/iter"
-            )
 
-    return params, loss_history
+        if i % print_iters == 0 and track_history:
+            loss_history.append(opt_state.fun_val)
+            if verbose:
+                print(
+                    f"Iter {i}, Success: {opt_state.success}, Loss = {opt_state.fun_val}"
+                )
+
+    return (params, loss_history) if track_history else params
 
 
 def fit_optax(
@@ -60,6 +64,7 @@ def fit_optax(
     print_iters: int = 10,
     apply_jit: bool = False,
     verbose: bool = False,
+    track_history: bool = False,
 ) -> Tuple[optax.Params, List]:
     """Minimises the declared loss function starting at params using optax (adam).
 
@@ -73,6 +78,7 @@ def fit_optax(
         print_iters (int, optional): How often to return the loss during training. Defaults to 10.
         apply_jit (bool, optional): Whether to jit the training step. Defaults to False.
         verbose (bool, optional): Whether to print loss during generation. Defaults to False.
+        track_history (bool, optional): Whether to track history during generation. Defaults to False.
 
     Returns:
         Tuple[optax.Params, List]: Optimised solution and loss history.
@@ -80,9 +86,10 @@ def fit_optax(
 
     grad_func = jit(grad(loss_func)) if apply_jit else grad(loss_func)
 
-    if loss_history is None:
+    if loss_history is None and track_history:
         loss_history = []
 
+    # optimizer = optax.lbfgs()
     optimizer = optax.adam(learning_rate)
     opt_state = optimizer.init(params)
 
@@ -91,13 +98,13 @@ def fit_optax(
         updates, opt_state = optimizer.update(grads, opt_state, params)
         params = optax.apply_updates(params, updates)
 
-        if i % print_iters == 0:
+        if i % print_iters == 0 and track_history:
             loss_value = loss_func(params)
             loss_history.append(loss_value)
             if verbose:
                 print(f"Iter {i}, Loss: {loss_value:.10f}")
 
-    return params, loss_history
+    return (params, loss_history) if track_history else params
 
 
 @jit

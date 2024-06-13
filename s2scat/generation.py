@@ -17,7 +17,7 @@ def build_model(
     recursive: bool = False,
     isotropic: bool = False,
     delta_j: int = None,
-    c_backend: bool = False,
+    c_backend: bool = False
 ) -> Callable:
 
     # Compute and cache wavelet matrices
@@ -44,11 +44,8 @@ def build_model(
     def sampler(
         xlm: jnp.ndarray, niter: int, learning_rate: float
     ) -> List[jnp.ndarray]:
-        xlm, history = s2scat.optimisation.fit_optax(
-            xlm[0], loss_function, niter, learning_rate
-        )
-        xlm = s2scat.operators.spherical.make_flm_full(xlm, L) if reality else xlm
-        return xlm, history
+        xlm = s2scat.optimisation.fit_optax(xlm, loss_function, niter, learning_rate)
+        return s2scat.operators.spherical.make_flm_full(xlm, L) if reality else xlm
 
     # Define generative model
     def model(
@@ -61,7 +58,6 @@ def build_model(
     return model
 
 
-@partial(jax.jit, static_argnums=(2, 4))
 def _initial_arrays(
     key: jnp.ndarray, sigma: float, L: int, count: int, reality: bool
 ) -> jnp.ndarray:
@@ -70,7 +66,6 @@ def _initial_arrays(
     return func(keys, L, reality) * sigma
 
 
-@partial(jax.jit, static_argnums=(1, 2))
 def _random_array(key: jnp.ndarray, L: int, reality: bool) -> jnp.ndarray:
     keys = jax.random.split(key, 2)
     xlm = jax.random.normal(
