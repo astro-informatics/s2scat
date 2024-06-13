@@ -43,7 +43,26 @@ $$S_4^{\lambda_1, \lambda_2, \lambda_3} = \text{Cov} \left[W^{\lambda_1}|W^{\lam
 
 where $W^{\lambda} I$ denotes the wavelet transform of field $I$ at scale $j$ and direction $\gamma$, which we group into a single label $\lambda=(j,\gamma)$. 
 
-This statistical representation characterises the power and sparsity at given scales, as well as covariant features between different wavelet scale and directions, which can effectively capture complex non-Gaussian structural information, e.g. filamentary structure. 
+This statistical representation characterises the power and sparsity at given scales, as well as covariant features between different wavelet scale and directions, which can effectively capture complex non-Gaussian structural information, e.g. filamentary structure.
+
+## Usage :rocket:
+
+To import and use `S2SCAT` is as simple follows:
+
+``` python
+import s2scat, jax
+
+# For statistical compression
+encoder = s2scat.build_encoder(L, N)        # Returns a callable compression model.
+covariance_statistics = encoder(alm)        # Generate statistics (can be batched).
+
+# For generative modelling
+key = jax.random.PRNGKey(seed)
+decoder = s2scat.build_decoder(alm, L, N)   # Returns a callable generative model.
+new_samples = decoder(key, 10)              # Generate 10 new spherical textures. 
+```
+
+For further details on usage see the [documentation](https://astro-informatics.github.io/s2scat/) and associated [notebooks](https://astro-informatics.github.io/s2scat/notebooks/).
 
 ## Package Directory Structure :art:
 
@@ -92,21 +111,6 @@ pytest tests/
 ```
 
 Documentation for the released version is available [here](https://astro-informatics.github.io/s2scat/).
-
-## Usage :rocket:
-
-To import and use `S2SCAT` is as simple follows:
-
-``` python
-import s2scat
-
-# Given harmonic bandlimit L, azimuthal bandlimit N and spherical harmonic coefficients flm
-
-config = s2scat.configure(L, N)
-covariances = s2scat.scatter(flm, L, N, config=config)
-```
-
-For further details on usage see the [documentation](https://astro-informatics.github.io/s2scat/) and associated [notebooks](https://astro-informatics.github.io/s2scat/notebooks/).
 
 ## Contributors
 

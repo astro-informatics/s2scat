@@ -125,7 +125,7 @@ def build_decoder(
 
     # Define generative decoder
     def decoder(
-        key: jnp.ndarray, count: int, niter: int, learning_rate: float
+        key: jnp.ndarray, count: int, niter: int = 200, learning_rate: float = 1e-3
     ) -> List[jnp.ndarray]:
         """Generative iterative decoder."""
         xlm = _initial_arrays(key, sigma, L, count, reality)
