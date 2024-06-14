@@ -10,7 +10,7 @@ from . import operators
 from .utility.config import run_config as configure
 from .utility.normalisation import compute_norm
 
-from .generation import build_encoder, build_decoder
+from .generation import build_encoder, build_generator
 
 from .representation import scatter
 from .representation import scatter_c

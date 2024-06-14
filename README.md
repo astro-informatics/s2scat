@@ -55,15 +55,14 @@ To import and use `S2SCAT` is as simple follows:
 
 ``` python
 import s2scat, jax
-
 # For statistical compression
-encoder = s2scat.build_encoder(L, N)        # Returns a callable compression model.
-covariance_statistics = encoder(alm)        # Generate statistics (can be batched).
+encoder = s2scat.build_encoder(L, N)          # Returns a callable compression model.
+covariance_statistics = encoder(alm)          # Generate statistics (can be batched).
 
 # For generative modelling
 key = jax.random.PRNGKey(seed)
-decoder = s2scat.build_decoder(alm, L, N)   # Returns a callable generative model.
-new_samples = decoder(key, 10)              # Generate 10 new spherical textures. 
+generator = s2scat.build_generator(alm, L, N) # Returns a callable generative model.
+new_samples = generator(key, 10)              # Generate 10 new spherical textures. 
 ```
 
 For further details on usage see the [documentation](https://astro-informatics.github.io/s2scat/) and associated [notebooks](https://astro-informatics.github.io/s2scat/notebooks/).

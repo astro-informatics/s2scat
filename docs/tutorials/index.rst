@@ -16,15 +16,14 @@ To import and use ``S2SCAT``  is as simple follows:
 .. code-block:: python
 
    import s2scat, jax
-
    # For statistical compression
-   encoder = s2scat.build_encoder(L, N)        # Returns a callable compression model.
-   covariance_statistics = encoder(alm)        # Generate statistics (can be batched).
+   encoder = s2scat.build_encoder(L, N)          # Returns a callable compression model.
+   covariance_statistics = encoder(alm)          # Generate statistics (can be batched).
 
    # For generative modelling
    key = jax.random.PRNGKey(seed)
-   decoder = s2scat.build_decoder(alm, L, N)   # Returns a callable generative model.
-   new_samples = decoder(key, 10)              # Generate 10 new spherical textures. 
+   generator = s2scat.build_generator(alm, L, N) # Returns a callable generative model.
+   new_samples = generator(key, 10)              # Generate 10 new spherical textures. 
 
 ``S2SCAT`` also provides JAX support for existing C backend libraries which are memory efficient but CPU bound; at launch we support `SSHT <https://github.com/astro-informatics/ssht>`_, however this could be extended straightforwardly. This works by wrapping python bindings with custom JAX frontends.
 

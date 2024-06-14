@@ -12,8 +12,8 @@ Core Functions
      - Description
    * - :func:`~s2scat.generation.build_encoder`
      - Builds a scattering covariance encoding function (latent encoder).
-   * - :func:`~s2scat.generation.build_decoder`
-     - Builds a scattering covariance decoder function. (generative decoder).
+   * - :func:`~s2scat.generation.build_generator`
+     - Builds a scattering covariance generator function. (generative model).
 
 .. list-table:: Scattering transforms
    :widths: 25 25

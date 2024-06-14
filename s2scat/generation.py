@@ -62,7 +62,7 @@ def build_encoder(
     return encoder
 
 
-def build_decoder(
+def build_generator(
     xlm: jnp.ndarray,
     L: int,
     N: int,
@@ -73,7 +73,7 @@ def build_decoder(
     delta_j: int = None,
     c_backend: bool = False,
 ) -> Callable:
-    """Builds a scattering covariance decoding function.
+    """Builds a scattering covariance generator function.
 
     Args:
         flm (jnp.ndarray): Spherical harmonic coefficients of target signal.
@@ -92,7 +92,8 @@ def build_decoder(
             Defaults to False.
 
     Returns:
-        Callable: Latent decoder.
+        Callable: Latent decoder which takes arguements
+            [key: jax.random.PRNGKey, count: int, niters: int = 400, learning_rate: float = 1e-3]
     """
 
     # Compute and cache wavelet matrices
@@ -124,7 +125,7 @@ def build_decoder(
         return s2scat.operators.spherical.make_flm_full(xlm, L) if reality else xlm
 
     # Define generative decoder
-    def decoder(
+    def generator(
         key: jnp.ndarray, count: int, niter: int = 200, learning_rate: float = 1e-3
     ) -> List[jnp.ndarray]:
         """Generative iterative decoder."""
@@ -132,7 +133,7 @@ def build_decoder(
         batched_sampler = jax.vmap(sampler, in_axes=(0, None, None))
         return batched_sampler(xlm, niter, learning_rate)
 
-    return decoder
+    return generator
 
 
 def _initial_arrays(
