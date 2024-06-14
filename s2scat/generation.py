@@ -33,7 +33,8 @@ def build_encoder(
             Defaults to False.
 
     Returns:
-        Callable: Latent encoder.
+        Callable: Latent encoder which takes arguements
+            (xlm: jnp.ndarray) with index [batch, theta, phi].
     """
 
     # Compute and cache wavelet matrices
@@ -93,7 +94,7 @@ def build_generator(
 
     Returns:
         Callable: Latent decoder which takes arguements
-            [key: jax.random.PRNGKey, count: int, niters: int = 400, learning_rate: float = 1e-3]
+            (key: jax.random.PRNGKey, count: int, niters: int = 400, learning_rate: float = 1e-3)
     """
 
     # Compute and cache wavelet matrices
