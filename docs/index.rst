@@ -1,13 +1,13 @@
 Differentiable scattering covariances on the sphere
 ===================================================
 
-``S2SCAT`` is a Python package for computing third generation scattering covariances on the sphere `(Mousset et al 2024) <https://arxiv.org/abs/xxxx.xxxxx>`_ using ``JAX``. It leverages autodiff to provide differentiable transforms, which are also deployable on hardware accelerators (e.g. GPUs and TPUs). Scattering covariances are useful both for field-level generative modelling of complex non-Gaussian textures and for statistical compression of high dimensional field-level data, a key step of e.g. simulation based inference.
+``S2SCAT`` is a Python package for computing third generation scattering covariances on the sphere `(Mousset et al. 2024) <https://arxiv.org/abs/xxxx.xxxxx>`_ using ``JAX``. It leverages autodiff to provide differentiable transforms, which are also deployable on hardware accelerators (e.g. GPUs and TPUs). Scattering covariances are useful both for field-level generative modelling of complex non-Gaussian textures and for statistical compression of high dimensional field-level data, a key step of e.g. simulation based inference.
 
 .. important::
     It is worth highlighting that the input to ``S2SCAT`` are spherical harmonic coefficients, which can be generated with whichever software package you prefer, e.g. `S2FFT <https://github.com/astro-informatics/s2fft>`_ or `healpy <https://healpy.readthedocs.io/en/latest/>`_. Just ensure your harmonic coefficients are indexed using our convention; helper functions for this reindexing can be found in `S2FFT <https://github.com/astro-informatics/s2fft>`_.
 
 .. tip::
-    At launch ``S2SCAT`` provides two core transform modes: recursive, which performs underlying spherical harmonic and Wigner transforms through the `Price & McEwen <https://arxiv.org/abs/2311.14670>`_ recursion; and precompute, which a priori computes and caches all Wigner elements required. The precompute approach will be faster but can only be run up to :math:`L \sim 512`, whereas the recursive approach will run up to :math:`L \sim 2048`, depending on GPU hardware.
+    At launch ``S2SCAT`` provides two core transform modes: on-the-fly, which performs underlying spherical harmonic and Wigner transforms through the `Price & McEwen <https://arxiv.org/abs/2311.14670>`_ recursion; and precompute, which a priori computes and caches all Wigner elements required. The precompute approach will be faster but can only be run up to :math:`L \sim 512`, whereas the recursive approach will run up to :math:`L \sim 2048`, depending on GPU hardware.
 
 +------------------------------+----------------+--------------+---------------+-----------------+--------------+----------------------------+--------------------------+
 | Ballpark Numbers [A100 40GB] | Max resolution | Forward pass | Gradient pass | JIT compilation | Input params | Anisotropic  (compression) | Isotropic  (compression) |
@@ -19,14 +19,17 @@ Differentiable scattering covariances on the sphere
 
 Note that these times are not batched, so in practice may be substantially faster.
 
-Scattering Covariances |:dna:|
+Scattering covariances |:dna:|
 ---------------------------------------------------------
 
 .. image:: ./assets/synthesis.gif
     :align: right
     :width: 200
 
-Scattering covariances, or scattering spectra, were previously introduced for 1D signals by `Morel et al (2023) <https://arxiv.org/abs/2204.10177>`_ and for planar 2D signals by `Cheng et al (2023) <https://arxiv.org/abs/2306.17210>`_. The scattering transform is defined by repeated application of directional wavelet transforms followed by a machine learning inspired non-linearity, typically the modulus operator. The wavelet transform :math:`W^{\lambda}` within each layer has an associated scale :math:`j` and direction $n$, which we group into a single label :math:`\lambda`. Scattering covariances :math:`S` are computed from the coefficients of a two-layer scattering transform and are defined as
+We introduce scattering covariances on the sphere in `Mousset et al. 2024 <https://arxiv.org/abs/xxxx.xxxxx>`_, which extend to spherical settings similar scattering transforms introduced for 1D signals by `Morel et al. (2023) <https://arxiv.org/abs/2204.10177>`_ and for planar 2D signals by `Cheng et al. (2023) <https://arxiv.org/abs/2306.17210>`_. 
+
+
+The scattering transform is defined by repeated application of directional wavelet transforms followed by a machine learning inspired non-linearity, typically the modulus operator. The wavelet transform :math:`W^{\lambda}` within each layer has an associated scale :math:`j` and direction $n$, which we group into a single label :math:`\lambda`. Scattering covariances :math:`S` are computed from the coefficients of a two-layer scattering transform and are defined as
 
 .. math:: 
     
@@ -40,7 +43,11 @@ Scattering covariances, or scattering spectra, were previously introduced for 1D
 
     S_4^{\lambda_1, \lambda_2, \lambda_3} = \text{Cov} \left[W^{\lambda_1}|W^{\lambda_3}I|, W^{\lambda_1}|W^{\lambda_2}I|\right].
 
-Given that the highest order coefficients are computed from products between :math:`\lambda_1, \lambda_2` and :math:`\lambda_3` they encode :math:`6^{\text{th}}`-order statistical information. This statistical representation characterises the power and sparsity at given scales, as well as covariant features between different wavelet scale and directions; which can adequetly capture complex non-Gaussian structural information, e.g. filamentary structure. Using recently release JAX spherical harmonic `(Price & McEwen 2023) <https://arxiv.org/abs/2311.14670>`_ and wavelet transforms `(Price et al 2024) <https://arxiv.org/abs/2402.01282>`_ this work extends scattering covariances to the sphere, which is necessary for their application to e.g. generative modelling of wide-field cosmological fields `(Mousset et al 2024) <https://arxiv.org/abs/xxxx.xxxxx>`_.
+where :math:`W^{\lambda} I` denotes the wavelet transform of field :math:`I` at scale :math:`j` and direction :math:`\gamma`, which we group into a single label :math:`\lambda=(j,\gamma)`. 
+
+This statistical representation characterises the power and sparsity at given scales, as well as covariant features between different wavelet scale and directions; which can adequetly capture complex non-Gaussian structural information, e.g. filamentary structure. 
+
+Using the recently released JAX spherical harmonic code `S2FFT <https://github.com/astro-informatics/s2fft>`_ (`Price & McEwen 2023 <https://arxiv.org/abs/2311.14670>`_) and spherical wavelet transform code `S2WAV <https://github.com/astro-informatics/s2wav>`_ (`Price et al. 2024 <https://arxiv.org/abs/2402.01282>`_) in the ``S2SCAT`` code we extends scattering covariances to the sphere, which are necessary for their application to generative modelling of wide-field cosmological fields `(Mousset et al. 2024) <https://arxiv.org/abs/xxxx.xxxxx>`_.
 
 Contributors ✨
 -----------------------------------
