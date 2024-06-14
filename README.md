@@ -157,11 +157,14 @@ code builds:
 
 ```
     @article{price:s2fft, 
-        author      = "Matthew A. Price and Jason D. McEwen",
-        title       = "Differentiable and accelerated spherical harmonic and Wigner transforms",
-        journal     = "Journal of Computational Physics, submitted",
-        year        = "2023",
-        eprint      = "arXiv:2311.14670"        
+        author      = "Matthew A. Price and Jason D. McEwen",         
+        title        = "Differentiable and accelerated spherical harmonic and {W}igner transforms",
+        journal      = "Journal of Computational Physics",
+        volume       = "510",
+        pages        = "113109",        
+        year         = "2024",
+        doi          = {10.1016/j.jcp.2024.113109},
+        eprint       = "arXiv:2311.14670"        
     }
 ```
 ```
