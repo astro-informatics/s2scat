@@ -34,5 +34,4 @@ setup(
     long_description=long_description,
     packages=find_packages(),
     include_package_data=True,
-    pacakge_data={"s2scat": ["default-logging-config.yaml"]},
 )
