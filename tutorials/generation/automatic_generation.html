@@ -517,8 +517,9 @@ document.write(`
 <span class="c1"># Install s2fft and data if running on google colab.</span>
 <span class="k">if</span> <span class="n">IN_COLAB</span><span class="p">:</span>
     <span class="o">!</span>pip<span class="w"> </span>install<span class="w"> </span>s2scat<span class="w"> </span><span class="p">&amp;</span>&gt;<span class="w"> </span>/dev/null
+    <span class="o">!</span>pip<span class="w"> </span>install<span class="w"> </span><span class="nv">numpy</span><span class="o">==</span><span class="m">1</span>.23.5<span class="w"> </span><span class="p">&amp;</span>&gt;<span class="w"> </span>/dev/null
     <span class="o">!</span>mkdir<span class="w"> </span>data/
-    <span class="o">!</span>wget<span class="w"> </span>https://github.com/astro-informatics/s2scat/tree/main/notebooks/data/target_map_lss.npy<span class="w"> </span>-P<span class="w"> </span>data/<span class="w"> </span><span class="p">&amp;</span>&gt;<span class="w"> </span>/dev/null
+    <span class="o">!</span>wget<span class="w"> </span>https://github.com/astro-informatics/s2scat/raw/main/notebooks/data/target_map_lss.npy<span class="w"> </span>-P<span class="w"> </span>data/<span class="w"> </span><span class="p">&amp;</span>&gt;<span class="w"> </span>/dev/null
 </pre></div>
 </div>
 </div>
@@ -586,7 +587,7 @@ gpu
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">key</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">PRNGKey</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-<span class="n">xlm_new</span> <span class="o">=</span> <span class="n">generator</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">niters</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">)</span>
+<span class="n">xlm_new</span> <span class="o">=</span> <span class="n">generator</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">niter</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
