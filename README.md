@@ -47,7 +47,7 @@ where $W^{\lambda} I$ denotes the wavelet transform of field $I$ at scale $j$ an
 
 This statistical representation characterises the power and sparsity at given scales, as well as covariant features between different wavelet scale and directions, which can effectively capture complex non-Gaussian structural information, e.g. filamentary structure.
 
-Using the recently released JAX spherical harmonic code [`S2FFT`](https://github.com/astro-informatics/s2fft) ([Price & McEwen 2024](https://arxiv.org/abs/2311.14670)) and spherical wavelet transform code [`S2WAV`](https://github.com/astro-informatics/s2wav) ([Price et al. 2024](<https://arxiv.org/abs/2402.01282)) in the `S2SCAT` code we extends scattering covariances to the sphere, which are necessary for their application to generative modelling of wide-field cosmological fields ([Mousset et al. 2024](https://arxiv.org/abs/xxxx.xxxxx)).
+Using the recently released JAX spherical harmonic code [`S2FFT`](https://github.com/astro-informatics/s2fft) ([Price & McEwen 2024](https://arxiv.org/abs/2311.14670)) and spherical wavelet transform code [`S2WAV`](https://github.com/astro-informatics/s2wav) ([Price et al. 2024](https://arxiv.org/abs/2402.01282)) in the `S2SCAT` code we extends scattering covariances to the sphere, which are necessary for their application to generative modelling of wide-field cosmological fields ([Mousset et al. 2024](https://arxiv.org/abs/xxxx.xxxxx)).
 
 ## Usage :rocket:
 
