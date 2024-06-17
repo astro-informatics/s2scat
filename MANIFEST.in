@@ -1,0 +1,16 @@
+graft s2scat
+graft tests 
+graft requirements 
+graft docs 
+
+include .pip_readme.rst 
+include README.md
+include pytest.ini
+include LICENCE.txt
+
+exclude .coveragerc
+exclude *.log
+recursive-exclude docs/_build *
+recursive-exclude notebooks *
+
+global-exclude *.py[cod] __pycache__ *.so *.dylib .ipynb_checkpoints/** *~
