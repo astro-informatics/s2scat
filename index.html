@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Scattering covariance transform on the sphere &#8212; S2SCAT 0.0.1 documentation</title>
+    <title>Differentiable scattering covariances on the sphere &#8212; S2SCAT 0.0.1 documentation</title>
   
   
   
@@ -470,17 +470,16 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="scattering-covariance-transform-on-the-sphere">
-<h1>Scattering covariance transform on the sphere<a class="headerlink" href="#scattering-covariance-transform-on-the-sphere" title="Link to this heading">#</a></h1>
-<img alt="_images/synthesis_zoom.gif" src="_images/synthesis_zoom.gif" />
-<p><code class="docutils literal notranslate"><span class="pre">S2SCAT</span></code> is a Python package for computing third generation scattering covariances on the sphere <a class="reference external" href="https://arxiv.org/abs/xxxx.xxxxx">(Mousset et al 2024)</a> using <code class="docutils literal notranslate"><span class="pre">JAX</span></code>. It leverages autodiff to provide differentiable transforms, which are also deployable on hardware accelerators (e.g. GPUs and TPUs). Scattering covariances are useful both for field-level emulation of complex non-Gaussian textures and for statistical compression of high dimensional field-level data, a key step of e.g. simulation based inference.</p>
+  <section id="differentiable-scattering-covariances-on-the-sphere">
+<h1>Differentiable scattering covariances on the sphere<a class="headerlink" href="#differentiable-scattering-covariances-on-the-sphere" title="Link to this heading">#</a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">S2SCAT</span></code> is a Python package for computing third generation scattering covariances on the sphere <a class="reference external" href="https://arxiv.org/abs/xxxx.xxxxx">(Mousset et al. 2024)</a> using <code class="docutils literal notranslate"><span class="pre">JAX</span></code>. It leverages autodiff to provide differentiable transforms, which are also deployable on hardware accelerators (e.g. GPUs and TPUs). Scattering covariances are useful both for field-level generative modelling of complex non-Gaussian textures and for statistical compression of high dimensional field-level data, a key step of e.g. simulation based inference.</p>
 <div class="admonition important">
 <p class="admonition-title">Important</p>
 <p>It is worth highlighting that the input to <code class="docutils literal notranslate"><span class="pre">S2SCAT</span></code> are spherical harmonic coefficients, which can be generated with whichever software package you prefer, e.g. <a class="reference external" href="https://github.com/astro-informatics/s2fft">S2FFT</a> or <a class="reference external" href="https://healpy.readthedocs.io/en/latest/">healpy</a>. Just ensure your harmonic coefficients are indexed using our convention; helper functions for this reindexing can be found in <a class="reference external" href="https://github.com/astro-informatics/s2fft">S2FFT</a>.</p>
 </div>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
-<p>At launch <cite>S2SCAT</cite> provides two core transform modes: recursive, which performs underlying spherical harmonic and Wigner transforms through the <a class="reference external" href="https://arxiv.org/abs/2311.14670">Price &amp; McEwen</a> recursion; and precompute, which a priori computes and caches all Wigner elements required. The precompute approach will be faster but can only be run up to <span class="math notranslate nohighlight">\(L \sim 512\)</span>, whereas the recursive approach will run up to <span class="math notranslate nohighlight">\(L \sim 2048\)</span>, depending on GPU hardware.</p>
+<p>At launch <code class="docutils literal notranslate"><span class="pre">S2SCAT</span></code> provides two core transform modes: on-the-fly, which performs underlying spherical harmonic and Wigner transforms through the <a class="reference external" href="https://arxiv.org/abs/2311.14670">Price &amp; McEwen</a> recursion; and precompute, which a priori computes and caches all Wigner elements required. The precompute approach will be faster but can only be run up to <span class="math notranslate nohighlight">\(L \sim 512\)</span>, whereas the recursive approach will run up to <span class="math notranslate nohighlight">\(L \sim 2048\)</span>, depending on GPU hardware.</p>
 </div>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -495,7 +494,7 @@ document.write(`
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>Recursive</p></td>
+<tr class="row-even"><td><p>Precompute</p></td>
 <td><p>L=512, N=3</p></td>
 <td><p>~90ms</p></td>
 <td><p>~190ms</p></td>
@@ -504,7 +503,7 @@ document.write(`
 <td><p>~ 63,000  (97.594%)</p></td>
 <td><p>~504  (99.981%)</p></td>
 </tr>
-<tr class="row-odd"><td><p>Precompute</p></td>
+<tr class="row-odd"><td><p>On-the-fly</p></td>
 <td><p>L=2048, N=3</p></td>
 <td><p>~18s</p></td>
 <td><p>~40s</p></td>
@@ -516,17 +515,21 @@ document.write(`
 </tbody>
 </table>
 </div>
-<section id="third-generation-scattering-covariances-dna">
-<h2>Third Generation Scattering Covariances 🧬<a class="headerlink" href="#third-generation-scattering-covariances-dna" title="Link to this heading">#</a></h2>
+<p>Note that these times are not batched, so in practice may be substantially faster.</p>
+<section id="scattering-covariances-dna">
+<h2>Scattering covariances 🧬<a class="headerlink" href="#scattering-covariances-dna" title="Link to this heading">#</a></h2>
 <a class="reference internal image-reference" href="_images/synthesis.gif"><img alt="_images/synthesis.gif" class="align-right" src="_images/synthesis.gif" style="width: 200px;" /></a>
-<p>Scattering covariances, or scattering spectra, were previously introduced for 1D signals by <a class="reference external" href="https://arxiv.org/abs/2204.10177">Morel et al (2023)</a> and for planar 2D signals by <a class="reference external" href="https://arxiv.org/abs/2306.17210">Cheng et al (2023)</a>. The scattering transform is defined by repeated application of directional wavelet transforms followed by a machine learning inspired non-linearity, typically the modulus operator. The wavelet transform <span class="math notranslate nohighlight">\(W^{\lambda}\)</span> within each layer has an associated scale <span class="math notranslate nohighlight">\(j\)</span> and direction $n$, which we group into a single label <span class="math notranslate nohighlight">\(\lambda\)</span>. Scattering covariances <span class="math notranslate nohighlight">\(S\)</span> are computed from the coefficients of a two-layer scattering transform and are defined as</p>
+<p>We introduce scattering covariances on the sphere in <a class="reference external" href="https://arxiv.org/abs/xxxx.xxxxx">Mousset et al. 2024</a>, which extend to spherical settings similar scattering transforms introduced for 1D signals by <a class="reference external" href="https://arxiv.org/abs/2204.10177">Morel et al. (2023)</a> and for planar 2D signals by <a class="reference external" href="https://arxiv.org/abs/2306.17210">Cheng et al. (2023)</a>.</p>
+<p>The scattering transform is defined by repeated application of directional wavelet transforms followed by a machine learning inspired non-linearity, typically the modulus operator. The wavelet transform <span class="math notranslate nohighlight">\(W^{\lambda}\)</span> within each layer has an associated scale <span class="math notranslate nohighlight">\(j\)</span> and direction $n$, which we group into a single label <span class="math notranslate nohighlight">\(\lambda\)</span>. Scattering covariances <span class="math notranslate nohighlight">\(S\)</span> are computed from the coefficients of a two-layer scattering transform and are defined as</p>
 <div class="math notranslate nohighlight">
 \[S_1^{\lambda_1} = \langle |W^{\lambda_1} I| \rangle \quad S_2^{\lambda_1} = \langle|W^{\lambda_1} I|^2 \rangle\]</div>
 <div class="math notranslate nohighlight">
 \[S_3^{\lambda_1, \lambda_2} = \text{Cov} \left[  W^{\lambda_1}I, W^{\lambda_1}|W^{\lambda_2} I| \right]\]</div>
 <div class="math notranslate nohighlight">
 \[S_4^{\lambda_1, \lambda_2, \lambda_3} = \text{Cov} \left[W^{\lambda_1}|W^{\lambda_3}I|, W^{\lambda_1}|W^{\lambda_2}I|\right].\]</div>
-<p>Given that the highest order coefficients are computed from products between <span class="math notranslate nohighlight">\(\lambda_1, \lambda_2\)</span> and <span class="math notranslate nohighlight">\(\lambda_3\)</span> they encode <span class="math notranslate nohighlight">\(6^{\text{th}}\)</span>-order statistical information. This statistical representation characterises the power and sparsity at given scales, as well as covariant features between different wavelet scale and directions; which can adequetly capture complex non-Gaussian structural information, e.g. filamentary structure. Using recently release JAX spherical harmonic <a class="reference external" href="https://arxiv.org/abs/2311.14670">(Price &amp; McEwen 2023)</a> and wavelet transforms <a class="reference external" href="https://arxiv.org/abs/2402.01282">(Price et al 2024)</a> this work extends scattering covariances to the sphere, which is necessary for their application to e.g. wide-field cosmological surveys <a class="reference external" href="https://arxiv.org/abs/xxxx.xxxxx">(Mousset et al 2024)</a>.</p>
+<p>where <span class="math notranslate nohighlight">\(W^{\lambda} I\)</span> denotes the wavelet transform of field <span class="math notranslate nohighlight">\(I\)</span> at scale <span class="math notranslate nohighlight">\(j\)</span> and direction <span class="math notranslate nohighlight">\(\gamma\)</span>, which we group into a single label <span class="math notranslate nohighlight">\(\lambda=(j,\gamma)\)</span>.</p>
+<p>This statistical representation characterises the power and sparsity at given scales, as well as covariant features between different wavelet scale and directions; which can adequetly capture complex non-Gaussian structural information, e.g. filamentary structure.</p>
+<p>Using the recently released JAX spherical harmonic code <a class="reference external" href="https://github.com/astro-informatics/s2fft">S2FFT</a> (<a class="reference external" href="https://arxiv.org/abs/2311.14670">Price &amp; McEwen 2023</a>) and spherical wavelet transform code <a class="reference external" href="https://github.com/astro-informatics/s2wav">S2WAV</a> (<a class="reference external" href="https://arxiv.org/abs/2402.01282">Price et al. 2024</a>) in the <code class="docutils literal notranslate"><span class="pre">S2SCAT</span></code> code we extends scattering covariances to the sphere, which are necessary for their application to generative modelling of wide-field cosmological fields <a class="reference external" href="https://arxiv.org/abs/xxxx.xxxxx">(Mousset et al. 2024)</a>.</p>
 </section>
 <section id="contributors">
 <h2>Contributors ✨<a class="headerlink" href="#contributors" title="Link to this heading">#</a></h2>
@@ -535,11 +538,12 @@ key</a>):</p>
 <embed>
     <table>
         <tbody>
-        <tr>
+            <tr>
             <td align="center" valign="top" width="14.28%"><a href="https://cosmomatt.github.io"><img src="https://avatars.githubusercontent.com/u/32554533?v=4?s=100" width="100px;" alt="Matt Price"/><br /><sub><b>Matt Price</b></sub></a><br /><a href="#ideas-CosmoMatt" title="Ideas, Planning, & Feedback">🤔</a> <a href="#code-CosmoMatt" title="Code">💻</a> <a href="#design-CosmoMatt" title="Design">🎨</a> <a href="#doc-CosmoMatt" title="Documentation">📖</a></td>
             <td align="center" valign="top" width="14.28%"><a href="https://github.com/mousset"><img src="https://avatars.githubusercontent.com/u/37935237?v=4?s=100" width="100px;" alt="mousset"/><br /><sub><b>mousset</b></sub></a><br /><a href="#code-mousset" title="Code">💻</a> <a href="#design-mousset" title="Design">🎨</a> <a href="#ideas-mousset" title="Ideas, Planning, & Feedback">🤔</a></td>
             <td align="center" valign="top" width="14.28%"><a href="http://www.jasonmcewen.org"><img src="https://avatars.githubusercontent.com/u/3181701?v=4?s=100" width="100px;" alt="Jason McEwen "/><br /><sub><b>Jason McEwen </b></sub></a><br /><a href="#ideas-jasonmcewen" title="Ideas, Planning, & Feedback">🤔</a></td>
-        </tr>
+            <td align="center" valign="top" width="14.28%"><a href="https://github.com/Eralys"><img src="https://avatars.githubusercontent.com/u/47173968?v=4?s=100" width="100px;" alt="Eralys"/><br /><sub><b>Eralys</b></sub></a><br /><a href="#ideas-Eralys" title="Ideas, Planning, & Feedback">🤔</a></td>
+            </tr>
         </tbody>
     </table>
 </embed><p>We encourage contributions from any interested developers.</p>
@@ -560,10 +564,13 @@ article is referenced. A BibTeX entry for this reference may look like:</p>
 <p>You might also like to consider citing our related papers on which this code builds:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@article</span><span class="p">{</span><span class="n">price</span><span class="p">:</span><span class="n">s2fft</span><span class="p">,</span>
     <span class="n">author</span>      <span class="o">=</span> <span class="s2">&quot;Matthew A. Price and Jason D. McEwen&quot;</span><span class="p">,</span>
-    <span class="n">title</span>       <span class="o">=</span> <span class="s2">&quot;Differentiable and accelerated spherical harmonic and Wigner transforms&quot;</span><span class="p">,</span>
-    <span class="n">journal</span>     <span class="o">=</span> <span class="s2">&quot;Journal of Computational Physics, submitted&quot;</span><span class="p">,</span>
-    <span class="n">year</span>        <span class="o">=</span> <span class="s2">&quot;2023&quot;</span><span class="p">,</span>
-    <span class="n">eprint</span>      <span class="o">=</span> <span class="s2">&quot;arXiv:2311.14670&quot;</span>
+    <span class="n">title</span>        <span class="o">=</span> <span class="s2">&quot;Differentiable and accelerated spherical harmonic and </span><span class="si">{W}</span><span class="s2">igner transforms&quot;</span><span class="p">,</span>
+    <span class="n">journal</span>      <span class="o">=</span> <span class="s2">&quot;Journal of Computational Physics&quot;</span><span class="p">,</span>
+    <span class="n">volume</span>       <span class="o">=</span> <span class="s2">&quot;510&quot;</span><span class="p">,</span>
+    <span class="n">pages</span>        <span class="o">=</span> <span class="s2">&quot;113109&quot;</span><span class="p">,</span>
+    <span class="n">year</span>         <span class="o">=</span> <span class="s2">&quot;2024&quot;</span><span class="p">,</span>
+    <span class="n">doi</span>          <span class="o">=</span> <span class="p">{</span><span class="mf">10.1016</span><span class="o">/</span><span class="n">j</span><span class="o">.</span><span class="n">jcp</span><span class="mf">.2024.113109</span><span class="p">},</span>
+    <span class="n">eprint</span>       <span class="o">=</span> <span class="s2">&quot;arXiv:2311.14670&quot;</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -629,7 +636,7 @@ details see the LICENSE file.</p>
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#third-generation-scattering-covariances-dna">Third Generation Scattering Covariances 🧬</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scattering-covariances-dna">Scattering covariances 🧬</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contributors">Contributors ✨</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#attribution-books">Attribution 📚</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#license-memo">License 📝</a><ul class="visible nav section-nav flex-column">

@@ -54,7 +54,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'api/core/index';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Scattering" href="scatter.html" />
+    <link rel="next" title="Generation" href="generation.html" />
     <link rel="prev" title="API" href="../index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -450,9 +450,10 @@ document.write(`
   <div class="bd-toc-item navbar-nav"><p aria-level="2" class="caption" role="heading"><span class="caption-text">Namespaces</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active has-children"><a class="current reference internal" href="#">Core Functions</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="scatter.html">Scattering</a></li>
-<li class="toctree-l2"><a class="reference internal" href="compress.html">Compression</a></li>
-<li class="toctree-l2"><a class="reference internal" href="synthesis.html">Synthesis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generation.html">Generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="representation.html">Representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compression.html">Compression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="optimisation.html">Optimisation</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../operators/index.html">Internal Functions</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -527,7 +528,7 @@ document.write(`
   <section id="core-functions">
 <h1>Core Functions<a class="headerlink" href="#core-functions" title="Link to this heading">#</a></h1>
 <div class="pst-scrollable-table-container"><table class="table" id="id1">
-<caption><span class="caption-text">Scattering Operations</span><a class="headerlink" href="#id1" title="Link to this table">#</a></caption>
+<caption><span class="caption-text">Generative models</span><a class="headerlink" href="#id1" title="Link to this table">#</a></caption>
 <colgroup>
 <col style="width: 50.0%" />
 <col style="width: 50.0%" />
@@ -538,17 +539,17 @@ document.write(`
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><a class="reference internal" href="scatter.html#s2scat.core.scatter.directional" title="s2scat.core.scatter.directional"><code class="xref py py-func docutils literal notranslate"><span class="pre">directional()</span></code></a></p></td>
-<td><p>Compute directional scattering covariances on the sphere (Mousset et al 2024).</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generation.html#s2scat.generation.build_encoder" title="s2scat.generation.build_encoder"><code class="xref py py-func docutils literal notranslate"><span class="pre">build_encoder()</span></code></a></p></td>
+<td><p>Builds a scattering covariance encoding function (latent encoder).</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="scatter.html#s2scat.core.scatter.directional_c" title="s2scat.core.scatter.directional_c"><code class="xref py py-func docutils literal notranslate"><span class="pre">directional_c()</span></code></a></p></td>
-<td><p>Compute directional scattering covariances on the sphere using a custom C backend (Mousset et al 2024).</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generation.html#s2scat.generation.build_generator" title="s2scat.generation.build_generator"><code class="xref py py-func docutils literal notranslate"><span class="pre">build_generator()</span></code></a></p></td>
+<td><p>Builds a scattering covariance generator function. (generative model).</p></td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="pst-scrollable-table-container"><table class="table" id="id2">
-<caption><span class="caption-text">Compression Operations</span><a class="headerlink" href="#id2" title="Link to this table">#</a></caption>
+<caption><span class="caption-text">Scattering transforms</span><a class="headerlink" href="#id2" title="Link to this table">#</a></caption>
 <colgroup>
 <col style="width: 50.0%" />
 <col style="width: 50.0%" />
@@ -559,14 +560,17 @@ document.write(`
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><a class="reference internal" href="compress.html#s2scat.core.compress.C01_C11_to_isotropic" title="s2scat.core.compress.C01_C11_to_isotropic"><code class="xref py py-func docutils literal notranslate"><span class="pre">C01_C11_to_isotropic()</span></code></a></p></td>
-<td><p>Convert scattering covariances to their isotropic counterpart.</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="representation.html#s2scat.representation.scatter" title="s2scat.representation.scatter"><code class="xref py py-func docutils literal notranslate"><span class="pre">scatter()</span></code></a></p></td>
+<td><p>Compute directional scattering covariances on the sphere (Mousset et al 2024).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="representation.html#s2scat.representation.scatter_c" title="s2scat.representation.scatter_c"><code class="xref py py-func docutils literal notranslate"><span class="pre">scatter_c()</span></code></a></p></td>
+<td><p>Compute directional scattering covariances on the sphere using a custom C backend (Mousset et al 2024).</p></td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="pst-scrollable-table-container"><table class="table" id="id3">
-<caption><span class="caption-text">Synthesis Operations</span><a class="headerlink" href="#id3" title="Link to this table">#</a></caption>
+<caption><span class="caption-text">Compression functions</span><a class="headerlink" href="#id3" title="Link to this table">#</a></caption>
 <colgroup>
 <col style="width: 50.0%" />
 <col style="width: 50.0%" />
@@ -577,19 +581,34 @@ document.write(`
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><a class="reference internal" href="synthesis.html#s2scat.core.synthesis.fit_jaxopt_scipy" title="s2scat.core.synthesis.fit_jaxopt_scipy"><code class="xref py py-func docutils literal notranslate"><span class="pre">fit_jaxopt_scipy()</span></code></a></p></td>
-<td><p>Minimises the declared loss function starting at params using jaxopt.</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compression.html#s2scat.compression.C01_C11_to_isotropic" title="s2scat.compression.C01_C11_to_isotropic"><code class="xref py py-func docutils literal notranslate"><span class="pre">C01_C11_to_isotropic()</span></code></a></p></td>
+<td><p>Convert scattering covariances to their isotropic counterpart.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="synthesis.html#s2scat.core.synthesis.fit_optax" title="s2scat.core.synthesis.fit_optax"><code class="xref py py-func docutils literal notranslate"><span class="pre">fit_optax()</span></code></a></p></td>
+</tbody>
+</table>
+</div>
+<div class="pst-scrollable-table-container"><table class="table" id="id4">
+<caption><span class="caption-text">Optimisation functions</span><a class="headerlink" href="#id4" title="Link to this table">#</a></caption>
+<colgroup>
+<col style="width: 50.0%" />
+<col style="width: 50.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Function Name</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="optimisation.html#s2scat.optimisation.fit_optax" title="s2scat.optimisation.fit_optax"><code class="xref py py-func docutils literal notranslate"><span class="pre">fit_optax()</span></code></a></p></td>
 <td><p>Minimises the declared loss function starting at params using optax (adam).</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="synthesis.html#s2scat.core.synthesis.l2_covariance_loss" title="s2scat.core.synthesis.l2_covariance_loss"><code class="xref py py-func docutils literal notranslate"><span class="pre">l2_covariance_loss()</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="optimisation.html#s2scat.optimisation.l2_covariance_loss" title="s2scat.optimisation.l2_covariance_loss"><code class="xref py py-func docutils literal notranslate"><span class="pre">l2_covariance_loss()</span></code></a></p></td>
 <td><p>L2 loss wrapper for the scattering covariance.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="synthesis.html#s2scat.core.synthesis.l2_loss" title="s2scat.core.synthesis.l2_loss"><code class="xref py py-func docutils literal notranslate"><span class="pre">l2_loss()</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="optimisation.html#s2scat.optimisation.l2_loss" title="s2scat.optimisation.l2_loss"><code class="xref py py-func docutils literal notranslate"><span class="pre">l2_loss()</span></code></a></p></td>
 <td><p>L2 loss for a single scattering covariance.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="synthesis.html#s2scat.core.synthesis.get_P00prime" title="s2scat.core.synthesis.get_P00prime"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_P00prime()</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="optimisation.html#s2scat.optimisation.get_P00prime" title="s2scat.optimisation.get_P00prime"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_P00prime()</span></code></a></p></td>
 <td><p>Computes P00prime which is the averaged power within each wavelet scale.</p></td>
 </tr>
 </tbody>
@@ -619,11 +638,11 @@ document.write(`
       </div>
     </a>
     <a class="right-next"
-       href="scatter.html"
+       href="generation.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Scattering</p>
+        <p class="prev-next-title">Generation</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

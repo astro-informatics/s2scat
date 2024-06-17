@@ -468,8 +468,8 @@ document.write(`
 
 <div class="genindex-jumpbox">
  <a href="#A"><strong>A</strong></a>
+ | <a href="#B"><strong>B</strong></a>
  | <a href="#C"><strong>C</strong></a>
- | <a href="#D"><strong>D</strong></a>
  | <a href="#F"><strong>F</strong></a>
  | <a href="#G"><strong>G</strong></a>
  | <a href="#L"><strong>L</strong></a>
@@ -498,10 +498,22 @@ document.write(`
   </ul></td>
 </tr></table>
 
+<h2 id="B">B</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/core/generation.html#s2scat.generation.build_encoder">build_encoder() (in module s2scat.generation)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/core/generation.html#s2scat.generation.build_generator">build_generator() (in module s2scat.generation)</a>
+</li>
+  </ul></td>
+</tr></table>
+
 <h2 id="C">C</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/core/compress.html#s2scat.core.compress.C01_C11_to_isotropic">C01_C11_to_isotropic() (in module s2scat.core.compress)</a>
+      <li><a href="api/core/compression.html#s2scat.compression.C01_C11_to_isotropic">C01_C11_to_isotropic() (in module s2scat.compression)</a>
 </li>
       <li><a href="api/utility/statistics.html#s2scat.utility.statistics.compute_C01_and_C11">compute_C01_and_C11() (in module s2scat.utility.statistics)</a>
 </li>
@@ -518,26 +530,10 @@ document.write(`
   </ul></td>
 </tr></table>
 
-<h2 id="D">D</h2>
-<table style="width: 100%" class="indextable genindextable"><tr>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/core/scatter.html#s2scat.core.scatter.directional">directional() (in module s2scat.core.scatter)</a>
-</li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/core/scatter.html#s2scat.core.scatter.directional_c">directional_c() (in module s2scat.core.scatter)</a>
-</li>
-  </ul></td>
-</tr></table>
-
 <h2 id="F">F</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/core/synthesis.html#s2scat.core.synthesis.fit_jaxopt_scipy">fit_jaxopt_scipy() (in module s2scat.core.synthesis)</a>
-</li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/core/synthesis.html#s2scat.core.synthesis.fit_optax">fit_optax() (in module s2scat.core.synthesis)</a>
+      <li><a href="api/core/optimisation.html#s2scat.optimisation.fit_optax">fit_optax() (in module s2scat.optimisation)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -551,7 +547,7 @@ document.write(`
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/operators/matrices.html#s2scat.operators.matrices.generate_recursive_matrices">generate_recursive_matrices() (in module s2scat.operators.matrices)</a>
 </li>
-      <li><a href="api/core/synthesis.html#s2scat.core.synthesis.get_P00prime">get_P00prime() (in module s2scat.core.synthesis)</a>
+      <li><a href="api/core/optimisation.html#s2scat.optimisation.get_P00prime">get_P00prime() (in module s2scat.optimisation)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -559,11 +555,11 @@ document.write(`
 <h2 id="L">L</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/core/synthesis.html#s2scat.core.synthesis.l2_covariance_loss">l2_covariance_loss() (in module s2scat.core.synthesis)</a>
+      <li><a href="api/core/optimisation.html#s2scat.optimisation.l2_covariance_loss">l2_covariance_loss() (in module s2scat.optimisation)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/core/synthesis.html#s2scat.core.synthesis.l2_loss">l2_loss() (in module s2scat.core.synthesis)</a>
+      <li><a href="api/core/optimisation.html#s2scat.optimisation.l2_loss">l2_loss() (in module s2scat.optimisation)</a>
 </li>
       <li><a href="api/utility/reorder.html#s2scat.utility.reorder.list_to_array">list_to_array() (in module s2scat.utility.reorder)</a>
 </li>
@@ -581,15 +577,17 @@ document.write(`
     module
 
       <ul>
-        <li><a href="api/core/compress.html#module-s2scat.core.compress">s2scat.core.compress</a>
+        <li><a href="api/core/compression.html#module-s2scat.compression">s2scat.compression</a>
 </li>
-        <li><a href="api/core/scatter.html#module-s2scat.core.scatter">s2scat.core.scatter</a>
-</li>
-        <li><a href="api/core/synthesis.html#module-s2scat.core.synthesis">s2scat.core.synthesis</a>
+        <li><a href="api/core/generation.html#module-s2scat.generation">s2scat.generation</a>
 </li>
         <li><a href="api/operators/matrices.html#module-s2scat.operators.matrices">s2scat.operators.matrices</a>
 </li>
         <li><a href="api/operators/spherical.html#module-s2scat.operators.spherical">s2scat.operators.spherical</a>
+</li>
+        <li><a href="api/core/optimisation.html#module-s2scat.optimisation">s2scat.optimisation</a>
+</li>
+        <li><a href="api/core/representation.html#module-s2scat.representation">s2scat.representation</a>
 </li>
         <li><a href="api/utility/config.html#module-s2scat.utility.config">s2scat.utility.config</a>
 </li>
@@ -635,24 +633,17 @@ document.write(`
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li>
-    s2scat.core.compress
+    s2scat.compression
 
       <ul>
-        <li><a href="api/core/compress.html#module-s2scat.core.compress">module</a>
+        <li><a href="api/core/compression.html#module-s2scat.compression">module</a>
 </li>
       </ul></li>
       <li>
-    s2scat.core.scatter
+    s2scat.generation
 
       <ul>
-        <li><a href="api/core/scatter.html#module-s2scat.core.scatter">module</a>
-</li>
-      </ul></li>
-      <li>
-    s2scat.core.synthesis
-
-      <ul>
-        <li><a href="api/core/synthesis.html#module-s2scat.core.synthesis">module</a>
+        <li><a href="api/core/generation.html#module-s2scat.generation">module</a>
 </li>
       </ul></li>
       <li>
@@ -667,6 +658,20 @@ document.write(`
 
       <ul>
         <li><a href="api/operators/spherical.html#module-s2scat.operators.spherical">module</a>
+</li>
+      </ul></li>
+      <li>
+    s2scat.optimisation
+
+      <ul>
+        <li><a href="api/core/optimisation.html#module-s2scat.optimisation">module</a>
+</li>
+      </ul></li>
+      <li>
+    s2scat.representation
+
+      <ul>
+        <li><a href="api/core/representation.html#module-s2scat.representation">module</a>
 </li>
       </ul></li>
   </ul></td>
@@ -699,6 +704,10 @@ document.write(`
         <li><a href="api/utility/statistics.html#module-s2scat.utility.statistics">module</a>
 </li>
       </ul></li>
+      <li><a href="api/core/representation.html#s2scat.representation.scatter">scatter() (in module s2scat.representation)</a>
+</li>
+      <li><a href="api/core/representation.html#s2scat.representation.scatter_c">scatter_c() (in module s2scat.representation)</a>
+</li>
   </ul></td>
 </tr></table>
 

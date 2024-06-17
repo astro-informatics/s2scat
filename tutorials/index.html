@@ -54,7 +54,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'tutorials/index';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Generating realisations" href="synthesis/synthesis.html" />
+    <link rel="next" title="Generation" href="generation/automatic_generation.html" />
     <link rel="prev" title="Installation" href="../user_guide/install.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -449,14 +449,25 @@ document.write(`
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
   <div class="bd-toc-item navbar-nav"><p aria-level="2" class="caption" role="heading"><span class="caption-text">Jupyter Notebooks</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="synthesis/synthesis.html"><strong>Generating realisations</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="generation/automatic_generation.html"><strong>Generation</strong></a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="compression/automatic_compression.html"><strong>Compression (Encoder)</strong></a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="generation/manual_generation.html"><strong>Generation (Step-by-Step)</strong></a></li>
 
 
 
 
 
 
-<li class="toctree-l1"><a class="reference internal" href="compression/compression.html"><strong>Compressing an image</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="compression/manual_compression.html"><strong>Compression (Step-by-Step)</strong></a></li>
 
 
 
@@ -526,18 +537,15 @@ can easily be accessed.</p>
 <section id="core-usage-rocket">
 <h2>Core usage 🚀<a class="headerlink" href="#core-usage-rocket" title="Link to this heading">#</a></h2>
 <p>To import and use <code class="docutils literal notranslate"><span class="pre">S2SCAT</span></code>  is as simple follows:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">s2scat</span>
-<span class="n">L</span> <span class="o">=</span> <span class="n">_</span>   <span class="c1"># Harmonic bandlimit</span>
-<span class="n">N</span> <span class="o">=</span> <span class="n">_</span>   <span class="c1"># Azimuthal bandlimit</span>
-<span class="n">flm</span> <span class="o">=</span> <span class="n">_</span> <span class="c1"># Harmonic coefficients of the input signal</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">s2scat</span><span class="o">,</span> <span class="nn">jax</span>
+<span class="c1"># For statistical compression</span>
+<span class="n">encoder</span> <span class="o">=</span> <span class="n">s2scat</span><span class="o">.</span><span class="n">build_encoder</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>          <span class="c1"># Returns a callable compression model.</span>
+<span class="n">covariance_statistics</span> <span class="o">=</span> <span class="n">encoder</span><span class="p">(</span><span class="n">alm</span><span class="p">)</span>          <span class="c1"># Generate statistics (can be batched).</span>
 
-<span class="c1"># Core GPU transforms</span>
-<span class="n">config</span> <span class="o">=</span> <span class="n">s2scat</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
-<span class="n">covariances</span> <span class="o">=</span> <span class="n">s2scat</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">flm</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
-
-<span class="c1"># C backend CPU transforms</span>
-<span class="n">config</span> <span class="o">=</span> <span class="n">s2scat</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">c_backend</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">covariances</span> <span class="o">=</span> <span class="n">s2scat</span><span class="o">.</span><span class="n">scatter_c</span><span class="p">(</span><span class="n">flm</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
+<span class="c1"># For generative modelling</span>
+<span class="n">key</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">PRNGKey</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+<span class="n">generator</span> <span class="o">=</span> <span class="n">s2scat</span><span class="o">.</span><span class="n">build_generator</span><span class="p">(</span><span class="n">alm</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span> <span class="c1"># Returns a callable generative model.</span>
+<span class="n">new_samples</span> <span class="o">=</span> <span class="n">generator</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>              <span class="c1"># Generate 10 new spherical textures.</span>
 </pre></div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">S2SCAT</span></code> also provides JAX support for existing C backend libraries which are memory efficient but CPU bound; at launch we support <a class="reference external" href="https://github.com/astro-informatics/ssht">SSHT</a>, however this could be extended straightforwardly. This works by wrapping python bindings with custom JAX frontends.</p>
@@ -567,11 +575,11 @@ can easily be accessed.</p>
       </div>
     </a>
     <a class="right-next"
-       href="synthesis/synthesis.html"
+       href="generation/automatic_generation.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title"><strong>Generating realisations</strong></p>
+        <p class="prev-next-title"><strong>Generation</strong></p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

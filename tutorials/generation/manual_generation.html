@@ -1,0 +1,814 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Generation (Step-by-Step) &#8212; S2SCAT 0.0.1 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/nbsphinx-code-cells.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=9be2284e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom_tabs.css?v=82e1095b" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/fontawesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/solid.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/brands.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=3ee479438cf8b5e0d341"></script>
+
+    <script src="../../_static/jquery.js?v=5d32c60e"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+    <script src="../../_static/documentation_options.js?v=d45e8c67"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'tutorials/generation/manual_generation';</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Compression (Step-by-Step)" href="../compression/manual_compression.html" />
+    <link rel="prev" title="Compression (Encoder)" href="../compression/automatic_compression.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+<aside class="bd-header-announcement" aria-label="Announcement">
+  <div class="bd-header-announcement__content">s2scat is currently under development</div>
+</aside>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class=" navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/sax_logo.png" class="logo__image only-light" alt="S2SCAT 0.0.1 documentation - Home"/>
+    <script>document.write(`<img src="../../_static/sax_logo.png" class="logo__image only-dark" alt="S2SCAT 0.0.1 documentation - Home"/>`);</script>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class=" navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav class="navbar-nav">
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../../user_guide/install.html">
+    Installation
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    Notebooks
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../../api/index.html">
+    API
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://arxiv.org/abs/xxxx.xxxxx" title="ArXiv" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../../_static/arxiv-logomark-small.png" class="icon-link-image" alt="ArXiv"/></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="add_link_here" title="Medium" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-medium fa-lg" aria-hidden="true"></i></span>
+            <span class="sr-only">Medium</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/s2scat/" title="PyPi" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../../_static/pypi.png" class="icon-link-image" alt="PyPi"/></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/astro-informatics/s2scat/" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-github fa-2x fa-lg" aria-hidden="true"></i></span>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://app.codecov.io/gh/astro-informatics/s2scat" title="CodeCov" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../../_static/codecov.png" class="icon-link-image" alt="CodeCov"/></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://opensource.org/licenses/MIT" title="Licence" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../../_static/MIT_Licence.png" class="icon-link-image" alt="Licence"/></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script>
+    </div>
+  
+
+  
+    <button class="sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav class="navbar-nav">
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../../user_guide/install.html">
+    Installation
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    Notebooks
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../../api/index.html">
+    API
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://arxiv.org/abs/xxxx.xxxxx" title="ArXiv" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../../_static/arxiv-logomark-small.png" class="icon-link-image" alt="ArXiv"/></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="add_link_here" title="Medium" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-medium fa-lg" aria-hidden="true"></i></span>
+            <span class="sr-only">Medium</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/s2scat/" title="PyPi" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../../_static/pypi.png" class="icon-link-image" alt="PyPi"/></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/astro-informatics/s2scat/" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-github fa-2x fa-lg" aria-hidden="true"></i></span>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://app.codecov.io/gh/astro-informatics/s2scat" title="CodeCov" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../../_static/codecov.png" class="icon-link-image" alt="CodeCov"/></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://opensource.org/licenses/MIT" title="Licence" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../../_static/MIT_Licence.png" class="icon-link-image" alt="Licence"/></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><p aria-level="2" class="caption" role="heading"><span class="caption-text">Jupyter Notebooks</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="automatic_generation.html"><strong>Generation</strong></a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../compression/automatic_compression.html"><strong>Compression (Encoder)</strong></a></li>
+
+
+
+
+
+<li class="toctree-l1 current active"><a class="current reference internal" href="#"><strong>Generation (Step-by-Step)</strong></a></li>
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../compression/manual_compression.html"><strong>Compression (Step-by-Step)</strong></a></li>
+
+
+
+
+
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Notebooks</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><strong>Gene...</li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="Generation-(Step-by-Step)">
+<h1><strong>Generation (Step-by-Step)</strong><a class="headerlink" href="#Generation-(Step-by-Step)" title="Link to this heading">#</a></h1>
+<p><a class="reference external" href="https://colab.research.google.com/github/astro-informatics/s2scat/blob/main/notebooks/manual_generation.ipynb"><img alt="colab image" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
+<p>This tutorial is a basic overview of how one may use the scattering covariances as a statistical generative model.</p>
+<p>Generative AI models typically require the abundance of realistic training data. In many (often high dimensional) application domains, such as the sciences, such training data does not exist, limiting generative AI approaches.</p>
+<p>One may instead construct an expressive statistical representation from which, provided at least a single fiducial realisation, many realisations may be drawn. This concept is actually very familiar, particularly in cosmology where it is typical to draw Gaussian realisations from a known power spectrum. However, this generative model does not capture complex non-linear structural information.</p>
+<p>Here we will instead use the scattering covariances <span class="math notranslate nohighlight">\(\Phi(x)\)</span> as our statistical representation. Given <span class="math notranslate nohighlight">\(\Phi\)</span> is a non-linear function of the data <span class="math notranslate nohighlight">\(x\)</span>, generating new realisations isn’t quite so straightforward. In fact, to do so we’ll need to minimise the loss function:</p>
+<div class="math notranslate nohighlight">
+\[\mathcal{L}(x) = ||\Phi(x) - \Phi(x_t)||^2_2\]</div>
+<p>where <span class="math notranslate nohighlight">\(\Phi(x_t)\)</span> are the target covariances computed from the signal we are aiming to emulate <span class="math notranslate nohighlight">\(x_t\)</span>. To solve this optimisation with gradient based methods we clearly need to be able to differentiate through <span class="math notranslate nohighlight">\(\Phi\)</span> which is a complex function involving wavelet transforms, non-linearities, spherical harmonic and Wigner transforms.</p>
+<p>As <code class="docutils literal notranslate"><span class="pre">S2SCAT</span></code> is a <code class="docutils literal notranslate"><span class="pre">JAX</span></code> package, we can readily access these gradients, so lets see exactly how this works!</p>
+</section>
+<section id="Import-the-package">
+<h1>Import the package<a class="headerlink" href="#Import-the-package" title="Link to this heading">#</a></h1>
+<p>Lets first import <code class="docutils literal notranslate"><span class="pre">S2SCAT</span></code> and some basic plotting functions. We’ll also pick up <code class="docutils literal notranslate"><span class="pre">pickle</span></code> to load the targets which have been stored just to save you some time.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="n">IN_COLAB</span> <span class="o">=</span> <span class="s1">&#39;google.colab&#39;</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span>
+
+<span class="c1"># Install a spherical plotting package.</span>
+<span class="o">!</span>pip<span class="w"> </span>install<span class="w"> </span>cartopy<span class="w"> </span><span class="p">&amp;</span>&gt;<span class="w"> </span>/dev/null
+
+<span class="c1"># Install s2fft and data if running on google colab.</span>
+<span class="k">if</span> <span class="n">IN_COLAB</span><span class="p">:</span>
+    <span class="o">!</span>pip<span class="w"> </span>install<span class="w"> </span>s2scat<span class="w"> </span><span class="p">&amp;</span>&gt;<span class="w"> </span>/dev/null
+    <span class="o">!</span>mkdir<span class="w"> </span>data/
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">jax</span>
+<span class="n">jax</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="s2">&quot;jax_enable_x64&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">cartopy.crs</span> <span class="k">as</span> <span class="nn">ccrs</span>
+<span class="kn">import</span> <span class="nn">s2scat</span><span class="o">,</span> <span class="nn">s2fft</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Configure-the-problem">
+<h1>Configure the problem<a class="headerlink" href="#Configure-the-problem" title="Link to this heading">#</a></h1>
+<p>Lets set up the target field we are aiming to emulate, and the hyperparameters of the scattering covariance representation we will work with.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">L</span> <span class="o">=</span> <span class="mi">256</span>                <span class="c1"># Spherical harmonic bandlimit.</span>
+<span class="n">N</span> <span class="o">=</span> <span class="mi">3</span>                  <span class="c1"># Azimuthal bandlimit (directionality).</span>
+<span class="n">J_min</span> <span class="o">=</span> <span class="mi">2</span>              <span class="c1"># Minimum wavelet scale.</span>
+<span class="n">reality</span> <span class="o">=</span> <span class="kc">True</span>         <span class="c1"># Input signal is real.</span>
+<span class="n">recursive</span> <span class="o">=</span> <span class="kc">False</span>      <span class="c1"># Use the fully precompute transform.</span>
+
+<span class="c1"># Lets load in the spherical field we wish to emulate and its harmonic coefficients.</span>
+<span class="n">x_t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;data/target_map_lss.npy&#39;</span><span class="p">)</span>
+<span class="n">xlm_t</span> <span class="o">=</span> <span class="n">s2fft</span><span class="o">.</span><span class="n">forward_jax</span><span class="p">(</span><span class="n">x_t</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">reality</span><span class="o">=</span><span class="n">reality</span><span class="p">)[:,</span><span class="n">L</span><span class="o">-</span><span class="mi">1</span><span class="p">:]</span>
+</pre></div>
+</div>
+</div>
+<p>Before calling the scattering transform you need to run configuration, which will generate any precomputed arrays and cache them. When running the recurisve transform this shouldn’t take much memory at all. However, the fully precompute transform, which is much faster, can be extremely memory hungry at L ~ 512 and above!</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Configure the representation e.g. load wavelet filters and Wigner matrices.</span>
+<span class="n">config</span> <span class="o">=</span> <span class="n">s2scat</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">J_min</span><span class="p">,</span> <span class="n">reality</span><span class="p">,</span> <span class="n">recursive</span><span class="p">)</span>
+
+<span class="c1"># Calculate normalisation and target latent vector.</span>
+<span class="n">norm</span> <span class="o">=</span> <span class="n">s2scat</span><span class="o">.</span><span class="n">compute_norm</span><span class="p">(</span><span class="n">xlm_t</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">J_min</span><span class="p">,</span> <span class="n">reality</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">recursive</span><span class="p">)</span>
+<span class="n">targets</span> <span class="o">=</span> <span class="n">s2scat</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">xlm_t</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">J_min</span><span class="p">,</span> <span class="n">reality</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">norm</span><span class="p">,</span> <span class="n">recursive</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Define-a-loss-function">
+<h1>Define a loss function<a class="headerlink" href="#Define-a-loss-function" title="Link to this heading">#</a></h1>
+<p>Lets define a simple <span class="math notranslate nohighlight">\(\ell_2\)</span>-loss function which just computes the mean squared error between the scattering covariances computed at our current iterant and those of the target. In practice, any loss could be considered here, however we’ll use the most straightforward scenario for this demonstration.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">loss_func</span><span class="p">(</span><span class="n">xlm</span><span class="p">):</span>
+    <span class="n">predicts</span> <span class="o">=</span> <span class="n">s2scat</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">xlm</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">J_min</span><span class="p">,</span> <span class="n">reality</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">norm</span><span class="p">,</span> <span class="n">recursive</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">s2scat</span><span class="o">.</span><span class="n">optimisation</span><span class="o">.</span><span class="n">l2_covariance_loss</span><span class="p">(</span><span class="n">predicts</span><span class="p">,</span> <span class="n">targets</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Generate-an-initial-estimate">
+<h1>Generate an initial estimate<a class="headerlink" href="#Generate-an-initial-estimate" title="Link to this heading">#</a></h1>
+<p>We need to choose a set of harmonic coefficients <span class="math notranslate nohighlight">\(x_{\ell m}\)</span> from which to start our optimisation. Strictly speaking, we should start from Gaussianly distributed random signal to ensure we form a macro-canonical model of our target field, and we will do precisely this. However, in practice it may be better to start from e.g. a Gaussian random field, generated from a fiducial power spectrum, as this may reduce the total number of iterations required for convergence.</p>
+<p>In any case, lets generate a starting signal.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute the standard deviation of the target field.</span>
+<span class="n">sigma_bar</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">xlm_t</span><span class="p">)[</span><span class="n">xlm_t</span><span class="o">!=</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="c1"># Generate Gaussian random harmonic coefficients with the correct variance.</span>
+<span class="n">xlm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">L</span><span class="p">)</span> <span class="o">*</span> <span class="n">sigma_bar</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">L</span><span class="p">)</span> <span class="o">*</span> <span class="n">sigma_bar</span>
+
+<span class="c1"># Save the starting noise signal for posterity and plotting!</span>
+<span class="n">xlm_start</span> <span class="o">=</span> <span class="n">s2scat</span><span class="o">.</span><span class="n">operators</span><span class="o">.</span><span class="n">spherical</span><span class="o">.</span><span class="n">make_flm_full</span><span class="p">(</span><span class="n">xlm</span><span class="p">,</span> <span class="n">L</span><span class="p">)</span>
+<span class="n">x_start</span> <span class="o">=</span> <span class="n">s2fft</span><span class="o">.</span><span class="n">inverse</span><span class="p">(</span><span class="n">xlm_start</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">reality</span><span class="o">=</span><span class="n">reality</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;jax&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Minimise-the-objective">
+<h1>Minimise the objective<a class="headerlink" href="#Minimise-the-objective" title="Link to this heading">#</a></h1>
+<p>Now we can pass all these components to <code class="docutils literal notranslate"><span class="pre">optax</span></code>, which we have internally configured to use the adam optimizer to minimise the loss and return us a synthetic realisation which should approximate the target field statistics.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Run the optimisation to generate a new realisation xlm.</span>
+<span class="n">xlm_end</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">s2scat</span><span class="o">.</span><span class="n">optimisation</span><span class="o">.</span><span class="n">fit_optax</span><span class="p">(</span><span class="n">xlm</span><span class="p">,</span> <span class="n">loss_func</span><span class="p">,</span> <span class="n">niter</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">track_history</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Convert the synthetic harmonic coefficients into a pixel-space image.</span>
+<span class="n">xlm_end</span> <span class="o">=</span> <span class="n">s2scat</span><span class="o">.</span><span class="n">operators</span><span class="o">.</span><span class="n">spherical</span><span class="o">.</span><span class="n">make_flm_full</span><span class="p">(</span><span class="n">xlm_end</span><span class="p">,</span> <span class="n">L</span><span class="p">)</span>
+<span class="n">x_end</span> <span class="o">=</span> <span class="n">s2fft</span><span class="o">.</span><span class="n">inverse_jax</span><span class="p">(</span><span class="n">xlm_end</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">reality</span><span class="o">=</span><span class="n">reality</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Check-the-synthesis">
+<h1>Check the synthesis<a class="headerlink" href="#Check-the-synthesis" title="Link to this heading">#</a></h1>
+<p>Finally, lets check how our starting and ending realisations shape up against the target field!</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="n">x_t</span><span class="p">,</span> <span class="n">x_start</span><span class="p">,</span> <span class="n">x_end</span><span class="p">]</span>
+<span class="n">titles</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Target&quot;</span><span class="p">,</span> <span class="s2">&quot;Start&quot;</span><span class="p">,</span> <span class="s2">&quot;Emulation&quot;</span><span class="p">]</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">subplot_kw</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;projection&#39;</span><span class="p">:</span> <span class="n">ccrs</span><span class="o">.</span><span class="n">Mollweide</span><span class="p">()},</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+<span class="n">mx</span><span class="p">,</span> <span class="n">mn</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+    <span class="n">axs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">fields</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">transform</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">(),</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;viridis&#39;</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="n">mx</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="n">mn</span><span class="p">)</span>
+    <span class="n">axs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">titles</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="n">axs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../compression/automatic_compression.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><strong>Compression (Encoder)</strong></p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../compression/manual_compression.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><strong>Compression (Step-by-Step)</strong></p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#"><strong>Generation (Step-by-Step)</strong></a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#Import-the-package">Import the package</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#Configure-the-problem">Configure the problem</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#Define-a-loss-function">Define a loss function</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#Generate-an-initial-estimate">Generate an initial estimate</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#Minimise-the-objective">Minimise the objective</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#Check-the-synthesis">Check the synthesis</a></li>
+</ul>
+
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  <div class="tocsection sourcelink">
+    <a href="../../_sources/tutorials/generation/manual_generation.nblink.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2024, Matthew Price, Louise Mousset, Erwan Allys, and Jason McEwen.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.15.3.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

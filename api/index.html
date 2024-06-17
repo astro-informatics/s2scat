@@ -55,7 +55,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Core Functions" href="core/index.html" />
-    <link rel="prev" title="Compressing an image" href="../tutorials/compression/compression.html" />
+    <link rel="prev" title="Compression (Step-by-Step)" href="../tutorials/compression/manual_compression.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -450,9 +450,10 @@ document.write(`
   <div class="bd-toc-item navbar-nav"><p aria-level="2" class="caption" role="heading"><span class="caption-text">Namespaces</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1 has-children"><a class="reference internal" href="core/index.html">Core Functions</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="core/scatter.html">Scattering</a></li>
-<li class="toctree-l2"><a class="reference internal" href="core/compress.html">Compression</a></li>
-<li class="toctree-l2"><a class="reference internal" href="core/synthesis.html">Synthesis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core/generation.html">Generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core/representation.html">Representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core/compression.html">Compression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core/optimisation.html">Optimisation</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="operators/index.html">Internal Functions</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -529,10 +530,10 @@ directory structure for the software.</p>
 <section id="directory-structure">
 <h2>Directory structure<a class="headerlink" href="#directory-structure" title="Link to this heading">#</a></h2>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>s2scat/
-├──<span class="w"> </span>core/<span class="w">               </span><span class="c1"># Top-level functionality:</span>
-│<span class="w">      </span>├─<span class="w"> </span>scatter.py<span class="w">            </span><span class="c1"># - Scattering covariance transform.</span>
-│<span class="w">      </span>├─<span class="w"> </span>compress.py<span class="w">           </span><span class="c1"># - Statistical compression functions.</span>
-│<span class="w">      </span>├─<span class="w"> </span>synthesis.py<span class="w">          </span><span class="c1"># - Synthesis optimisation functions.</span>
+├──<span class="w"> </span>representation.py<span class="w">   </span><span class="c1"># - Scattering covariance transform.</span>
+├──<span class="w"> </span>compression.py<span class="w">      </span><span class="c1"># - Statistical compression functions.</span>
+├──<span class="w"> </span>optimisation.py<span class="w">     </span><span class="c1"># - Optimisation algorithm wrappers.</span>
+├──<span class="w"> </span>generation.py<span class="w">       </span><span class="c1"># - Latent encoder and Generative decoder.</span>
 │
 ├──<span class="w"> </span>operators/<span class="w">          </span><span class="c1"># Internal functionality:</span>
 │<span class="w">      </span>├─<span class="w"> </span>spherical.py<span class="w">          </span><span class="c1"># - Specific spherical operations, e.g. batched SHTs.</span>
@@ -561,12 +562,12 @@ directory structure for the software.</p>
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="../tutorials/compression/compression.html"
+       href="../tutorials/compression/manual_compression.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title"><strong>Compressing an image</strong></p>
+        <p class="prev-next-title"><strong>Compression (Step-by-Step)</strong></p>
       </div>
     </a>
     <a class="right-next"

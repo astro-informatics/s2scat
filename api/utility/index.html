@@ -450,9 +450,10 @@ document.write(`
   <div class="bd-toc-item navbar-nav"><p aria-level="2" class="caption" role="heading"><span class="caption-text">Namespaces</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1 has-children"><a class="reference internal" href="../core/index.html">Core Functions</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../core/scatter.html">Scattering</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../core/compress.html">Compression</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../core/synthesis.html">Synthesis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/generation.html">Generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/representation.html">Representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/compression.html">Compression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/optimisation.html">Optimisation</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../operators/index.html">Internal Functions</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -562,26 +563,20 @@ document.write(`
 <tr class="row-odd"><td><p><a class="reference internal" href="statistics.html#s2scat.utility.statistics.normalize_map" title="s2scat.utility.statistics.normalize_map"><code class="xref py py-func docutils literal notranslate"><span class="pre">normalize_map()</span></code></a></p></td>
 <td><p>Normalises a spherical map to zero mean and unit variance.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-func docutils literal notranslate"><span class="pre">compute_P00()</span></code></p></td>
-<td><p>Stand alone function to compute the second order power statistics.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="statistics.html#s2scat.utility.statistics.compute_C01_and_C11" title="s2scat.utility.statistics.compute_C01_and_C11"><code class="xref py py-func docutils literal notranslate"><span class="pre">compute_C01_and_C11()</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="statistics.html#s2scat.utility.statistics.compute_C01_and_C11" title="s2scat.utility.statistics.compute_C01_and_C11"><code class="xref py py-func docutils literal notranslate"><span class="pre">compute_C01_and_C11()</span></code></a></p></td>
 <td><p>Stand alone function to compute the fourth and sixth order covariance statistics.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="statistics.html#s2scat.utility.statistics.add_to_S1" title="s2scat.utility.statistics.add_to_S1"><code class="xref py py-func docutils literal notranslate"><span class="pre">add_to_S1()</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="statistics.html#s2scat.utility.statistics.add_to_S1" title="s2scat.utility.statistics.add_to_S1"><code class="xref py py-func docutils literal notranslate"><span class="pre">add_to_S1()</span></code></a></p></td>
 <td><p>Computes and appends the mean field statistic <span class="math notranslate nohighlight">\(\text{S1}_j = \langle |\Psi^\lambda f| \rangle\)</span> at scale <span class="math notranslate nohighlight">\(j\)</span>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="statistics.html#s2scat.utility.statistics.add_to_P00" title="s2scat.utility.statistics.add_to_P00"><code class="xref py py-func docutils literal notranslate"><span class="pre">add_to_P00()</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="statistics.html#s2scat.utility.statistics.add_to_P00" title="s2scat.utility.statistics.add_to_P00"><code class="xref py py-func docutils literal notranslate"><span class="pre">add_to_P00()</span></code></a></p></td>
 <td><p>Computes and appends the second order power statistic <span class="math notranslate nohighlight">\(\text{P00}_j = \langle |\Psi^\lambda f|^2 \rangle\)</span> at scale <span class="math notranslate nohighlight">\(j\)</span>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="statistics.html#s2scat.utility.statistics.add_to_C01" title="s2scat.utility.statistics.add_to_C01"><code class="xref py py-func docutils literal notranslate"><span class="pre">add_to_C01()</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="statistics.html#s2scat.utility.statistics.add_to_C01" title="s2scat.utility.statistics.add_to_C01"><code class="xref py py-func docutils literal notranslate"><span class="pre">add_to_C01()</span></code></a></p></td>
 <td><p>Computes and appends the fourth order covariance statistic <span class="math notranslate nohighlight">\(\text{C01}_j = \text{Cov}\big [ \Psi^{\lambda_1} f, \Psi^{\lambda_1} | \Psi^{\lambda_2} f | \big ]\)</span> at scale <span class="math notranslate nohighlight">\(j\)</span>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="statistics.html#s2scat.utility.statistics.add_to_C11" title="s2scat.utility.statistics.add_to_C11"><code class="xref py py-func docutils literal notranslate"><span class="pre">add_to_C11()</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="statistics.html#s2scat.utility.statistics.add_to_C11" title="s2scat.utility.statistics.add_to_C11"><code class="xref py py-func docutils literal notranslate"><span class="pre">add_to_C11()</span></code></a></p></td>
 <td><p>Computes and appends the sixth order covariance statistic <span class="math notranslate nohighlight">\(\text{C11}_j = \text{Cov}\big [ \Psi^{\lambda_1} | \Psi^{\lambda_3} f |, \Psi^{\lambda_1} | \Psi^{\lambda_2} f | \big ]\)</span> at scale <span class="math notranslate nohighlight">\(j\)</span>.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-func docutils literal notranslate"><span class="pre">apply_norm()</span></code></p></td>
-<td><p>Applies normalisation to a complete list of covariance statistics.</p></td>
 </tr>
 </tbody>
 </table>
