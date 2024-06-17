@@ -27,7 +27,9 @@ setup(
     license="MIT",
     python_requires=">=3.8",
     install_requires=requirements,
-    description=("Scattering covariance transform on the sphere"),
+    description=(
+        "Differentiable and GPU accelerated scattering covariance statistics on the sphere"
+    ),
     long_description_content_type="text/x-rst",
     long_description=long_description,
     packages=find_packages(),

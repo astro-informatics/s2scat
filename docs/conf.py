@@ -100,18 +100,18 @@ html_theme_options = {
     "header_links_before_dropdown": 5,
     "secondary_sidebar_items": ["page-toc", "edit-this-page", "sourcelink"],
     "icon_links": [
-        {
-            "name": "ArXiv",
-            "url": "https://arxiv.org/abs/xxxx.xxxxx",
-            "icon": "_static/arxiv-logomark-small.png",
-            "type": "local",
-        },
-        {
-            "name": "Medium",
-            "url": "add_link_here",
-            "icon": "fa-brands fa-medium",
-            "type": "fontawesome",
-        },
+        # {
+        #     "name": "ArXiv",
+        #     "url": "https://arxiv.org/abs/xxxx.xxxxx",
+        #     "icon": "_static/arxiv-logomark-small.png",
+        #     "type": "local",
+        # },
+        # {
+        #     "name": "Medium",
+        #     "url": "add_link_here",
+        #     "icon": "fa-brands fa-medium",
+        #     "type": "fontawesome",
+        # },
         {
             "name": "PyPi",
             "url": "https://pypi.org/project/s2scat/",
