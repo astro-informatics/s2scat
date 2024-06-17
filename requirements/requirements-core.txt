@@ -1,5 +1,5 @@
 # Packages required for core functionality 
-numpy 
+numpy ==  1.26.4 # numpy 2.0.0 breaks pyssht in s2fft.
 
 # JAX optimisation routines
 optax
