@@ -15,18 +15,15 @@ To import and use ``S2SCAT``  is as simple follows:
 
 .. code-block:: python
 
-   import s2scat
-   L = _   # Harmonic bandlimit 
-   N = _   # Azimuthal bandlimit 
-   flm = _ # Harmonic coefficients of the input signal 
+   import s2scat, jax
+   # For statistical compression
+   encoder = s2scat.build_encoder(L, N)          # Returns a callable compression model.
+   covariance_statistics = encoder(alm)          # Generate statistics (can be batched).
 
-   # Core GPU transforms 
-   config = s2scat.configure(L, N)
-   covariances = s2scat.scatter(flm, L, N, config=config)
-
-   # C backend CPU transforms
-   config = s2scat.configure(L, N, c_backend=True)
-   covariances = s2scat.scatter_c(flm, L, N, config=config)
+   # For generative modelling
+   key = jax.random.PRNGKey(seed)
+   generator = s2scat.build_generator(alm, L, N) # Returns a callable generative model.
+   new_samples = generator(key, 10)              # Generate 10 new spherical textures. 
 
 ``S2SCAT`` also provides JAX support for existing C backend libraries which are memory efficient but CPU bound; at launch we support `SSHT <https://github.com/astro-informatics/ssht>`_, however this could be extended straightforwardly. This works by wrapping python bindings with custom JAX frontends.
 
@@ -38,5 +35,7 @@ For further details on usage see the `documentation <https://astro-informatics.g
    :maxdepth: 3
    :caption: Jupyter Notebooks
 
-   synthesis/synthesis.nblink
-   compression/compression.nblink
+   generation/automatic_generation.nblink
+   compression/automatic_compression.nblink
+   generation/manual_generation.nblink
+   compression/manual_compression.nblink

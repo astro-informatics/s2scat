@@ -12,7 +12,7 @@
     :target: add_link_here
 
 
-Scattering covariance transform on the sphere
+Differentiable scattering covariances on the sphere
 =================================================================================================================
 
 ``S2SCAT`` is a Python package for computing third generation scattering covariances on the 

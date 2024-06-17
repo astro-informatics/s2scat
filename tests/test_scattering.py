@@ -51,10 +51,10 @@ def test_forward_pass(
         else None
     )
 
-    coeffs_recursive = s2scat.core.scatter.directional(
+    coeffs_recursive = s2scat.scatter(
         flm, L, N, J_min, reality, config_recursive, norm, True, isotropic, delta_j
     )
-    coeffs_precompute = s2scat.core.scatter.directional(
+    coeffs_precompute = s2scat.scatter(
         flm, L, N, J_min, reality, config_precompute, norm, False, isotropic, delta_j
     )
 
@@ -90,11 +90,11 @@ def test_forward_pass_c_backend(
     config_precompute = s2scat.utility.config.run_config(
         L, N, J_min, reality, False, False
     )
-    coeffs_precompute = s2scat.core.scatter.directional(
+    coeffs_precompute = s2scat.scatter(
         flm, L, N, J_min, reality, config_precompute, None, False, isotropic, delta_j
     )
 
-    coeffs_c = s2scat.core.scatter.directional_c(
+    coeffs_c = s2scat.scatter_c(
         flm, L, N, J_min, reality, config_c, None, isotropic, delta_j
     )
 

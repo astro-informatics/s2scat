@@ -8,7 +8,7 @@
 
 # Differentiable scattering covariances on the sphere
 
-`S2SCAT` is a Python package for computing scattering covariances on the sphere ([Mousset et al. 2024](https://arxiv.org/abs/xxxx.xxxxx)) using JAX.  It exploits autodiff to provide differentiable transforms, which are also deployable on hardware accelerators (e.g. GPUs and TPUs), leveraging the differentiable and accelerated spherical harmonic and wavelet transforms implemented in [S2FFT](https://github.com/astro-informatics/s2fft) and [S2WAV](https://github.com/astro-informatics/s2wav), respectively. 
+`S2SCAT` is a Python package for computing scattering covariances on the sphere ([Mousset et al. 2024](https://arxiv.org/abs/xxxx.xxxxx)) using JAX.  It exploits autodiff to provide differentiable transforms, which are also deployable on hardware accelerators (e.g. GPUs and TPUs), leveraging the differentiable and accelerated spherical harmonic and wavelet transforms implemented in [S2FFT](https://github.com/astro-informatics/s2fft) and [S2WAV](https://github.com/astro-informatics/s2wav), respectively. Scattering covariances are useful both for field-level generative modelling of complex non-Gaussian textures and for statistical compression of high dimensional field-level data, a key step of e.g. simulation based inference.
 
 > [!IMPORTANT]
 > It is worth highlighting that the input to `S2SCAT` are spherical harmonic coefficients, which can be generated with whichever software package you prefer, e.g. [`S2FFT`](https://github.com/astro-informatics/s2fft) or [`healpy`](https://healpy.readthedocs.io/en/latest/). Just ensure your harmonic coefficients are indexed using our convention; helper functions for this reindexing can be found in [`S2FFT`](https://github.com/astro-informatics/s2fft).
@@ -22,6 +22,8 @@ Ballpark compute times (when running on an 40GB A100 GPU) and compression levels
 |:----------------------------:|:--------------:|:------------:|:-------------:|:---------------:|:------------:|:--------------------------:|:------------------------:|
 |           Precompute          |   L=512, N=3   |     ~90ms    |     ~190ms    |       ~20s      |   2,618,880  |     ~ 63,000  (97.594%)    |      ~504  (99.981%)     |
 |          On-the-fly          |   L=2048, N=3  |     ~18s     |      ~40s     |       ~5m       |  41,932,800  |    ~ 123,750  (99.705%)    |     ~ 990  (99.998%)     |
+
+Note that these times are not batched, so in practice may be substantially faster.
 
 ## Scattering covariances :dna:
 
@@ -43,16 +45,36 @@ $$S_4^{\lambda_1, \lambda_2, \lambda_3} = \text{Cov} \left[W^{\lambda_1}|W^{\lam
 
 where $W^{\lambda} I$ denotes the wavelet transform of field $I$ at scale $j$ and direction $\gamma$, which we group into a single label $\lambda=(j,\gamma)$. 
 
-This statistical representation characterises the power and sparsity at given scales, as well as covariant features between different wavelet scale and directions, which can effectively capture complex non-Gaussian structural information, e.g. filamentary structure. 
+This statistical representation characterises the power and sparsity at given scales, as well as covariant features between different wavelet scale and directions, which can effectively capture complex non-Gaussian structural information, e.g. filamentary structure.
+
+Using the recently released JAX spherical harmonic code [`S2FFT`](https://github.com/astro-informatics/s2fft) ([Price & McEwen 2024](https://arxiv.org/abs/2311.14670)) and spherical wavelet transform code [`S2WAV`](https://github.com/astro-informatics/s2wav) ([Price et al. 2024](<https://arxiv.org/abs/2402.01282)) in the `S2SCAT` code we extends scattering covariances to the sphere, which are necessary for their application to generative modelling of wide-field cosmological fields ([Mousset et al. 2024](https://arxiv.org/abs/xxxx.xxxxx)).
+
+## Usage :rocket:
+
+To import and use `S2SCAT` is as simple follows:
+
+``` python
+import s2scat, jax
+# For statistical compression
+encoder = s2scat.build_encoder(L, N)          # Returns a callable compression model.
+covariance_statistics = encoder(alm)          # Generate statistics (can be batched).
+
+# For generative modelling
+key = jax.random.PRNGKey(seed)
+generator = s2scat.build_generator(alm, L, N) # Returns a callable generative model.
+new_samples = generator(key, 10)              # Generate 10 new spherical textures. 
+```
+
+For further details on usage see the [documentation](https://astro-informatics.github.io/s2scat/) and associated [notebooks](https://astro-informatics.github.io/s2scat/notebooks/).
 
 ## Package Directory Structure :art:
 
 ``` bash
 s2scat/  
-├── core/               # Top-level functionality:
-│      ├─ scatter.py            # - Scattering covariance transform.
-│      ├─ compress.py           # - Statistical compression functions.
-│      ├─ synthesis.py          # - Synthesis optimisation functions. 
+├── representation.py   # - Scattering covariance transform.
+├── compression.py      # - Statistical compression functions.
+├── optimisation.py     # - Optimisation algorithm wrappers. 
+├── generation.py       # - Latent encoder and Generative decoder.
 │    
 ├── operators/          # Internal functionality:
 │      ├─ spherical.py          # - Specific spherical operations, e.g. batched SHTs.
@@ -93,21 +115,6 @@ pytest tests/
 ```
 
 Documentation for the released version is available [here](https://astro-informatics.github.io/s2scat/).
-
-## Usage :rocket:
-
-To import and use `S2SCAT` is as simple follows:
-
-``` python
-import s2scat
-
-# Given harmonic bandlimit L, azimuthal bandlimit N and spherical harmonic coefficients flm
-
-config = s2scat.configure(L, N)
-covariances = s2scat.scatter(flm, L, N, config=config)
-```
-
-For further details on usage see the [documentation](https://astro-informatics.github.io/s2scat/) and associated [notebooks](https://astro-informatics.github.io/s2scat/notebooks/).
 
 ## Contributors
 
@@ -151,11 +158,14 @@ code builds:
 
 ```
     @article{price:s2fft, 
-        author      = "Matthew A. Price and Jason D. McEwen",
-        title       = "Differentiable and accelerated spherical harmonic and Wigner transforms",
-        journal     = "Journal of Computational Physics, submitted",
-        year        = "2023",
-        eprint      = "arXiv:2311.14670"        
+        author      = "Matthew A. Price and Jason D. McEwen",         
+        title        = "Differentiable and accelerated spherical harmonic and {W}igner transforms",
+        journal      = "Journal of Computational Physics",
+        volume       = "510",
+        pages        = "113109",        
+        year         = "2024",
+        doi          = {10.1016/j.jcp.2024.113109},
+        eprint       = "arXiv:2311.14670"        
     }
 ```
 ```
