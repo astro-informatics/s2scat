@@ -21,7 +21,7 @@ setup(
         "Intended Audience :: Science/Research",
     ],
     name="s2scat",
-    version="0.0.1",
+    version="0.0.3",
     url="https://github.com/astro-informatics/s2scat",
     author="Matthew A. Price, Louise Mousset, Erwan Allys, Jason D. McEwen",
     license="MIT",
