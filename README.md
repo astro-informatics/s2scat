@@ -1,8 +1,9 @@
 [![image](https://github.com/astro-informatics/s2scat/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/astro-informatics/s2scat/actions/workflows/tests.yml)
 [![codecov](https://codecov.io/gh/astro-informatics/s2scat/graph/badge.svg?token=LTSRXQVHIA)](https://codecov.io/gh/astro-informatics/s2scat)
 [![image](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![image](https://badge.fury.io/py/s2scat.svg)](https://badge.fury.io/py/s2scat)
-[![image](http://img.shields.io/badge/arXiv-xxxx.xxxxx-orange.svg?style=flat)](https://arxiv.org/abs/xxxx.xxxxx)
+[![PyPi version](https://badgen.net/pypi/v/s2scat/)](https://pypi.org/project/s2scat)
+[![PyPI download month](https://img.shields.io/pypi/dm/s2scat.svg)](https://pypi.python.org/pypi/s2scat/)
+<!-- [![image](http://img.shields.io/badge/arXiv-xxxx.xxxxx-orange.svg?style=flat)](https://arxiv.org/abs/xxxx.xxxxx) -->
 [![All Contributors](https://img.shields.io/github/all-contributors/astro-informatics/s2scat?color=ee8449&style=flat-square)](#contributors)
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/astro-informatics/s2scat/blob/main/notebooks/auto_generation.ipynb)
 

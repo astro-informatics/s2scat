@@ -1,9 +1,11 @@
 # Packages required for core functionality 
-numpy ==  1.26.4 # numpy 2.0.0 breaks pyssht in s2fft.
+numpy ==  1.26.4  # numpy 2.0.0 breaks pyssht in s2fft.
+matplotlib==3.8.4 # for notebooks.
 
 # JAX optimisation routines
 optax
 
 # Sister packages
+healpy == 1.16.6
 s2wav >= 1.0.4
 s2fft >= 1.1.1
