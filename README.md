@@ -23,7 +23,7 @@ Ballpark compute times (when running on an 40GB A100 GPU) and compression levels
 |          Precompute          |   L=512, N=3   |     ~90ms    |     ~190ms    |       ~20s      |   2,618,880  |     ~ 63,000  (97.594%)    |      ~504  (99.981%)     |
 |          On-the-fly          |   L=2048, N=3  |     ~18s     |      ~40s     |       ~5m       |  41,932,800  |    ~ 123,750  (99.705%)    |     ~ 990  (99.998%)     |
 
-Note that these times are not batched, so in practice may be substantially faster.
+Note that these times are not batched, so in practice may be substantially faster. For example, with a large batch size at $L=256, N=3$ textures are generated at a rate of 500ms per texture on a single 40GB NVIDIA A100 GPU. Further note that everything here is running at 64 bit precision, therefore relaxing to 32 bit precision reduces computation time and memory by a factor of 2, and facilitates larger batching for further acceleration.
 
 ## Scattering covariances :dna:
 
