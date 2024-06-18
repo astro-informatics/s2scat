@@ -31,9 +31,7 @@ Note that these times are not batched, so in practice may be substantially faste
   <img width="300" height="300" src="./docs/assets/synthesis.gif">
 </p>
 
-We introduce scattering covariances on the sphere in [Mousset et al. (2024)](https://arxiv.org/abs/xxxx.xxxxx), which extend to spherical settings similar scattering transforms introduced for 1D signals by [Morel et al. (2023)](https://arxiv.org/abs/2204.10177) and for planar 2D signals by [Cheng et al. (2023)](https://arxiv.org/abs/2306.17210). 
-
-Scattering covariances $S$ are computed by
+We introduce scattering covariances on the sphere in [Mousset et al. (2024)](https://arxiv.org/abs/xxxx.xxxxx), which extend to spherical settings similar scattering transforms introduced for 1D signals by [Morel et al. (2023)](https://arxiv.org/abs/2204.10177) and for planar 2D signals by [Cheng et al. (2023)](https://arxiv.org/abs/2306.17210). Scattering covariances $S$ are computed by
 
 $$S_1^{\lambda_1} = \langle |W^{\lambda_1} I| \rangle,$$
 
