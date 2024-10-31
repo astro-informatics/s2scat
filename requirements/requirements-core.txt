@@ -1,6 +1,7 @@
 # Packages required for core functionality 
 numpy ==  1.26.4  # numpy 2.0.0 breaks pyssht in s2fft.
 matplotlib==3.8.4 # for notebooks.
+scipy==1.12.0 # healpy breaks with scipy==1.14.1
 
 # JAX optimisation routines
 optax
