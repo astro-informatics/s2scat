@@ -1,3 +1,9 @@
+<div style="text-align: center;" align="center">
+
+<img class="dark-light" width="98" height="98" alt="s2scat placeholder logo" src="./docs/assets/s2scat_logo-modified.png">
+
+# s2scat: Differentiable Scattering Covariances on the Sphere
+
 [![image](https://github.com/astro-informatics/s2scat/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/astro-informatics/s2scat/actions/workflows/tests.yml)
 [![codecov](https://codecov.io/gh/astro-informatics/s2scat/graph/badge.svg?token=LTSRXQVHIA)](https://codecov.io/gh/astro-informatics/s2scat)
 [![image](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -6,15 +12,16 @@
 [![All Contributors](https://img.shields.io/github/all-contributors/astro-informatics/s2scat?color=ee8449&style=flat-square)](#contributors)
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/astro-informatics/s2scat/blob/main/notebooks/auto_generation.ipynb)
 
-# Differentiable scattering covariances on the sphere
+</div>
 
-`S2SCAT` is a Python package for computing scattering covariances on the sphere ([Mousset et al. 2024](https://arxiv.org/abs/xxxx.xxxxx)) using JAX.  It exploits autodiff to provide differentiable transforms, which are also deployable on hardware accelerators (e.g. GPUs and TPUs), leveraging the differentiable and accelerated spherical harmonic and wavelet transforms implemented in [S2FFT](https://github.com/astro-informatics/s2fft) and [S2WAV](https://github.com/astro-informatics/s2wav), respectively. Scattering covariances are useful both for field-level generative modelling of complex non-Gaussian textures and for statistical compression of high dimensional field-level data, a key step of e.g. simulation based inference.
+
+`s2scat` is a Python package for computing scattering covariances on the sphere ([Mousset et al. 2024](https://arxiv.org/abs/2407.07007)) using JAX.  It exploits autodiff to provide differentiable transforms, which are also deployable on hardware accelerators (e.g. GPUs and TPUs), leveraging the differentiable and accelerated spherical harmonic and wavelet transforms implemented in [`s2fft`](https://github.com/astro-informatics/s2fft) and [`s2wav`](https://github.com/astro-informatics/s2wav), respectively. Scattering covariances are useful both for field-level generative modelling of complex non-Gaussian textures and for statistical compression of high dimensional field-level data, a key step of e.g. simulation based inference.
 
 > [!IMPORTANT]
-> It is worth highlighting that the input to `S2SCAT` are spherical harmonic coefficients, which can be generated with whichever software package you prefer, e.g. [`S2FFT`](https://github.com/astro-informatics/s2fft) or [`healpy`](https://healpy.readthedocs.io/en/latest/). Just ensure your harmonic coefficients are indexed using our convention; helper functions for this reindexing can be found in [`S2FFT`](https://github.com/astro-informatics/s2fft).
+> It is worth highlighting that the input to `s2scat` are spherical harmonic coefficients, which can be generated with whichever software package you prefer, e.g. [`s2fft`](https://github.com/astro-informatics/s2fft) or [`healpy`](https://healpy.readthedocs.io/en/latest/). Just ensure your harmonic coefficients are indexed using our convention; helper functions for this reindexing can be found in [`s2fft`](https://github.com/astro-informatics/s2fft).
 
 > [!TIP]
-> At launch `S2SCAT` provides two core transform modes: on-the-fly, which performs underlying spherical harmonic and Wigner transforms through the [Price & McEwen](https://arxiv.org/abs/2311.14670) recursion; and precompute, which a priori computes and caches all Wigner elements required. The precompute approach will be faster but can only be run up to $L \sim 512$, whereas the on-the-fly approach will run up to $L \sim 2048$ and potentially beyond, depending on GPU hardware.
+> At launch `s2scat` provides two core transform modes: on-the-fly, which performs underlying spherical harmonic and Wigner transforms through the [Price & McEwen](https://arxiv.org/abs/2311.14670) recursion; and precompute, which a priori computes and caches all Wigner elements required. The precompute approach will be faster but can only be run up to $L \sim 512$, whereas the on-the-fly approach will run up to $L \sim 2048$ and potentially beyond, depending on GPU hardware.
 
 Ballpark compute times (when running on an 40GB A100 GPU) and compression levels are given in the table below. 
 
@@ -31,7 +38,7 @@ Note that these times are not batched, so in practice may be substantially faste
   <img width="300" height="300" src="./docs/assets/synthesis.gif">
 </p>
 
-We introduce scattering covariances on the sphere in [Mousset et al. (2024)](https://arxiv.org/abs/xxxx.xxxxx), which extend to spherical settings similar scattering transforms introduced for 1D signals by [Morel et al. (2023)](https://arxiv.org/abs/2204.10177) and for planar 2D signals by [Cheng et al. (2023)](https://arxiv.org/abs/2306.17210). Scattering covariances $S$ are computed by
+We introduce scattering covariances on the sphere in [Mousset et al. (2024)](https://arxiv.org/abs/2407.07007), which extend to spherical settings similar scattering transforms introduced for 1D signals by [Morel et al. (2023)](https://arxiv.org/abs/2204.10177) and for planar 2D signals by [Cheng et al. (2023)](https://arxiv.org/abs/2306.17210). Scattering covariances $S$ are computed by
 
 $$S_1^{\lambda_1} = \langle |W^{\lambda_1} I| \rangle,$$
 
@@ -45,11 +52,11 @@ where $W^{\lambda} I$ denotes the wavelet transform of field $I$ at scale $j$ an
 
 This statistical representation characterises the power and sparsity at given scales, as well as covariant features between different wavelet scale and directions, which can effectively capture complex non-Gaussian structural information, e.g. filamentary structure.
 
-Using the recently released JAX spherical harmonic code [`S2FFT`](https://github.com/astro-informatics/s2fft) ([Price & McEwen 2024](https://arxiv.org/abs/2311.14670)) and spherical wavelet transform code [`S2WAV`](https://github.com/astro-informatics/s2wav) ([Price et al. 2024](https://arxiv.org/abs/2402.01282)) in the `S2SCAT` code we extends scattering covariances to the sphere, which are necessary for their application to generative modelling of wide-field cosmological fields ([Mousset et al. 2024](https://arxiv.org/abs/xxxx.xxxxx)).
+Using the recently released JAX spherical harmonic code [`s2fft`](https://github.com/astro-informatics/s2fft) ([Price & McEwen 2024](https://arxiv.org/abs/2311.14670)) and spherical wavelet transform code [`s2wav`](https://github.com/astro-informatics/s2wav) ([Price et al. 2024](https://arxiv.org/abs/2402.01282)) in the `s2scat` code we extends scattering covariances to the sphere, which are necessary for their application to generative modelling of wide-field cosmological fields ([Mousset et al. 2024](https://arxiv.org/abs/2407.07007)).
 
 ## Usage :rocket:
 
-To import and use `S2SCAT` is as simple follows:
+To import and use `s2scat` is as simple follows:
 
 ``` python
 import s2scat, jax
@@ -87,7 +94,7 @@ s2scat/
 
 ## Installation :computer:
 
-The Python dependencies for the `S2SCAT` package are listed in the file
+The Python dependencies for the `s2scat` package are listed in the file
 `requirements/requirements-core.txt` and will be automatically installed
 into the active python environment by [pip](https://pypi.org) when running
 
@@ -96,7 +103,7 @@ pip install s2scat
 ```
 This will install all core functionality which includes full JAX support.
 
-Alternatively, the `S2SCAT` package may be installed directly from GitHub by cloning this 
+Alternatively, the `s2scat` package may be installed directly from GitHub by cloning this 
 repository and then running 
 
 ``` bash
@@ -144,10 +151,13 @@ referenced. A BibTeX entry for this reference may look like:
 ```
     @article{mousset:s2scat, 
         author      = "Louise Mousset et al",
-        title       = "TBD",
-        journal     = "TBD, submitted",
+        title       = "Generative models of astrophysical fields with scattering transforms on the sphere",
+        journal     = "Astronomy & Astrophysics",
+        volume      = "691",
+        pages       = "A269",
         year        = "2024",
-        eprint      = "TBD"        
+        doi         = "10.1051/0004-6361/202451396",
+        eprint      = "arXiv:2407.07007"        
     }
 ```
 
@@ -182,5 +192,5 @@ it will be of use to a wider community.
 
 Copyright 2024 Louise Mousset, Matthew Price, Erwan Allys and Jason McEwen
 
-`S2SCAT` is free software made available under the MIT License. For
+`s2scat` is free software made available under the MIT License. For
 details see the LICENSE file.
